@@ -10,7 +10,8 @@ Imported all **17 files** from the user-provided `FIL_Codex_Starter_Pack.zip`,
 preserving relative paths and file bytes. Archive SHA-256:
 `10781a534a5c91256f66c72625137999449d7e22ba2d288c5e7846d49d99a153`.
 The separately uploaded engineering handbook matches the archived handbook
-byte for byte. `README.md` and this review are the only additional files.
+byte for byte. `README.md`, this review, and `docs/BOOTSTRAP_PR.md` (the prepared PR body)
+are the only additional files.
 No dependencies, application code, datasets, CI jobs, dashboards, or AI agent
 were added. The existing `LICENSE` is unchanged.
 
@@ -35,6 +36,7 @@ README.md                       # bootstrap addition
 README_INSTALL.md
 docs/
   BOOTSTRAP_REVIEW.md            # bootstrap addition
+  BOOTSTRAP_PR.md                # prepared pull request description
   CODEX_WORKFLOW.md
   Football_Intelligence_Lab_Master_Reference.md
   Football_Intelligence_Lab_Engineering_Handbook_v3.0.md
@@ -121,7 +123,8 @@ Commands were run from the repository root unless stated otherwise.
 | `ruff check .` | 127 | Command unavailable; lint did not run. |
 | `pytest -q` | 127 | Command unavailable; tests did not run. No test suite exists. |
 | `git diff --cached --check` | 2 | Nine pre-existing Markdown hard-break lines in the supplied references have trailing spaces; preserved for byte-identical import. |
-| `git -c core.whitespace=blank-at-eof,space-before-tab diff --cached --check` | 0 | Remaining whitespace checks pass; Markdown line-ending spaces explicitly permitted for this check only. |
+| Initial whitespace override without `-blank-at-eol` | 2 | Still flagged Markdown hard breaks; explicit override below corrected the check. |
+| `git -c core.whitespace=-blank-at-eol,blank-at-eof,space-before-tab diff --check 6a83fab20a59324eade106d0a67b258f236dd5fc` | 0 | Remaining whitespace checks pass; Markdown line-ending spaces explicitly permitted for this check only. |
 | `python --version` | 0 | Python 3.12.14; not a project compatibility test. |
 | `gh auth status` | 1 | CLI authentication check unsuccessful; no credential values inspected. |
 | `gh api repos/Qiao527/football-intelligence-lab --jq '{default_branch: .default_branch, permissions: .permissions}'` | 1 | API request returned Forbidden; Git read access does not establish API access. |
@@ -154,7 +157,7 @@ assert not list(Path('src').rglob('*.py'))
 assert not Path('pyproject.toml').exists()
 print('PASS: archive integrity, paths, LICENSE, skill metadata, bootstrap-only scope')
 PY
-git -c core.whitespace=blank-at-eof,space-before-tab diff --check 6a83fab20a59324eade106d0a67b258f236dd5fc
+git -c core.whitespace=-blank-at-eol,blank-at-eof,space-before-tab diff --check 6a83fab20a59324eade106d0a67b258f236dd5fc
 ```
 
 No fixture provenance, numerical reconciliation, screenshots, application
@@ -162,3 +165,16 @@ behavior, test PASS, independent review, or merge authorization is claimed.
 The smallest proposed next PR is FIL-001: choose the pinned Python target and
 reviewed dependencies, then add reproducible project metadata, lockfile and
 meaningful checks. Do not start source acquisition or analytics in this PR.
+
+
+## Pull request delivery
+
+`git push -u origin chore/fil-bootstrap` succeeded (exit 0).
+`gh pr create --repo Qiao527/football-intelligence-lab --base main --head chore/fil-bootstrap --title "chore: bootstrap FIL repository from supplied starter pack" --body-file /tmp/fil-bootstrap-pr.md`
+failed (exit 1): `Post "https://api.github.com/graphql": Forbidden`.
+No GitHub PR was created by this command. The prepared PR body is retained in
+[BOOTSTRAP_PR.md](BOOTSTRAP_PR.md). GitHub's push response supplied this
+[PR creation link](https://github.com/Qiao527/football-intelligence-lab/pull/new/chore/fil-bootstrap).
+A maintainer can open the PR using that body, or provide an environment with
+working GitHub API access for a retry. No new secret or expanded environment
+permissions were configured. Merge and deployment remain unperformed.
