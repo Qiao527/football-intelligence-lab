@@ -77,6 +77,19 @@ Ready for scoped review; no later milestone acceptance, merge or deployment.
 
 ## Delivery limitation
 
-Pending final push/API attempt; this section records actual delivery outcome.
+Native Git push succeeded for `feat/fil-005-score-reconstruction`. Final fetch
+verified main `cde6c6607e569cb74a0fd665d20d88a7cc969136` and all three recorded
+parent heads unchanged, with #3 → #4 → #5 → FIL-005 ancestry. No rebase needed.
+
+Executed `gh pr create --repo Qiao527/football-intelligence-lab --base
+feat/fil-004-period-aware-clock --head feat/fil-005-score-reconstruction --title
+"FIL-005: traceable score reconstruction and goal attribution" --body-file
+docs/FIL-005_PR.md`: exit **1**, GraphQL `Forbidden`. No PR creation is claimed.
+`gh run list --repo Qiao527/football-intelligence-lab --branch
+feat/fil-005-score-reconstruction --limit 5 --json
+databaseId,status,conclusion,headSha,url`: exit **1**, REST `Forbidden`.
+Hosted CI results for FIL-005 are unavailable; equivalent configured checks
+passed locally. API access is a delivery limitation, not an implementation
+blocker; verified work remains pushed. This file is the prepared review body.
 Intended creation link (base FIL-004, head FIL-005):
 https://github.com/Qiao527/football-intelligence-lab/compare/feat/fil-004-period-aware-clock...feat/fil-005-score-reconstruction?expand=1

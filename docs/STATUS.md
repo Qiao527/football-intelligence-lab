@@ -31,4 +31,7 @@
 - No xG/xT aggregation, player ratings, networks, dashboard, AI, rights expansion,
   merge or deployment. Registration/noncommercial research confirmation persists;
   raw and derived provider datasets remain local/ignored, not redistributed.
-- Delivery/PR creation link and API limitations are in FIL-005_PR.md.
+- Branch is pushed. PR creation and hosted-CI queries both exit 1, GitHub API
+  Forbidden. Prepared review body and exact FIL-004-targeted creation link are
+  in FIL-005_PR.md; no new PR or hosted success is claimed. Final parent/main
+  fetch confirms unchanged heads; no reconciliation is needed yet.
