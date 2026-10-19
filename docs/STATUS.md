@@ -1,26 +1,27 @@
-# FIL project status — FIL-002
+# FIL project status — FIL-003 stacked development
 
-- FIL-001 is merged (PR #2); this milestone starts from main `cde6c66`.
-- Source-preserving acquisition and offline verification CLI implemented for
-  Hudl/StatsBomb match 8658 at upstream revision
-  `4b73468fc5b0f1950f9f66fada70ad3a4f9327cb`. No runtime dependencies added.
-- Source records verify FIFA World Cup 2018 Final, 2018-07-15, France–Croatia.
-  Actual local events: 2,978; all IDs unique. Lineups and source terms acquired;
-  no 360/tracking availability assumed.
-- Original provider files and actual manifest are in ignored local `data/raw/`;
-  no provider datasets, documents or raw manifest are committed or packaged.
-- Frozen installs, Ruff, 41 offline tests (0 skipped), wheel/source build and
-  a cold-cache fresh regular installation/acquisition passed. Repeat acquisition
-  is offline and preserves file bytes/timestamps. See [evidence](FIL-002_VERIFICATION.md).
-- Source integrity checks pass. Following the owner's 2026-10-19 confirmation
-  "Registration completed; noncommercial research", DATA-SOURCE and DEL-SOURCE
-  PASS for this pinned match's local noncommercial research use only.
-  Redistribution and commercial use remain unapproved. The immutable manifest
-  retains its earlier pending status; see [source policy](SOURCE_POLICY.md).
-- No normalization, clock, score reconciliation, xG/xT, player ratings, networks,
-  dashboards, scraping or AI agent implemented. FIL-003 and later gates remain
-  unpassed. The historical v0.2 notebook/evidence packet is absent and unverified.
-- Original references, LICENSE and dependency lock are unchanged. Branch is
-  pushed; API Forbidden responses block PR creation and hosted CI observation.
-  The prepared PR body and exact failures are in the verification report.
-  No merge, deployment or environment publication performed.
+- FIL-003 branch: `feat/fil-003-event-normalization`, based on FIL-002 branch
+  `feat/fil-002-data-acquisition` at `5a18a4e1a417cfbf33941796552b25c9c8ab0c36`.
+  Parent PR #3 exists (native Git head verified); owner reports its hosted CI
+  passed. Stacked development is explicitly authorized; merge is not a prerequisite.
+- Workflow now records dependency/evidence/assumptions, parent reconciliation,
+  autonomous scoped progress, API delivery limitations and human acceptance.
+- Implemented canonical schema v1 (53 typed columns), isolated StatsBomb adapter,
+  deterministic Parquet build, offline verification, full source lineage and
+  exact-ID reverse lookup. PyArrow 21.0.0 is the sole runtime dependency.
+- Verified real match: 2,978 raw → 2,978 canonical rows, no exclusions/duplicate
+  IDs; all original source records retained. Raw and derived provider files
+  stay local/ignored and are not redistributed or packaged.
+- Frozen install, Ruff, all 97 tests (0 skipped), package builds, real-data
+  reconciliation, idempotent rebuild and fresh editable/regular installs pass.
+  Repeated Parquet and quality-report bytes match on the tested platform.
+- DATA-SOURCE/DEL-SOURCE remain scoped to the owner's confirmed local
+  noncommercial research use. DATA-SCHEMA/DEL-SCHEMA have local technical
+  verification; FIL-003 is **not human accepted**. See FIL-003_VERIFICATION.md.
+- No reconstructed clocks, xG/xT calculations, score reconciliation, player
+  ratings, networks, dashboards, scraping or AI agent. Provider xG is copied
+  only; later gates and FIL-004 remain unimplemented/unpassed.
+- Parent was re-fetched unchanged; no reconciliation needed. Original references,
+  LICENSE, source policy, source acquisition code and raw provenance are intact.
+- FIL-003 hosted CI/PR delivery are recorded separately when observable. No
+  merge, deployment, rights expansion or material architecture change performed.
