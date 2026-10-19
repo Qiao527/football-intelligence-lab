@@ -39,3 +39,4 @@ jobs:
           uv run --frozen --no-editable ruff check .
           uv run --frozen --no-editable pytest -q
           uv run --frozen --no-editable python -m fil.ingestion.normalize --help
+          uv run --frozen --no-editable python -m fil.time --help

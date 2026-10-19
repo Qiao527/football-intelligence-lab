@@ -2,9 +2,10 @@
 
 FIL provides a reproducible Python foundation, immutable source acquisition and
 canonical event normalization for one pinned historical StatsBomb match. It
-implements no calculated metrics, reconstructed match clock, dashboards or AI
-agent. PyArrow is the sole runtime dependency, used for typed Parquet storage. The
-historical v0.2 notebook reported in the product reference is absent here.
+includes period-aware event clocks, while implementing no calculated football
+metrics, dashboards or AI agent. PyArrow is the sole runtime dependency, used
+for typed Parquet storage. The historical v0.2 notebook reported in the product
+reference is absent here.
 
 ## Clean installation and checks
 
@@ -68,6 +69,8 @@ x86_64 / Python 3.11.14 is locally validated; other platforms are unverified.
 - [Stacked development policy](docs/CODEX_WORKFLOW.md)
 - [Canonical schema and normalization CLI](docs/CANONICAL_EVENTS.md)
 - [FIL-003 evidence and upstream dependency](docs/FIL-003_VERIFICATION.md)
+- [Period-aware clock contract](docs/MATCH_CLOCK.md)
+- [FIL-004 verification and stack status](docs/FIL-004_VERIFICATION.md)
 - [FIL-001 verification](docs/FIL-001_VERIFICATION.md)
 - [FIL-002 verification](docs/FIL-002_VERIFICATION.md)
 - [Source terms and scoped gate assessment](docs/SOURCE_POLICY.md)
@@ -159,3 +162,43 @@ Both raw and canonical records remain restricted to local noncommercial
 research; neither Git, package artifacts nor a PR should contain provider data.
 A copied provider `shot_xg` field is not a calculated xG metric. Clock, score,
 spatial-direction and metric gates are outside FIL-003.
+
+
+## FIL-004: period-aware clock (offline)
+
+FIL-004 is stacked on `feat/fil-003-event-normalization` (PR #4). It preserves
+all 53 canonical columns and adds exact millisecond clocks, display labels,
+period-end/offset estimates and a pointer to the verified canonical manifest.
+No provider field, raw source or canonical artifact is rewritten.
+
+Set `raw_bundle` and `dataset` to the verified FIL-002/FIL-003 input directories
+above. From the matching clean implementation checkout:
+
+```bash
+uv run --frozen python -m fil.time build \
+  --raw-bundle "$raw_bundle" --canonical-dataset "$dataset" \
+  --pipeline-revision "$(git rev-parse HEAD)"
+```
+
+Use the returned `clock_dataset` path with:
+
+```bash
+uv run --frozen python -m fil.time verify \
+  --raw-bundle "$raw_bundle" --canonical-dataset "$dataset" \
+  --clock-dataset "$clock_dataset"
+```
+
+Outputs stay ignored under `data/interim/clocks/`: `clock_events.parquet`,
+`quality.json` and `manifest.json`. Existing artifacts are verified/reused,
+never silently repaired. These commands are offline and reverify the complete
+source/canonical chain; normal tests and CI use TEST-ONLY fixtures.
+
+Use `fil.time.clock` for `PeriodRange`, exact timestamp parsing, period-relative
+half-open filtering, regular/extra/match-play/shootout scopes, bin partitions
+and chronological-range conversion. Default match-play excludes period 5;
+shootout events retain source fields but have null match-play chronology.
+Half End and the following Half Start can share a scalar boundary; period-aware
+selection and original event IDs distinguish them. Read MATCH_CLOCK.md for the
+terminal-endpoint rule, estimate propagation and strict malformed-input handling.
+This clock is an event-phase axis, not elapsed wall time or a video timecode.
+No score reconciliation or later analytics gate is claimed.

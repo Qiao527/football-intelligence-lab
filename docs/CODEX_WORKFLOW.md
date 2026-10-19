@@ -51,7 +51,34 @@ material architecture changes without approval. Implemented, locally verified,
 hosted-CI verified and human accepted are distinct states. A milestone is not
 accepted until required validation and human approval are complete.
 
+## FIL-004 stack and squash reconciliation
+
+FIL-004 starts on `feat/fil-003-event-normalization` at
+`3d81faf9ae66f1b2075a1aba5b877baefa42e418` (PR #4), which depends on FIL-002
+PR #3. The owner reports #4 hosted CI passed; local validation remains separate.
+Until the parents merge, the FIL-004 PR targets FIL-003, keeping only FIL-004
+changes in its diff.
+
+Before delivery, fetch main and both parents and inspect the actual merge state.
+After #3/#4 are merged, identify the latest verified parent SHA used by FIL-004
+and preserve a recoverable local branch ref before reconciliation. For squash
+merges, transplant only commits **after that FIL-003 parent SHA** onto updated
+main (`git rebase --onto origin/main <recorded-parent-sha> <fil-004-branch>`).
+Do not merge old feature history wholesale or rebase the entire main-to-child
+range: that can reintroduce already-squashed FIL-002/FIL-003 commits.
+If the parent itself has advanced, reconcile and record its new anchor first.
+
+Inspect the resulting diff against main, resolve conflicts using the verified
+contracts, rerun affected/full checks and real-data verification, regenerate
+artifacts with the new actual implementation SHA, and retarget the PR base to
+main. Coordinate any published feature-history update using the expected remote
+head (`--force-with-lease` only if a rewrite is necessary); never force main.
+These are conditional reconciliation instructions, not a claim the parent PRs
+have merged or authorization to merge them. Record actual observations and
+defer milestone acceptance to required validation and human approval.
+
 ## Starred-tool policy
+
 - Frameworks are **references**, not mandatory global plugins. Default: repo-native AGENTS.md + three narrow FIL skills + tests.
 - Evaluate addyosmani/agent-skills OR obra/superpowers on a throwaway branch; compare against baseline; adopt only a useful subset after license/security review.
 - K-Dense scientific skills: selective use for research stage; not required for ingestion/UI.
