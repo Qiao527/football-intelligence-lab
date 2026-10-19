@@ -2,8 +2,8 @@
 
 FIL provides a reproducible Python foundation, immutable source acquisition and
 canonical event normalization for one pinned historical StatsBomb match. It
-includes period-aware event clocks, while implementing no calculated football
-metrics, dashboards or AI agent. PyArrow is the sole runtime dependency, used
+includes period-aware event clocks and traceable goal attribution/score reconstruction.
+Dashboards, xG aggregation and AI agents are not implemented. PyArrow is the sole runtime dependency, used
 for typed Parquet storage. The historical v0.2 notebook reported in the product
 reference is absent here.
 
@@ -202,3 +202,28 @@ selection and original event IDs distinguish them. Read MATCH_CLOCK.md for the
 terminal-endpoint rule, estimate propagation and strict malformed-input handling.
 This clock is an event-phase axis, not elapsed wall time or a video timecode.
 No score reconciliation or later analytics gate is claimed.
+
+
+## FIL-005: score reconstruction and goal attribution (offline)
+
+Stacked on validated FIL-004 PR #5. Read [the score contract and CLI](docs/SCORE_RECONSTRUCTION.md),
+[stack reconciliation plan](docs/STACK_RECONCILIATION.md) and
+[verification evidence](docs/FIL-005_VERIFICATION.md).
+Using the verified input paths above:
+
+```bash
+uv run --frozen python -m fil.metrics.score_cli build \
+  --raw-bundle "$raw_bundle" --canonical-dataset "$dataset" \
+  --clock-dataset "$clock_dataset" --pipeline-revision "$(git rev-parse HEAD)"
+uv run --frozen python -m fil.metrics.score_cli verify \
+  --raw-bundle "$raw_bundle" --canonical-dataset "$dataset" \
+  --clock-dataset "$clock_dataset" --score-dataset "$score_dataset"
+```
+
+Set `score_dataset` to build's returned path. Outputs stay ignored under
+`data/interim/scores/`. All input fields survive; every score decision links to
+original source IDs and verified manifests. Explicitly linked own-goal records
+count once, match-play penalties count normally, and shootout goals stay separate.
+Ambiguity or official final-score disagreement blocks output, never forces a
+match. Repeated runs verify/reuse unchanged artifacts. No data redistribution,
+new dependencies, later analytics implementation or merge is authorized.

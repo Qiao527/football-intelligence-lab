@@ -88,3 +88,13 @@ defer milestone acceptance to required validation and human approval.
 - gstack: optional review discipline; not needed to achieve v0.3.
 - FinceptTerminal: UI inspiration only until license analysis permits more.
 - No autonomous multi-agent manager, unattended credential/tool permissions, browser scraping or repository-wide hooks by default.
+
+## FIL-005 dependency and sequential squash plan
+
+FIL-005 develops on FIL-004 PR #5 at
+`48d566a2664a21b84b4ba8777de39116eff5480f`; the owner reports #5 hosted CI passed.
+The complete #3/#4/#5 stack snapshot and downstream-only transplant procedure
+are in [STACK_RECONCILIATION.md](STACK_RECONCILIATION.md). Reconcile each child
+using its latest incorporated parent anchor, propagating rewritten parents
+through the stack. Keep recoverable refs and rerun verification before updating
+published feature branches. No merge is authorized by this procedure.
