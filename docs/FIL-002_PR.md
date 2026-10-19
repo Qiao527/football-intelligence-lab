@@ -25,9 +25,12 @@ branding for publications, and asks owner registration before access.
 
 All six original files and the actual manifest remain local under ignored
 `data/raw/statsbomb/8658/<upstream-revision>/`. No raw dataset or provider terms
-are committed or packaged. **DATA-SOURCE and DEL-SOURCE remain PENDING** until
-owner registration/terms compliance is confirmed. Integrity PASS does not grant
-redistribution permission. See `docs/SOURCE_POLICY.md`.
+are committed or packaged. The owner confirmed "Registration completed;
+noncommercial research" on 2026-10-19. **DATA-SOURCE and DEL-SOURCE PASS for
+local noncommercial research on this pinned fixture only**. The original
+manifest retains its acquisition-time pending status; the subsequent owner
+attestation is recorded in SOURCE_POLICY.md and the verification report.
+Redistribution/commercial use remain unapproved.
 
 ## Setup and reproduction
 
@@ -74,5 +77,5 @@ Full schema/enum audit and normalization remain FIL-003 work. Linux x86_64 /
 Python 3.11.14 is locally verified. Hosted Actions outcome must be inspected
 separately when accessible; no hosted PASS is inferred from local results.
 
-Review source rights/registration and the provenance evidence before closing
-source gates or beginning dependent work. No merge or deployment performed.
+Review the scoped source-gate assessment and provenance evidence before beginning
+dependent work; redistribution remains outside the approved research scope. No merge or deployment performed.

@@ -69,4 +69,7 @@ assertion: run from the matching clean checkout to make it meaningful.
 
 The offline unit tests use explicitly labeled TEST-ONLY records, never football
 observations. They inject source bytes/transport; ordinary pytest runs do not
-download the provider dataset. See SOURCE_POLICY.md for unclosed rights gates.
+download the provider dataset. See SOURCE_POLICY.md for the current scoped
+rights assessment and subsequent owner confirmation. The immutable manifest's
+pending value records acquisition-time knowledge; it is not rewritten to reflect
+later attestations.

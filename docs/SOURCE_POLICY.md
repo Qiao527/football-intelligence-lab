@@ -27,11 +27,11 @@ of data to third parties; §1.2.2 forbids commercial exploitation of the data or
 derived analysis. Section 1.4 requires branding on publications.
 
 Sections 1/2.2 ask users to register their name and email via
-`www.statsbomb.com/resource-centre` before access. Owner registration has **not
-been verified by this implementation**. No personal details were submitted by
-the agent. No registration endpoint or broader license permission is assumed
-to be available. The owner must confirm registration/terms compliance and the
-noncommercial research purpose before the rights gate can close.
+`www.statsbomb.com/resource-centre` before access. On 2026-10-19 the project
+owner explicitly confirmed: **"Registration completed; noncommercial research"**.
+This is an owner attestation, not independent verification of a provider account
+or a new provider license. No personal details were requested or submitted by
+the agent. No broader permission or redistribution approval is inferred.
 
 Current acquisition is limited to the user's requested local historical research
 fixture and its source terms/metadata. All provider bytes and the actual
@@ -50,13 +50,27 @@ rights and explicit user approval are established.
 
 - Technical source integrity: independently verify the pinned URLs, file hashes,
   metadata identity and event IDs using the acquisition/verification commands.
-- **DATA-SOURCE: PENDING** while owner registration/terms compliance remains
-  unconfirmed, even if the technical checks pass.
-- **DEL-SOURCE: PENDING** for the same unresolved rights condition. Recording
-  restrictions is not evidence that this condition was fulfilled.
+- **DATA-SOURCE: PASS for local noncommercial research**, based on the recorded
+  source identity/hash/manifest checks plus the owner's registration and use
+  confirmation. This applies to match 8658 at the pinned revision above.
+- **DEL-SOURCE: PASS for that same limited scope**: usable source and applicable
+  rights/restrictions are recorded. Redistribution and commercial use remain
+  unapproved; publication still requires provider attribution/branding.
 - No DATA-SCHEMA or later gate is claimed: acquisition is not normalization,
   full provider-schema validation, score reconciliation or metric calculation.
 
 The manifest deliberately separates `source_integrity_status` from
 `rights_gate_status`. The CLI does not accept a flag that silently grants
 redistribution permission or claims owner registration.
+
+
+## Immutable acquisition record and later confirmation
+
+The existing local manifest was created before the owner's reply and retains
+`rights_gate_status: PENDING_OWNER_CONFIRMATION`. Its warnings and timestamp
+remain historical acquisition facts; neither it nor provider bytes are rewritten.
+This policy and FIL-002_VERIFICATION.md record the subsequent owner confirmation
+and current scoped gate decision. The CLI only reports its immutable acquisition
+record and technical verification; it does not decide later rights status.
+The relevant manifest SHA-256 is
+`f9d1b52d9d736972df029a64480d8e2853a3cbf88f251bb2478c6e0f4da6952c`.

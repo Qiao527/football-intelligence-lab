@@ -12,9 +12,11 @@
 - Frozen installs, Ruff, 41 offline tests (0 skipped), wheel/source build and
   a cold-cache fresh regular installation/acquisition passed. Repeat acquisition
   is offline and preserves file bytes/timestamps. See [evidence](FIL-002_VERIFICATION.md).
-- Source integrity checks pass; DATA-SOURCE and DEL-SOURCE remain PENDING on
-  owner registration/terms compliance. Redistribution and commercial use are
-  not approved. See [source policy](SOURCE_POLICY.md).
+- Source integrity checks pass. Following the owner's 2026-10-19 confirmation
+  "Registration completed; noncommercial research", DATA-SOURCE and DEL-SOURCE
+  PASS for this pinned match's local noncommercial research use only.
+  Redistribution and commercial use remain unapproved. The immutable manifest
+  retains its earlier pending status; see [source policy](SOURCE_POLICY.md).
 - No normalization, clock, score reconciliation, xG/xT, player ratings, networks,
   dashboards, scraping or AI agent implemented. FIL-003 and later gates remain
   unpassed. The historical v0.2 notebook/evidence packet is absent and unverified.

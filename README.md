@@ -66,7 +66,7 @@ x86_64 / Python 3.11.14 is locally validated; other platforms are unverified.
 - [Current status](docs/STATUS.md)
 - [FIL-001 verification](docs/FIL-001_VERIFICATION.md)
 - [FIL-002 verification](docs/FIL-002_VERIFICATION.md)
-- [Source terms and unclosed rights gates](docs/SOURCE_POLICY.md)
+- [Source terms and scoped gate assessment](docs/SOURCE_POLICY.md)
 - [Local manifest specification](docs/SOURCE_MANIFEST.md)
 - [Historical bootstrap review](docs/BOOTSTRAP_REVIEW.md)
 
@@ -107,4 +107,7 @@ reviewed source-pin change. Read [manifest behavior](docs/SOURCE_MANIFEST.md)
 for checks, atomic publication and limits.
 
 An integrity PASS from this CLI is not DATA-SOURCE or DEL-SOURCE approval:
-the rights condition is tracked separately and remains pending owner confirmation.
+the rights assessment is tracked separately in SOURCE_POLICY.md. The owner has
+confirmed registration and noncommercial research use for the reviewed fixture,
+so those source gates pass within that scope. The immutable manifest/CLI retains
+its acquisition-time pending status; it is not rewritten by a later confirmation.

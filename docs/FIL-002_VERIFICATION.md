@@ -149,14 +149,19 @@ of every raw file and the manifest. Git status remained clean.
 ## Rights and gate assessment
 
 See [SOURCE_POLICY.md](SOURCE_POLICY.md) for source clauses and attribution.
-Technical source checks PASS for this pin. **DATA-SOURCE: PENDING** and
-**DEL-SOURCE: PENDING**: owner registration/terms compliance remains unconfirmed.
+Technical source checks PASS for this pin. On 2026-10-19 the owner confirmed
+**"Registration completed; noncommercial research"**. Combined with the recorded
+integrity and metadata evidence, **DATA-SOURCE: PASS** and **DEL-SOURCE: PASS**
+for local noncommercial research on this pinned fixture. This is an owner
+attestation; no provider account was independently checked.
 The broad README research wording does not override the more restrictive PDF
 terms. No redistribution/commercial permission is inferred, and no provider
 files or datasets have been committed or publicly redistributed.
 
-Only local noncommercial research acquisition is performed. Owner confirmation
-is needed before closing the rights condition. No normalization or later gate
+Only local noncommercial research acquisition is performed. The acquisition-time
+manifest still reports pending: it predates the owner's confirmation and is
+preserved unchanged. This section and SOURCE_POLICY.md record the later rights
+assessment, without altering raw bytes or inventing a new acquisition. No normalization or later gate
 is passed; FIL-003 is not implemented. Linux x86_64 / Python 3.11.14 is tested;
 other platforms and hosted CI are reported separately when observable.
 
@@ -178,3 +183,20 @@ workflow, or provide working API access for those operations. Neither a missing
 CLI token value nor failed API access was treated as missing Git access: native
 Git reads/pushes succeeded. No credentials were printed/requested or permissions
 broadened. No merge, deployment or environment publication performed.
+
+
+## Owner confirmation follow-up
+
+Owner response: "Registration completed; noncommercial research" (2026-10-19).
+This closes the recorded registration/use-confirmation condition only. No raw
+redistribution, commercial use, publication, merge, deployment or next milestone
+is authorized by that reply. CLI verification was repeated offline after the
+reply, and the canonical manifest digest was checked against the original value.
+The historical pending CLI output in the command table remains unchanged.
+
+
+Follow-up checks (all exit 0): the same documented offline `verify` command;
+independent SHA-256 comparison of the manifest to
+`f9d1b52d9d736972df029a64480d8e2853a3cbf88f251bb2478c6e0f4da6952c`;
+`uv run --frozen ruff check .`; `uv run --frozen pytest -q` (41 passed,
+0 skipped); and `git diff --check`. No implementation or provider files changed.
