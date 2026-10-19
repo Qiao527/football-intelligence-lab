@@ -159,3 +159,22 @@ Only local noncommercial research acquisition is performed. Owner confirmation
 is needed before closing the rights condition. No normalization or later gate
 is passed; FIL-003 is not implemented. Linux x86_64 / Python 3.11.14 is tested;
 other platforms and hosted CI are reported separately when observable.
+
+
+## Hosted CI and PR delivery
+
+`git push -u origin feat/fil-002-data-acquisition` succeeded (exit 0).
+`gh pr create --repo Qiao527/football-intelligence-lab --base main --head feat/fil-002-data-acquisition --title "feat: acquire pinned StatsBomb fixture with provenance (FIL-002)" --body-file docs/FIL-002_PR.md`
+failed (exit 1): `Post "https://api.github.com/graphql": Forbidden`.
+`gh run list --repo Qiao527/football-intelligence-lab --branch feat/fil-002-data-acquisition --limit 5 --json databaseId,headSha,status,conclusion,url`
+also failed (exit 1), with API Forbidden. No PR was created by that command and
+no hosted CI result is claimed. Local package/CI-equivalent checks pass as
+recorded above; remote Actions status remains unverified.
+
+The [prepared PR body](FIL-002_PR.md) is committed for review. GitHub supplied
+this [PR creation link](https://github.com/Qiao527/football-intelligence-lab/pull/new/feat/fil-002-data-acquisition).
+A maintainer can create the PR with that description and inspect the hosted
+workflow, or provide working API access for those operations. Neither a missing
+CLI token value nor failed API access was treated as missing Git access: native
+Git reads/pushes succeeded. No credentials were printed/requested or permissions
+broadened. No merge, deployment or environment publication performed.

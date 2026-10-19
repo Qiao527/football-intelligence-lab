@@ -18,6 +18,7 @@
 - No normalization, clock, score reconciliation, xG/xT, player ratings, networks,
   dashboards, scraping or AI agent implemented. FIL-003 and later gates remain
   unpassed. The historical v0.2 notebook/evidence packet is absent and unverified.
-- Original references, LICENSE and dependency lock are unchanged. Hosted CI and
-  PR delivery status will be recorded in the verification report; no merge or
-  deployment performed.
+- Original references, LICENSE and dependency lock are unchanged. Branch is
+  pushed; API Forbidden responses block PR creation and hosted CI observation.
+  The prepared PR body and exact failures are in the verification report.
+  No merge, deployment or environment publication performed.
