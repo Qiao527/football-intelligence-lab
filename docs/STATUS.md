@@ -7,8 +7,9 @@
 - Local editable and regular installations pass Ruff and all four tests
   (zero skipped). Wheel/source distribution build succeeds. Fresh-checkout
   evidence and hosted CI status are recorded in [FIL-001 verification](FIL-001_VERIFICATION.md).
-- ENG-FOUNDATION has local verification; remote CI/review must be reported
-  separately. No DEL-* delivery stage or DATA-* validation gate has passed.
+- ENG-FOUNDATION passes local/fresh-clone verification. Hosted CI results and
+  PR creation are blocked by GitHub API Forbidden responses; remote CI/review
+  remain outstanding. No DEL-* delivery stage or DATA-* validation gate has passed.
 - FIL-002 is the next separately scoped task: source acquisition, licensing,
   attribution and provenance are still required. No match data is present.
 - FIL-003/004 and later work remain unimplemented: no normalization, clock,
