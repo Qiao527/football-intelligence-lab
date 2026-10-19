@@ -2,7 +2,7 @@ name: Engineering foundation
 
 on:
   push:
-    branches: [main, feat/fil-001-engineering-foundation]
+    branches: [main, "feat/**"]
   pull_request:
   workflow_dispatch:
 

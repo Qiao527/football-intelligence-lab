@@ -1,20 +1,26 @@
-# FIL project status — FIL-001
+# FIL project status — FIL-002
 
-- Bootstrap PR #1 is merged: inspected main baseline `f6ee527`.
-- Python engineering foundation implemented: Python 3.11.14, uv 0.12.23,
-  importable `fil` package, pinned build backend, committed dependency lock,
-  Ruff configuration, four packaging/environment smoke tests and CI workflow.
-- Local editable and regular installations pass Ruff and all four tests
-  (zero skipped). Wheel/source distribution build succeeds. Fresh-checkout
-  evidence and hosted CI status are recorded in [FIL-001 verification](FIL-001_VERIFICATION.md).
-- ENG-FOUNDATION passes local/fresh-clone verification. Hosted CI results and
-  PR creation are blocked by GitHub API Forbidden responses; remote CI/review
-  remain outstanding. No DEL-* delivery stage or DATA-* validation gate has passed.
-- FIL-002 is the next separately scoped task: source acquisition, licensing,
-  attribution and provenance are still required. No match data is present.
-- FIL-003/004 and later work remain unimplemented: no normalization, clock,
-  score/xG/xT, dashboards, ingestion CLI, scraping or product AI agent.
-- The historical v0.2 notebook and `evidence_packet.json` reported in the Master
-  Reference are absent and unverified in this checkout; no prototype was removed.
-- Original product reference and LICENSE are unchanged. Handbook edits only
-  resolve the gate naming inconsistency; see [mapping](GATES.md).
+- FIL-001 is merged (PR #2); this milestone starts from main `cde6c66`.
+- Source-preserving acquisition and offline verification CLI implemented for
+  Hudl/StatsBomb match 8658 at upstream revision
+  `4b73468fc5b0f1950f9f66fada70ad3a4f9327cb`. No runtime dependencies added.
+- Source records verify FIFA World Cup 2018 Final, 2018-07-15, France–Croatia.
+  Actual local events: 2,978; all IDs unique. Lineups and source terms acquired;
+  no 360/tracking availability assumed.
+- Original provider files and actual manifest are in ignored local `data/raw/`;
+  no provider datasets, documents or raw manifest are committed or packaged.
+- Frozen installs, Ruff, 41 offline tests (0 skipped), wheel/source build and
+  a cold-cache fresh regular installation/acquisition passed. Repeat acquisition
+  is offline and preserves file bytes/timestamps. See [evidence](FIL-002_VERIFICATION.md).
+- Source integrity checks pass. Following the owner's 2026-10-19 confirmation
+  "Registration completed; noncommercial research", DATA-SOURCE and DEL-SOURCE
+  PASS for this pinned match's local noncommercial research use only.
+  Redistribution and commercial use remain unapproved. The immutable manifest
+  retains its earlier pending status; see [source policy](SOURCE_POLICY.md).
+- No normalization, clock, score reconciliation, xG/xT, player ratings, networks,
+  dashboards, scraping or AI agent implemented. FIL-003 and later gates remain
+  unpassed. The historical v0.2 notebook/evidence packet is absent and unverified.
+- Original references, LICENSE and dependency lock are unchanged. Branch is
+  pushed; API Forbidden responses block PR creation and hosted CI observation.
+  The prepared PR body and exact failures are in the verification report.
+  No merge, deployment or environment publication performed.

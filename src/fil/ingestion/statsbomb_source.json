@@ -1,0 +1,49 @@
+{
+  "repository": "https://github.com/hudl/open-data",
+  "revision": "4b73468fc5b0f1950f9f66fada70ad3a4f9327cb",
+  "match": {
+    "match_id": 8658,
+    "competition_id": 43,
+    "competition_name": "FIFA World Cup",
+    "season_id": 3,
+    "season_name": "2018",
+    "match_date": "2018-07-15",
+    "home_team_id": 771,
+    "home_team_name": "France",
+    "away_team_id": 785,
+    "away_team_name": "Croatia",
+    "competition_stage": "Final"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "98a757466c4d931dba4b6c4290c55c2fe74e4550d7455bbe05fd884dc831aff3",
+      "size_bytes": 1753
+    },
+    {
+      "path": "LICENSE.pdf",
+      "sha256": "a5462e69aeb71a39268b760b110c5c2190a2e0cee3015ba976f66bd71f6c2bb4",
+      "size_bytes": 165130
+    },
+    {
+      "path": "data/competitions.json",
+      "sha256": "e6cd42f5d8956d6aa30fb917ce8d4c3b3df1879a93f02f8feba820930a6971fa",
+      "size_bytes": 34887
+    },
+    {
+      "path": "data/matches/43/3.json",
+      "sha256": "f89dbd4aedcaf9c9e4ec9d8e745d5d54596500ec357d7489c914a2f126805adf",
+      "size_bytes": 114527
+    },
+    {
+      "path": "data/events/8658.json",
+      "sha256": "a9aa72c042153fa351c3591ee11e7fba95b0c8841c4489da4aa6809de1edbdf5",
+      "size_bytes": 2490969
+    },
+    {
+      "path": "data/lineups/8658.json",
+      "sha256": "84696fa0d36f14e6aa557d9dcdf11f4ac0f304e6e7a547bb160f740f85a71f53",
+      "size_bytes": 18572
+    }
+  ]
+}
