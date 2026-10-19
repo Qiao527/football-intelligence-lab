@@ -23,5 +23,8 @@
   remains unpassed pending score reconciliation; no later analytics gate passes.
 - No score/xG/xT/player calculation, network, dashboard, AI agent or video/wall
   clock inference. FIL-005 and later implementation are outside this task.
-- Hosted FIL-004 CI/PR delivery is recorded separately when observable. No merge,
-  deployment, data-rights expansion or main-history rewrite performed.
+- FIL-004 branch is pushed; API Forbidden blocks PR creation and hosted CI
+  observation. The prepared description and exact parent-targeted creation link
+  are in the verification report. Local engineering scope is complete; hosted
+  validation and human acceptance remain outstanding. No merge, deployment,
+  data-rights expansion or main-history rewrite performed.

@@ -67,6 +67,9 @@ main (`git rebase --onto origin/main <recorded-parent-sha> <fil-004-branch>`).
 Do not merge old feature history wholesale or rebase the entire main-to-child
 range: that can reintroduce already-squashed FIL-002/FIL-003 commits.
 If the parent itself has advanced, reconcile and record its new anchor first.
+If remote parent branches were deleted after merge, use the retained recorded
+anchor and main merge/content evidence; a missing remote head alone is not a
+reason to discard downstream work.
 
 Inspect the resulting diff against main, resolve conflicts using the verified
 contracts, rerun affected/full checks and real-data verification, regenerate

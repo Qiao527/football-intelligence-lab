@@ -217,3 +217,33 @@ analytics gates remain unpassed**. FIL-004 is implemented/locally verified, not
 human accepted. Hosted child CI and independent/human review must be recorded
 separately. Source rights remain local noncommercial research only, with no
 redistribution, commercial-use, deployment or merge authorization.
+
+
+## Hosted validation and PR delivery
+
+`git push -u origin feat/fil-004-period-aware-clock` succeeded (exit 0).
+`gh pr create --repo Qiao527/football-intelligence-lab --base feat/fil-003-event-normalization --head feat/fil-004-period-aware-clock --title "feat: implement period-aware match clocks and filters (FIL-004)" --body-file docs/FIL-004_PR.md`
+failed (exit 1): `Post "https://api.github.com/graphql": Forbidden`.
+`gh run list --repo Qiao527/football-intelligence-lab --branch feat/fil-004-period-aware-clock --limit 5 --json databaseId,headSha,status,conclusion,url`
+also failed (exit 1), API Forbidden. No FIL-004 hosted PASS or PR creation is
+claimed. This is a delivery limitation, not a reason to discard verified work.
+The parent's hosted PASS is explicitly attributed to the owner.
+
+Prepared description: [FIL-004_PR.md](FIL-004_PR.md).
+Exact [stacked PR creation link](https://github.com/Qiao527/football-intelligence-lab/compare/feat/fil-003-event-normalization...feat/fil-004-period-aware-clock?expand=1)
+selects base FIL-003 and head FIL-004. A maintainer can create the PR/inspect
+Actions there, or provide working API access for those operations. No broader
+permissions or credentials were requested/changed.
+
+The final main/parent fetch still showed main `cde6c66` and unchanged parent
+heads, so no rebase/history rewrite was needed. Conditional squash-safe
+reconciliation is documented for when both parents merge. No acceptance,
+merge, deployment or rights expansion is claimed.
+
+Final package inspection (exit 0) confirmed both wheel and source distribution
+contain clock implementation but no raw/interim provider records/Parquet files.
+Snapshot checks again confirmed all raw/canonical bytes and mtimes unchanged.
+`git diff --exit-code <FIL-003-parent> -- pyproject.toml uv.lock LICENSE src/fil/schema.py src/fil/ingestion docs/SOURCE_POLICY.md <both-original-reference-documents>`
+passed (exit 0); `git diff --check` passed. Subsequent commits finalize only
+workflow/status/report/PR documentation; the tested clock implementation is
+unchanged. No behavioral assertions or checks were weakened.
