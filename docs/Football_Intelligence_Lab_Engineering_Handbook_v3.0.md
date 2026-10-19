@@ -561,16 +561,18 @@ T_{team,window} = \sum_{i\in Shots(team,window)} xG_i
 
 ### 10.1 从输入到发布的门禁
 
+**FIL-001 consistency correction:** `DATA-*` names below replace this section’s G0–G7; `DEL-*` identifies delivery stages in §33.2 and AGENTS.md. Acceptance requirements are unchanged. `ENG-FOUNDATION` is the separate FIL-001 engineering prerequisite. See [gate mapping](GATES.md).
+
 | Gate | 检查内容 | 失败行为 |
 |---|---|---|
-| G0 Source | URL/哈希/JSON/manifest 可复核 | 不入库 |
-| G1 Schema | 主键、period、types、必需字段 | quarantine |
-| G2 Time | period + index 稳定、时钟合法、区间没有错漏 | 停止 timeline 发布 |
-| G3 Spatial | 坐标合法、nullable 正确、方向符合设定 | 停止空间分析 |
-| G4 Shots | xG ∈ [0,1]、每脚 Shot 唯一、累计和一致 | 停止 xG 发布 |
-| G5 Score | goal / own-goal 去重与 official match score reconciliation | 停止最终比分发布 |
-| G6 Interaction | 不同图表同一个时间窗/状态 | 阻止 v0.3 验收 |
-| G7 Research | 角色、样本量、反证、可溯源满足要求 | candidate 不进入 verified |
+| DATA-SOURCE Source | URL/哈希/JSON/manifest 可复核 | 不入库 |
+| DATA-SCHEMA Schema | 主键、period、types、必需字段 | quarantine |
+| DATA-TIME Time | period + index 稳定、时钟合法、区间没有错漏 | 停止 timeline 发布 |
+| DATA-SPATIAL Spatial | 坐标合法、nullable 正确、方向符合设定 | 停止空间分析 |
+| DATA-SHOTS Shots | xG ∈ [0,1]、每脚 Shot 唯一、累计和一致 | 停止 xG 发布 |
+| DATA-SCORE Score | goal / own-goal 去重与 official match score reconciliation | 停止最终比分发布 |
+| DATA-INTERACTION Interaction | 不同图表同一个时间窗/状态 | 阻止 v0.3 验收 |
+| DATA-RESEARCH Research | 角色、样本量、反证、可溯源满足要求 | candidate 不进入 verified |
 
 **区分 hard fail 与 soft warning：** 非 Shot 无 `shot_xg` 合法；Shot 缺 xG 是 hard fail。未出现 `under_pressure` 不妨碍 xG 图表，但妨碍宣称完整 press intensity。`Half End` 缺失可能需 warning 和时间回退策略。
 
@@ -1008,7 +1010,7 @@ flowchart LR
 
 | 阶段 | 必须完成 | 禁止提前包装成结果的能力 | Exit Gate |
 |---|---|---|---|
-| **v0.3** | 8658 合法源 → normalized events、时钟/比分/Shot/xG/威胁、联动 UI、事件审计 | 自动战术因果、实际 22 人运动 | G0–G6 PASS |
+| **v0.3** | 8658 合法源 → normalized events、时钟/比分/Shot/xG/威胁、联动 UI、事件审计 | 自动战术因果、实际 22 人运动 | DATA-SOURCE / DATA-SCHEMA / DATA-TIME / DATA-SPATIAL / DATA-SHOTS / DATA-SCORE / DATA-INTERACTION PASS |
 | **v0.4** | 时段传球网络、progression v1、换人/比分状态比较 | “某人最重要”的总体评价 | 有向图每条边回溯 pass IDs |
 | **v0.5** | Possession、Player Profiles、跨比赛角色对照、初始 xT | 仅按单场 xT 给能力总榜 | 分组定义/训练数据/分母可追踪 |
 | **v0.6** | 路径瓶颈、网络韧性、异常发现、独立 holdout 和反证 | 静态图节点删除=真实换人因果 | 每个 candidate 有正反证与不确定性 |
@@ -1163,7 +1165,7 @@ flowchart LR
 
 **原 v2.0 第一条实施指令（v3.0 现须先做 FIL-000 仓库审计）：**
 
-> 先阅读 Master Reference v1.0 和本 Engineering Handbook v3.0，进行 FIL-000 read-only 审计；不开发 AI Analyst、不重新设计整站。审计后按依赖优先实现未完成的 FIL-001～FIL-004：构建 Python 项目、受控取得 StatsBomb 8658 raw JSON、生成带 SHA256 的 source manifest、转成 canonical_events Parquet、完成 period-aware 时间模块和单元测试。展示 CLI 真实输出、测试报告与原始 event_id 查回能力。若数据不可用或规则未确定，明确说明 blocker，不用 mock 冒充真实比赛。未经 G0–G2 验证，不进入可视化开发。
+> 先阅读 Master Reference v1.0 和本 Engineering Handbook v3.0，进行 FIL-000 read-only 审计；不开发 AI Analyst、不重新设计整站。审计后按依赖优先实现未完成的 FIL-001～FIL-004：构建 Python 项目、受控取得 StatsBomb 8658 raw JSON、生成带 SHA256 的 source manifest、转成 canonical_events Parquet、完成 period-aware 时间模块和单元测试。展示 CLI 真实输出、测试报告与原始 event_id 查回能力。若数据不可用或规则未确定，明确说明 blocker，不用 mock 冒充真实比赛。未经 DEL-SOURCE / DEL-SCHEMA / DEL-TIME-SCORE 验证，不进入可视化开发。
 
 **v0.3 首个版本验收一句话：** 数据实取，时间不乱，xG 可验，点击可追踪，一窗驱动全部事实图表。
 
@@ -1511,19 +1513,19 @@ Validated Events
 | Issue | Codex 工作范围 | 必须提供的真实证据 | Gate |
 |---|---|---|---|
 | FIL-000 | 首次 repo audit：现有 notebook/branch/test/data | 真实文件清单与状态；不写代码 | baseline |
-| FIL-001 | Python project、lock、lint/test、CI | 在干净环境装依赖与运行结果 | G0 |
-| FIL-002 | 获取 8658 JSON + manifest/hash + rights | URL、SHA、fixture 元数据与抽检 | G0 |
-| FIL-003 | canonical_events/Parquet、event ID traceability | row counts、schema、reverse lookup | G1 |
-| FIL-004 | period-aware match clock | 45+、H2 开局、OT、period5 边界单测 | G2 |
-| FIL-005 | scoreboard、乌龙球/罚球归属 | 官方源比分对账、例外 case | G2 |
-| FIL-006 | shots、累计 xG、窗口威胁 | provider xG 和、窗口划分不重叠 | G3 |
-| FIL-007 | typed shared filters | 状态改变后各模块相同 slice | G4 |
-| FIL-008 | Timeline / xG / shot map UI | 交互录屏、空态、15-min 筛选 | G4 |
-| FIL-009 | event evidence drawer | 图点 → event_id → raw JSON 证明 | G4 |
-| FIL-010 | QC / regression / documentation | CI、告警、reproduce instructions | G5 |
-| FIL-011 | 人工功能验收 | 实测链接/录屏及签收记录 | G5 |
+| FIL-001 | Python project、lock、lint/test、CI | 在干净环境装依赖与运行结果 | ENG-FOUNDATION |
+| FIL-002 | 获取 8658 JSON + manifest/hash + rights | URL、SHA、fixture 元数据与抽检 | DEL-SOURCE |
+| FIL-003 | canonical_events/Parquet、event ID traceability | row counts、schema、reverse lookup | DEL-SCHEMA |
+| FIL-004 | period-aware match clock | 45+、H2 开局、OT、period5 边界单测 | DEL-TIME-SCORE |
+| FIL-005 | scoreboard、乌龙球/罚球归属 | 官方源比分对账、例外 case | DEL-TIME-SCORE |
+| FIL-006 | shots、累计 xG、窗口威胁 | provider xG 和、窗口划分不重叠 | DEL-SHOTS-WINDOWS |
+| FIL-007 | typed shared filters | 状态改变后各模块相同 slice | DEL-FILTERS-EVIDENCE |
+| FIL-008 | Timeline / xG / shot map UI | 交互录屏、空态、15-min 筛选 | DEL-FILTERS-EVIDENCE |
+| FIL-009 | event evidence drawer | 图点 → event_id → raw JSON 证明 | DEL-FILTERS-EVIDENCE |
+| FIL-010 | QC / regression / documentation | CI、告警、reproduce instructions | DEL-REVIEW |
+| FIL-011 | 人工功能验收 | 实测链接/录屏及签收记录 | DEL-REVIEW |
 
-**建议实践**：每次向 Codex 发送一个 Issue brief。若历史 repo 已经完成一些工作，先由 FIL-000 核验后更新状态，不重复造轮子；不可把 v0.2 的 Notebook 数据读取等同于全部 G1–G4 都完成。
+**建议实践**：每次向 Codex 发送一个 Issue brief。若历史 repo 已经完成一些工作，先由 FIL-000 核验后更新状态，不重复造轮子；不可把 v0.2 的 Notebook 数据读取等同于全部 DEL-SCHEMA / DEL-TIME-SCORE / DEL-SHOTS-WINDOWS / DEL-FILTERS-EVIDENCE 都完成。
 
 ### 33.3 PR 分割建议
 

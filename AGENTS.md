@@ -27,6 +27,8 @@
 - Report changed files, exact commands/exit codes, fixture provenance, failed/skipped tests, UX evidence (for UI tasks), risks and next dependency.
 - Do not publish/merge/deploy, enable broad network/credential permissions, install unreviewed plugins, or alter source data without explicit approval.
 
-## Phase gate
-- G0 Source usable + rights recorded → G1 Normalization and schema PASS → G2 Period-aware timing and score reconciliation PASS → G3 Shots/xG and windows PASS → G4 Shared filters + drilldown PASS → G5 v0.3 user review.
+## Engineering and delivery gates
+- ENG-FOUNDATION: reproducible Python 3.11 install, lockfile, lint, tests and CI definition (FIL-001); report remote CI separately. This does not pass any football data gate.
+- DEL-SOURCE: Source usable + rights recorded → DEL-SCHEMA: Normalization and schema PASS → DEL-TIME-SCORE: Period-aware timing and score reconciliation PASS → DEL-SHOTS-WINDOWS: Shots/xG and windows PASS → DEL-FILTERS-EVIDENCE: Shared filters + drilldown PASS → DEL-REVIEW: v0.3 user review.
+- Use DATA-* for the distinct validation gates in handbook §10.1. See `docs/GATES.md` for the legacy mapping; never use bare G0–G7 for new acceptance evidence.
 - No AI Analyst, cross-match causal claims or advanced simulation until their independent gates are met.

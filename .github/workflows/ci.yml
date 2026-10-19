@@ -1,0 +1,40 @@
+name: Engineering foundation
+
+on:
+  push:
+    branches: [main, feat/fil-001-engineering-foundation]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v6.0.1
+        with:
+          version: "0.12.23"
+          enable-cache: false
+      - name: Install pinned Python
+        run: uv python install
+      - name: Check manifest and lock agreement
+        run: uv lock --check
+      - name: Install from frozen lockfile
+        run: uv sync --frozen
+      - name: Lint
+        run: uv run --frozen ruff check .
+      - name: Test installed editable package
+        run: uv run --frozen pytest -q
+      - name: Build wheel and source distribution
+        run: uv build
+      - name: Test regular installation from empty environment
+        env:
+          UV_PROJECT_ENVIRONMENT: .venv-wheel
+        run: |
+          uv sync --frozen --no-editable
+          uv run --frozen --no-editable ruff check .
+          uv run --frozen --no-editable pytest -q
