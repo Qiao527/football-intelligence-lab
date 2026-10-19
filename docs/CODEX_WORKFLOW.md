@@ -17,6 +17,40 @@
 ## Recommended first execution
 Read AGENTS.md and the two project reference documents. Inspect the existing repository without changing files. Audit current v0.2 code and manifests against FIL-001–FIL-004. Report what exists, test coverage and discrepancies. Then implement ONLY the first missing prerequisite in a reviewable change, run actual checks and show evidence. Do not start AI Analyst, network simulation, a new frontend stack or unauthorized API scraping.
 
+## Autonomous stacked development (owner policy, 2026-10-19)
+
+Do not stop solely because a completed upstream implementation is unmerged.
+When its branch is available, suitable and validated, create the dependent
+feature branch from that branch's verified SHA. Inspect its source/rights status,
+run applicable checks, and record evidence and unresolved assumptions. Continue
+planning, implementing, testing, self-reviewing and fixing within approved scope;
+stop for material blockers, mandatory approvals or scope completion.
+
+For FIL-003 the parent is `feat/fil-002-data-acquisition`, PR #3. The owner reports
+that PR exists and hosted CI passed; independently record local checks rather
+than treating that report as a newly observed CI run. A stacked FIL-003 PR should
+target that parent branch so its diff contains FIL-003 changes only. Record the
+exact parent SHA and use `git diff <parent-sha>...HEAD` for independent review.
+Develop in the existing checkout; do not create worktrees unless requested.
+
+Before delivery, fetch the parent again. If it changed, inspect and reconcile
+with the downstream branch (preserve existing work), then rerun all affected
+tests. Do not silently reset the branch or ignore conflicting schema/rights
+changes. If upstream is squash-merged, reconcile downstream onto the resulting
+main history and retarget its PR so upstream commits are not reintroduced.
+Retargeting/reconciliation does not authorize merging into main.
+
+Record parent branch/SHA, dependency PR, changed files, commands/exit codes,
+source provenance, limitations and upstream assumptions in each stacked PR.
+GitHub API Forbidden responses do not invalidate completed engineering work:
+push/preserve the branch, save the prepared PR body and provide the exact
+GitHub PR creation link with the intended base branch.
+
+Never bypass failing tests, expand data rights, merge into main, deploy or make
+material architecture changes without approval. Implemented, locally verified,
+hosted-CI verified and human accepted are distinct states. A milestone is not
+accepted until required validation and human approval are complete.
+
 ## Starred-tool policy
 - Frameworks are **references**, not mandatory global plugins. Default: repo-native AGENTS.md + three narrow FIL skills + tests.
 - Evaluate addyosmani/agent-skills OR obra/superpowers on a throwaway branch; compare against baseline; adopt only a useful subset after license/security review.

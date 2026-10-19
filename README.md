@@ -1,8 +1,9 @@
 # Football Intelligence Lab (FIL)
 
-FIL provides a reproducible Python foundation and a source-preserving acquisition
-workflow for one pinned historical StatsBomb match. It implements no metrics,
-normalization, dashboards or AI agent and has no runtime dependencies. The
+FIL provides a reproducible Python foundation, immutable source acquisition and
+canonical event normalization for one pinned historical StatsBomb match. It
+implements no calculated metrics, reconstructed match clock, dashboards or AI
+agent. PyArrow is the sole runtime dependency, used for typed Parquet storage. The
 historical v0.2 notebook reported in the product reference is absent here.
 
 ## Clean installation and checks
@@ -41,7 +42,7 @@ The isolated build backend is exactly pinned in `pyproject.toml`. Package versio
 Keep `uv.lock` committed. After an intentional reviewed dependency change, use
 `uv lock`, inspect the diff, then rerun all frozen checks. Also run
 `uv lock --check`: frozen sync alone does not reject every stale manifest.
-Do not add analytics libraries until a scoped task needs them.
+PyArrow is pinned for FIL-003 storage. Add further libraries only when a scoped task needs them.
 
 Test a separate, regular (non-editable) installation:
 
@@ -64,6 +65,9 @@ x86_64 / Python 3.11.14 is locally validated; other platforms are unverified.
 - [Gate definitions and legacy mapping](docs/GATES.md)
 - [Development workflow](docs/CODEX_WORKFLOW.md)
 - [Current status](docs/STATUS.md)
+- [Stacked development policy](docs/CODEX_WORKFLOW.md)
+- [Canonical schema and normalization CLI](docs/CANONICAL_EVENTS.md)
+- [FIL-003 evidence and upstream dependency](docs/FIL-003_VERIFICATION.md)
 - [FIL-001 verification](docs/FIL-001_VERIFICATION.md)
 - [FIL-002 verification](docs/FIL-002_VERIFICATION.md)
 - [Source terms and scoped gate assessment](docs/SOURCE_POLICY.md)
@@ -111,3 +115,47 @@ the rights assessment is tracked separately in SOURCE_POLICY.md. The owner has
 confirmed registration and noncommercial research use for the reviewed fixture,
 so those source gates pass within that scope. The immutable manifest/CLI retains
 its acquisition-time pending status; it is not rewritten by a later confirmation.
+
+
+## FIL-003: canonical normalization (offline)
+
+FIL-003 is stacked on validated `feat/fil-002-data-acquisition` (PR #3), not
+blocked on its merge. See the workflow and verification documents for its exact
+parent SHA and acceptance status. Review the source policy before using data.
+
+From the matching clean implementation checkout, acquire the raw bundle above
+if it is not already present, then:
+
+```bash
+raw_bundle=data/raw/statsbomb/8658/4b73468fc5b0f1950f9f66fada70ad3a4f9327cb
+uv run --frozen python -m fil.ingestion.normalize build \
+  --raw-bundle "$raw_bundle" --pipeline-revision "$(git rev-parse HEAD)"
+```
+
+Use the returned `dataset` directory for verification or lookup:
+
+```bash
+uv run --frozen python -m fil.ingestion.normalize verify \
+  --raw-bundle "$raw_bundle" --dataset "$dataset"
+uv run --frozen python -m fil.ingestion.normalize lookup \
+  --raw-bundle "$raw_bundle" --dataset "$dataset" \
+  --event-id 4a44199a-3111-4e28-b567-9c1393e68dff
+```
+
+Set `dataset` to the path printed by build (it includes source-manifest digest,
+adapter version and implementation SHA). Outputs are ignored under
+`data/interim/events/`: Parquet, a full null/count quality report and an artifact
+manifest. `--output-root` may select another ignored directory, never inside the
+raw bundle. Normalization verifies the FIL-002 source bundle first and never
+fetches or modifies it. Failures exit 1; usage errors exit 2.
+
+Every source event is retained, including unrecognized types. Rebuilds verify
+and reuse valid existing outputs without rewriting them. New roots generate
+semantically identical tables with the same pinned implementation and source;
+creation timestamps may differ. A corrupt artifact fails closed and is never
+silently replaced. See the schema document for transformations and limitations.
+
+Both raw and canonical records remain restricted to local noncommercial
+research; neither Git, package artifacts nor a PR should contain provider data.
+A copied provider `shot_xg` field is not a calculated xG metric. Clock, score,
+spatial-direction and metric gates are outside FIL-003.

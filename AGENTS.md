@@ -21,6 +21,9 @@
 ## Development discipline
 - **Codex is the primary implementing agent.** Work as lead engineer: inspect before editing; propose a scoped implementation plan; implement a vertical slice; test; self-review; provide actual evidence.
 - Prefer small, reviewable PRs aligned with one FIL issue. Avoid refactoring unrelated modules or adding microservices/agent orchestration during v0.3.
+- Support stacked development: a completed, validated, suitable upstream feature branch may be the parent of a dependent branch before merge. Record its branch/SHA, dependency PR, evidence and assumptions; lack of merge alone is not a blocker. See `docs/CODEX_WORKFLOW.md`.
+- Continue scoped implementation, tests, self-review and fixes autonomously. Reconcile parent changes and rerun affected checks before delivery. API Forbidden is a delivery limitation: retain/push verified work and provide the exact PR creation link.
+- Distinguish implemented/verified from human-accepted. Never merge into main, deploy, bypass failed tests, expand data rights or make material architecture changes without approval.
 - Python 3.11 target, type hints for public interfaces; use Pandas/Parquet/DuckDB. Keep math in `src/fil/`, never hidden in UI callbacks.
 - Tests must cover happy path, malformed source, period transitions, own goal/penalty exceptions, no-shot windows, duplicate event IDs, data provenance, and idempotent rebuilds as applicable.
 - Run `ruff check .` and `pytest -q` whenever environment supports them. If unavailable, record blockers and do not report PASS.
