@@ -258,3 +258,30 @@ FIL-002 source bundle; there is no new arbitrary source/URL importer.
 FIL-003 is ready for independent review, not accepted or merged. Human approval
 and applicable hosted validation remain outstanding. No FIL-004 implementation,
 merge, deployment, public data redistribution or commercial use is authorized.
+
+
+## Delivery and hosted validation
+
+`git push -u origin feat/fil-003-event-normalization` succeeded (exit 0).
+`gh pr create --repo Qiao527/football-intelligence-lab --base feat/fil-002-data-acquisition --head feat/fil-003-event-normalization --title "feat: normalize canonical events with source traceability (FIL-003)" --body-file docs/FIL-003_PR.md`
+failed (exit 1): `Post "https://api.github.com/graphql": Forbidden`.
+`gh run list --repo Qiao527/football-intelligence-lab --branch feat/fil-003-event-normalization --limit 5 --json databaseId,headSha,status,conclusion,url`
+also failed (exit 1), API Forbidden. No child PR creation or hosted child CI
+PASS is claimed. This is a delivery limitation; the verified branch is retained.
+The parent's hosted PASS remains explicitly attributed to the owner's report.
+
+Prepared description: [FIL-003_PR.md](FIL-003_PR.md).
+Exact [stacked PR creation link](https://github.com/Qiao527/football-intelligence-lab/compare/feat/fil-002-data-acquisition...feat/fil-003-event-normalization?expand=1)
+selects base `feat/fil-002-data-acquisition` and head
+`feat/fil-003-event-normalization`, preserving an independently reviewable diff.
+A maintainer can open that PR and inspect child Actions, or provide working
+API access for those operations. No permission expansion, credential changes,
+merge or deployment was performed. Another final parent fetch confirmed the
+same SHA `5a18a4e1a417cfbf33941796552b25c9c8ab0c36`; no integration was needed.
+
+Final package inspection (exit 0) confirmed wheel/source distributions contain
+implementation/source pins but no raw/interim provider data or Parquet files.
+`git ls-files data/raw data/interim` returned no tracked data, `git check-ignore`
+confirmed the processed directory is ignored, and `git diff --check` passed.
+All local CI commands, 97 tests and builds passed on the final implementation;
+later commits only finalize documentation and the prepared PR body.

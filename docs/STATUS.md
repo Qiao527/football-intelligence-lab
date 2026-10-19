@@ -23,5 +23,7 @@
   only; later gates and FIL-004 remain unimplemented/unpassed.
 - Parent was re-fetched unchanged; no reconciliation needed. Original references,
   LICENSE, source policy, source acquisition code and raw provenance are intact.
-- FIL-003 hosted CI/PR delivery are recorded separately when observable. No
-  merge, deployment, rights expansion or material architecture change performed.
+- FIL-003 branch is pushed. API Forbidden blocks child PR creation and hosted
+  CI observation; the prepared PR body and parent-specific creation link are
+  recorded in the evidence. This delivery limitation does not discard verified
+  progress. No merge, deployment or rights expansion performed.
