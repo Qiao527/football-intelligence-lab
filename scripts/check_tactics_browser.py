@@ -84,6 +84,14 @@ def main():
             expect(page.get_by_test_id("stException")).to_have_count(0)
             assert not errors, errors
 
+        def native_axis_bounds():
+            for chart in page.get_by_test_id("stPlotlyChart").all():
+                assert chart.locator(".js-plotly-plot").evaluate("""e=>{
+                  const x=e._fullLayout.xaxis.range,y=e._fullLayout.yaxis.range;
+                  return Math.min(...x)>=-3 && Math.max(...x)<=123 &&
+                    Math.min(...y)>=-3 && Math.max(...y)<=83;
+                }"""), "Aspect-ratio resize expanded axes beyond native pitch bounds"
+
         def metrics(subset):
             ids = {e["id"] for e in subset}
             passes = [e for e in complete if e["id"] in ids]
@@ -135,6 +143,7 @@ def main():
             timeout=60000
         )
         metrics(raw)
+        native_axis_bounds()
         open_seconds = time.perf_counter() - began
         page.get_by_role(
             "heading", name="Tactical Dashboard", exact=True
@@ -254,6 +263,7 @@ def main():
               const legend=e.querySelector('.legend')?.getBoundingClientRect();
               return !title || !legend || title.bottom<=legend.top || legend.bottom<=title.top;
             }"""), "Mobile chart title overlaps legend"
+        native_axis_bounds()
         page.get_by_test_id("stPlotlyChart").nth(0).scroll_into_view_if_needed()
         page.screenshot(path=str(args.output / "mobile-network.png"))
         page.get_by_test_id("stExpandSidebarButton").click()

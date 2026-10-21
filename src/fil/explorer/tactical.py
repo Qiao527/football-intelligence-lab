@@ -121,8 +121,14 @@ def network_figure(edges, nodes, team: int, name: str, color: str, figure):
         )
     )
     fig.add_shape(type="rect", x0=0, x1=120, y0=0, y1=80, line=dict(color="#647a8c"))
-    fig.update_xaxes(range=[-3, 123], title="Native x")
-    fig.update_yaxes(range=[83, -3], title="Native y (down)", scaleanchor="x", scaleratio=1)
+    fig.update_xaxes(range=[-3, 123], title="Native x", constrain="domain")
+    fig.update_yaxes(
+        range=[83, -3],
+        title="Native y (down)",
+        scaleanchor="x",
+        scaleratio=1,
+        constrain="domain",
+    )
     # The common legend wraps above the plot on narrow screens and collides
     # with the title. The nearby caption already explains these two symbols.
     fig.update_layout(showlegend=False)
@@ -265,8 +271,10 @@ def render(events, selected, meta: dict, state, width: int, content_key: str, fi
                 ),
             )
         )
-    plot.update_xaxes(range=[0, 120], title="Native x")
-    plot.update_yaxes(range=[80, 0], title="Native y", scaleanchor="x", scaleratio=1)
+    plot.update_xaxes(range=[0, 120], title="Native x", constrain="domain")
+    plot.update_yaxes(
+        range=[80, 0], title="Native y", scaleanchor="x", scaleratio=1, constrain="domain"
+    )
     accept(
         st.plotly_chart(
             plot, key=f"tactical_progression_{token}", on_select="rerun", selection_mode="points"
