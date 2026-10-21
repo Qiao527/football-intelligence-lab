@@ -49,3 +49,44 @@ Hosted CI is unobserved while API access is denied; no merge is attempted or
 claimed. The integration PR targets main:
 https://github.com/Qiao527/football-intelligence-lab/compare/main...integrate/fil-003-005?expand=1
 Local verification details are recorded in the mission report after execution.
+
+## Executed clean-environment and real-data evidence
+
+Implementation `329362e86612d8320f1ee9ccd6d0eb6be01260ae` was cloned with
+no hardlinks into `/tmp/fil-integration-4ksmw_52/checkout`, initially empty uv
+cache. All commands below exited **0** on Python 3.11.14 / uv 0.12.23:
+
+- `uv lock --check`; `uv sync --frozen`; `uv run --frozen ruff check .`
+- `uv run --frozen pytest -q`: **253 passed**, 0 skipped (2.43s).
+- `uv build`: wheel and source distribution built.
+- `UV_PROJECT_ENVIRONMENT=.venv-regular uv sync --frozen --no-editable`
+- Regular frozen Ruff and pytest: **253 passed**, 0 skipped (2.21s).
+- Regular `python -m fil.ingestion.normalize build`, `python -m fil.time build`,
+  `python -m fil.metrics.score_cli build` and `verify`, all with actual integration
+  implementation SHA and verified raw/canonical/clock arguments.
+- `python scripts/verify_score_source.py RAW CANONICAL CLOCK SCORE`: independently
+  verifies all **2,978** source/canonical/clock/score states, six goal awards,
+  one own goal (two linked representations counted once), one scored penalty,
+  final **France 4–2 Croatia**, matching original official metadata.
+
+Raw source remains the official reviewed Hudl/StatsBomb revision
+`4b73468fc5b0f1950f9f66fada70ad3a4f9327cb`. Event SHA-256
+`a9aa72c042153fa351c3591ee11e7fba95b0c8841c4489da4aa6809de1edbdf5`;
+match metadata SHA-256
+`f89dbd4aedcaf9c9e4ec9d8e745d5d54596500ec357d7489c914a2f126805adf`.
+All original bundle file hashes/mtimes were checked before/after and unchanged.
+Exact command arrays, exits and generated input/output paths are retained locally
+in `/tmp/fil-integration-verification.json` and fresh-clone logs. Earlier FIL-005
+reports retain original code-specific manifest/output hashes as historical evidence.
+
+No licensing change, dependency drift beyond FIL-003's PyArrow 21.0.0, raw data
+modification, existing branch rewrite or conflict. Two regression failures were
+corrected rather than bypassed. No hosted success or merge is claimed.
+
+Later environment inspection identified api.github.com missing from the current
+network destination list. A draft adds only that custom host, preserving presets,
+plus tested install/start instructions; save returned requires_publish=true.
+Owner must review/save/publish that environment draft, then retry the authorized
+API once. Exact denial cause/API auth remains unconfirmed until activation;
+no credentials were extracted or replaced. This is the one-time delivery action,
+not a reason to discard the verified integration or block product implementation.
