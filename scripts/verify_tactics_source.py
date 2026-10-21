@@ -201,7 +201,7 @@ def main():
     for r in pq.read_table(folder / "comparisons.parquet").to_pylist():
         subset = [
             e
-            for e in original
+            for e in raw
             if e["team"]["id"] == r["team_id"]
             and (
                 e["period"] == int(r["selection"].split()[-1])
