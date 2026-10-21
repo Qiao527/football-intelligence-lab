@@ -106,9 +106,24 @@ def window_threat(events: pa.Table, teams: tuple[int, ...], width_ms: int) -> li
     """Transparent period-bin sum of source xG, not possession/control/pressing intensity."""
     clock = clock_view(events)
     result = []
+    all_shots = build_shots(events)
+    records = all_shots.to_pylist()
     for period in sorted(set(events["period"].to_pylist()) - {5}):
         for segment in partition_period(clock, period, width_ms):
-            shot_rows = build_shots(apply_filter(events, MatchFilter((segment,))))
+            shot_rows = all_shots.filter(
+                pa.array(
+                    [
+                        r["period"] == period
+                        and (
+                            segment.start_ms <= r["period_elapsed_ms"] < segment.end_ms
+                            or segment.include_terminal
+                            and r["period_elapsed_ms"] == segment.end_ms
+                        )
+                        for r in records
+                    ],
+                    type=pa.bool_(),
+                )
+            )
             duration = (segment.end_ms - segment.start_ms) / 60000
             for team in teams:
                 result.append(

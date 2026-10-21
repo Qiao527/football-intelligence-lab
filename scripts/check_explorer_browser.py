@@ -101,13 +101,13 @@ def main() -> None:
         point.scroll_into_view_if_needed()
         box = point.bounding_box()
         page.mouse.click(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
-        expect(page.get_by_test_id("stCode").locator("code")).to_have_text(
-            expected_id, timeout=30000
-        )
+        expect(page.get_by_test_id("stCode")).to_have_text(expected_id, timeout=30000)
         source = next(e for e in raw if e["id"] == expected_id)
         expect(
             page.get_by_text(f"Provider timestamp {source['timestamp']}", exact=False)
         ).to_be_visible()
+        page.get_by_role("heading", name="Source evidence", exact=True).scroll_into_view_if_needed()
+        page.mouse.move(0, 0)
         page.screenshot(path=str(args.output / "event-evidence.png"))
         checks.append(f"real shot-map click resolves exact original ID {expected_id} and timestamp")
         page.get_by_role("button", name="Reset filters", exact=True).click()
@@ -139,6 +139,17 @@ def main() -> None:
         )
         no_errors()
         checks.append("390px mobile viewport renders without page horizontal overflow")
+        page.get_by_test_id("stExpandSidebarButton").get_by_role("button").click()
+        select("Team", "Croatia")
+        mobile_rows = [e for e in raw if e["team"]["id"] == 785]
+        mobile_shots = [e for e in mobile_rows if e["type"]["name"] == "Shot"]
+        metrics(
+            len(mobile_rows),
+            len(mobile_shots),
+            math.fsum(e["shot"]["statsbomb_xg"] for e in mobile_shots),
+        )
+        page.screenshot(path=str(args.output / "mobile-filters.png"))
+        checks.append("mobile sidebar opens and team filter updates the same metrics")
         browser.close()
     result = {
         "checks": checks,

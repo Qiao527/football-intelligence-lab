@@ -60,3 +60,8 @@ def test_shared_ui_filter_reset_and_empty_state(score_events, tmp_path, monkeypa
     assert not app.exception
     assert [m.value for m in app.metric][:2] == ["9", "3"]
     assert app.selectbox(key="event_choice").value == score_events[0]["id"]
+    app.run()  # A later interaction/rerun must not resurrect the old frontend filters.
+    assert [m.value for m in app.metric][:2] == ["9", "3"]
+    assert app.selectbox(key="period_choice").value == "Full match"
+    assert app.selectbox(key="team_choice").value is None
+    assert app.selectbox(key="type_choice").value is None

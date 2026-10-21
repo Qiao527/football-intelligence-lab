@@ -98,3 +98,17 @@ are in [STACK_RECONCILIATION.md](STACK_RECONCILIATION.md). Reconcile each child
 using its latest incorporated parent anchor, propagating rewritten parents
 through the stack. Keep recoverable refs and rerun verification before updating
 published feature branches. No merge is authorized by this procedure.
+
+## 2026-10-21 mission authorization
+
+The owner supersedes the earlier sequential rebase plan for the existing stack:
+consolidate FIL-003–005 changes from the FIL-002 feature anchor into a clean branch
+on squash-merged main, preserving recoverable original refs/PRs. See
+reports/INTEGRATION.md. Only this reviewed integration may be merged autonomously
+after hosted CI, clean merge state, corrected critical findings and unchanged
+rights. No direct main push or protections bypass. Future low-risk merges need
+an explicitly established authorized quality-gated workflow; product work is
+not covered by the one-off integration grant. Reversible scoped product work,
+local testing, screenshots and dependency additions needed for v0.3 are authorized.
+Network/API activation remains a one-time environment/repository administration
+step, not grounds for retry loops or credential workarounds.

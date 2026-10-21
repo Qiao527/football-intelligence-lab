@@ -46,7 +46,7 @@ text-transform:uppercase}
 letter-spacing:-.04em;
 margin:12px 0}.subtle{color:#a9b7ca;
 font-size:13px}
-[data-testid="stToolbar"]{display:none}
+[data-testid="stAppDeployButton"]{display:none}
 [data-testid="stSidebar"]{background:#101c2a} button{border-radius:8px!important}
 </style>""",
     unsafe_allow_html=True,
@@ -63,6 +63,7 @@ def figure(title: str, height: int = 320) -> go.Figure:
     fig.update_layout(
         title=dict(text=title, font=dict(color="#e3edf7", size=15)),
         height=height,
+        clickmode="event+select",
         paper_bgcolor="#0c1420",
         plot_bgcolor="#111e2d",
         font=dict(color="#bac8d9", family="system-ui"),
@@ -112,19 +113,20 @@ def main() -> None:
 
         def reset():
             for key in tuple(st.session_state):
-                if key.startswith("window_") or key == "last_map_click":
-                    st.session_state.pop(key, None)
-            for key in (
-                "period_choice",
-                "window_choice",
-                "team_choice",
-                "player_choice",
-                "type_choice",
-                "outcome_choice",
-                "event_choice",
-                "match_filter",
-            ):
-                st.session_state.pop(key, None)
+                if key.startswith("window_Full") or key.startswith("window_Period"):
+                    st.session_state[key] = None
+            st.session_state.update(
+                {
+                    "period_choice": "Full match",
+                    "team_choice": None,
+                    "player_choice": None,
+                    "type_choice": None,
+                    "outcome_choice": None,
+                    "event_choice": rows[0]["event_id"],
+                    "selection_epoch": st.session_state.get("selection_epoch", 0) + 1,
+                }
+            )
+            st.session_state.pop("last_map_click", None)
 
         st.button("Reset filters", on_click=reset, use_container_width=True)
         options = ["Full match"] + [f"Period {p}" for p in periods]
@@ -303,7 +305,7 @@ def main() -> None:
         selection = st.plotly_chart(
             pitch,
             use_container_width=True,
-            key="shot_map",
+            key=f"shot_map_{st.session_state.get('selection_epoch', 0)}",
             on_select="rerun",
             selection_mode="points",
         )
@@ -333,8 +335,10 @@ def main() -> None:
         )
     threat.update_layout(barmode="group")
 
+    threat_key = f"threat_selection_{st.session_state.get('selection_epoch', 0)}"
+
     def select_threat_window():
-        points = st.session_state["window_threat"].selection.points
+        points = st.session_state[threat_key].selection.points
         if points:
             values = points[-1].get("customdata", [])
             for i, b in enumerate(bins):
@@ -344,7 +348,7 @@ def main() -> None:
     st.plotly_chart(
         threat,
         use_container_width=True,
-        key="window_threat",
+        key=threat_key,
         on_select=select_threat_window,
         selection_mode="points",
     )
