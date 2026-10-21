@@ -254,7 +254,7 @@ def main() -> None:
                     showlegend=False,
                 )
             )
-        curve.update_xaxes(title="Chronological event minutes · includes stoppage, excludes breaks")
+        curve.update_xaxes(title="Event clock (minutes)")
         curve.update_yaxes(title="Cumulative source xG")
         st.plotly_chart(curve, use_container_width=True, key="xg_curve")
     with right:

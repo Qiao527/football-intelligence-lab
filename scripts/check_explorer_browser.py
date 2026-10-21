@@ -133,13 +133,14 @@ def main() -> None:
         page.get_by_role("button", name="Reset filters", exact=True).click()
         metrics(len(raw), 23, math.fsum(e["shot"]["statsbomb_xg"] for e in all_shots))
         page.set_viewport_size({"width": 390, "height": 844})
+        page.locator(".match-head").scroll_into_view_if_needed()
         page.screenshot(path=str(args.output / "mobile.png"))
         assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth"), (
             "Horizontal overflow"
         )
         no_errors()
         checks.append("390px mobile viewport renders without page horizontal overflow")
-        page.get_by_test_id("stExpandSidebarButton").get_by_role("button").click()
+        page.get_by_test_id("stExpandSidebarButton").click()
         select("Team", "Croatia")
         mobile_rows = [e for e in raw if e["team"]["id"] == 785]
         mobile_shots = [e for e in mobile_rows if e["type"]["name"] == "Shot"]
