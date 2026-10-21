@@ -5,6 +5,7 @@ import json
 import math
 import os
 from pathlib import Path
+from time import perf_counter
 
 import plotly.graph_objects as go
 import streamlit as st
@@ -19,7 +20,21 @@ from fil.metrics.shots import (
     totals,
     window_threat,
 )
+from fil.metrics.spatial import spatial_report
 from fil.time.clock import PeriodRange, partition_period
+
+_TIMINGS = {}
+_LAST_STAGE = perf_counter()
+ALL_VALUES = "__fil_all_values__"
+
+
+def mark(stage: str) -> None:
+    """Optional local profiling only; never includes provider records."""
+    global _LAST_STAGE
+    now = perf_counter()
+    _TIMINGS[stage] = now - _LAST_STAGE
+    _LAST_STAGE = now
+
 
 st.set_page_config(page_title="FIL · Match Explorer", page_icon="⚽", layout="wide")
 st.markdown(
@@ -48,6 +63,15 @@ margin:12px 0}.subtle{color:#a9b7ca;
 font-size:13px}
 [data-testid="stAppDeployButton"]{display:none}
 [data-testid="stSidebar"]{background:#101c2a} button{border-radius:8px!important}
+@media(max-width:600px){
+  .match-head{padding:20px}.score{font-size:28px}
+  [data-testid="stHorizontalBlock"]:has([data-testid="stMetric"]){
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  [data-testid="stHorizontalBlock"]:has([data-testid="stMetric"]) >
+    [data-testid="stColumn"]{width:100%!important;min-width:0!important}
+  [data-testid="stMetric"]{padding:12px}
+  [data-testid="stMetricValue"]{font-size:26px}
+}
 </style>""",
     unsafe_allow_html=True,
 )
@@ -67,8 +91,8 @@ def figure(title: str, height: int = 320) -> go.Figure:
         paper_bgcolor="#0c1420",
         plot_bgcolor="#111e2d",
         font=dict(color="#bac8d9", family="system-ui"),
-        margin=dict(l=24, r=24, t=46, b=35),
-        legend=dict(orientation="h", y=1.15),
+        margin=dict(l=24, r=24, t=70, b=35),
+        legend=dict(orientation="h", y=1.02, yanchor="bottom", x=0),
     )
     fig.update_xaxes(gridcolor="#283647", zeroline=False)
     fig.update_yaxes(gridcolor="#283647", zeroline=False)
@@ -84,17 +108,39 @@ def main() -> None:
     try:
         config_body = Path(config_path).read_text()
         config = json.loads(config_body)
+        mark("page_setup_seconds")
         events, meta = verified(config_body, fingerprint(config))
+        mark("verification_seconds")
     except Exception as exc:
         st.error(f"Source verification failed. No analytics displayed: {exc}")
         st.stop()
     team_ids = (meta["home_team_id"], meta["away_team_id"])
     names = dict(zip(team_ids, (meta["home_team_name"], meta["away_team_name"]), strict=True))
     colors = {team_ids[0]: "#66c9ed", team_ids[1]: "#f8a56c"}
-    rows = events.to_pylist()
+    rows = events.select(
+        [
+            "event_id",
+            "period",
+            "provider_index",
+            "period_end_ms",
+            "chronological_ms",
+            "player_id",
+            "player_name",
+            "team_id",
+            "outcome",
+            "event_type",
+            "display_clock",
+            "score_home_before",
+            "score_home_after",
+            "score_away_before",
+            "score_away_after",
+        ]
+    ).to_pylist()
     full_shots = build_shots(events)
     cv = clock_view(events)
     periods = sorted(set(events["period"].to_pylist()) - {5})
+    spatial = meta.get("spatial") or spatial_report(events)
+    mark("view_preparation_seconds")
     st.html(
         f"""<div class="match-head">
     <div class="eyebrow">Football Intelligence Lab · Match Explorer</div>
@@ -112,44 +158,55 @@ def main() -> None:
         st.caption("One selection drives every foreground panel.")
 
         def reset():
-            for key in tuple(st.session_state):
-                if key.startswith("window_Full") or key.startswith("window_Period"):
-                    st.session_state[key] = None
             st.session_state.update(
                 {
+                    "window_selection": ALL_VALUES,
+                    "width_choice": 15,
                     "period_choice": "Full match",
-                    "team_choice": None,
-                    "player_choice": None,
-                    "type_choice": None,
-                    "outcome_choice": None,
+                    "team_choice": ALL_VALUES,
+                    "player_choice": ALL_VALUES,
+                    "type_choice": ALL_VALUES,
+                    "outcome_choice": ALL_VALUES,
                     "event_choice": rows[0]["event_id"],
                     "selection_epoch": st.session_state.get("selection_epoch", 0) + 1,
                 }
             )
             st.session_state.pop("last_map_click", None)
 
-        st.button("Reset filters", on_click=reset, use_container_width=True)
+        st.button("Reset filters", on_click=reset, width="stretch")
+
+        def clear_window():
+            st.session_state["window_selection"] = ALL_VALUES
+            st.session_state["selection_epoch"] = st.session_state.get("selection_epoch", 0) + 1
+            st.session_state.pop("last_map_click", None)
+
         options = ["Full match"] + [f"Period {p}" for p in periods]
-        period_choice = st.selectbox("Period", options, key="period_choice")
+        period_choice = st.selectbox("Period", options, key="period_choice", on_change=clear_window)
         selected_periods = (
             periods if period_choice == "Full match" else [int(period_choice.split()[-1])]
         )
         width = st.selectbox(
-            "Threat window", [5, 10, 15], index=2, format_func=lambda v: f"{v} minutes"
+            "Threat window",
+            [5, 10, 15],
+            index=2,
+            format_func=lambda v: f"{v} minutes",
+            key="width_choice",
+            on_change=clear_window,
         )
         bins = tuple(b for p in selected_periods for b in partition_period(cv, p, width * 60000))
-        # Window keys change with period/width, preventing stale incompatible range selections.
-        window = st.selectbox(
+        # Changing period/width clears the range; returning cannot resurrect an old bin.
+        window_choice = st.selectbox(
             "Time window",
-            [None, *range(len(bins))],
+            [ALL_VALUES, *range(len(bins))],
             format_func=lambda i: "Entire selected period(s)"
-            if i is None
+            if i == ALL_VALUES
             else (
                 f"P{bins[i].period} · {bins[i].start_ms / 60000:g}–"
                 f"{bins[i].end_ms / 60000:.2f} elapsed min"
             ),
-            key=f"window_{period_choice}_{width}",
+            key="window_selection",
         )
+        window = None if window_choice == ALL_VALUES else window_choice
         segments = (
             tuple(
                 PeriodRange(p, 0, next(r["period_end_ms"] for r in rows if r["period"] == p), True)
@@ -158,41 +215,45 @@ def main() -> None:
             if window is None
             else (bins[window],)
         )
-        team = st.selectbox(
+        team_choice = st.selectbox(
             "Team",
-            [None, *team_ids],
-            format_func=lambda t: "Both teams" if t is None else names[t],
+            [ALL_VALUES, *team_ids],
+            format_func=lambda t: "Both teams" if t == ALL_VALUES else names[t],
             key="team_choice",
         )
+        team = None if team_choice == ALL_VALUES else team_choice
         players = {
             r["player_id"]: r["player_name"]
             for r in rows
             if r["player_id"] is not None and (team is None or r["team_id"] == team)
         }
-        if st.session_state.get("player_choice") not in [None, *players]:
-            st.session_state["player_choice"] = None
-        player = st.selectbox(
+        if st.session_state.get("player_choice") not in [ALL_VALUES, *players]:
+            st.session_state["player_choice"] = ALL_VALUES
+        player_choice = st.selectbox(
             "Player",
-            [None, *sorted(players)],
-            format_func=lambda i: "All players" if i is None else players[i],
+            [ALL_VALUES, *sorted(players)],
+            format_func=lambda i: "All players" if i == ALL_VALUES else players[i],
             key="player_choice",
         )
-        kind = st.selectbox(
+        player = None if player_choice == ALL_VALUES else player_choice
+        kind_choice = st.selectbox(
             "Event type",
-            [None, *sorted(set(events["event_type"].to_pylist()))],
-            format_func=lambda v: v or "All event types",
+            [ALL_VALUES, *sorted(set(events["event_type"].to_pylist()))],
+            format_func=lambda v: "All event types" if v == ALL_VALUES else v,
             key="type_choice",
         )
-        outcome = st.selectbox(
+        kind = None if kind_choice == ALL_VALUES else kind_choice
+        outcome_choice = st.selectbox(
             "Outcome",
-            [None, *sorted({r["outcome"] for r in rows if r["outcome"]})],
-            format_func=lambda v: v or "All outcomes",
+            [ALL_VALUES, *sorted({r["outcome"] for r in rows if r["outcome"]})],
+            format_func=lambda v: "All outcomes" if v == ALL_VALUES else v,
             key="outcome_choice",
         )
+        outcome = None if outcome_choice == ALL_VALUES else outcome_choice
         st.divider()
         st.caption(
-            "Shot coordinates: StatsBomb 120 × 80. No inferred player tracking "
-            "or team-direction flips."
+            "Coordinates: provider 120 × 80, y increases downward. "
+            "Physical attacking ends are unknown; no team/period flips."
         )
         st.caption(
             "Noncommercial local research. Provider data is not covered by "
@@ -204,6 +265,7 @@ def main() -> None:
     shots = build_shots(selected)
     shot_rows = shots.to_pylist()
     selected_ids = set(selected["event_id"].to_pylist())
+    mark("filter_seconds")
     cols = st.columns(4)
     cols[0].metric("Selected events", str(selected.num_rows))
     cols[1].metric("Selected shots", str(shots.num_rows))
@@ -258,7 +320,7 @@ def main() -> None:
         curve.update_yaxes(title="Cumulative source xG")
         st.plotly_chart(curve, use_container_width=True, key="xg_curve")
     with right:
-        pitch = figure("Shot map · shared selection", 320)
+        pitch = figure("Shot map · provider coordinates", 320)
         pitch.add_shape(type="rect", x0=0, x1=120, y0=0, y1=80, line=dict(color="#647a8c"))
         for x0, x1 in [(0, 18), (102, 120)]:
             pitch.add_shape(type="rect", x0=x0, x1=x1, y0=18, y1=62, line=dict(color="#647a8c"))
@@ -313,11 +375,22 @@ def main() -> None:
             "★ Shot goal · ● Other outcome · marker size = 8 + 22√xG px (range "
             "8–30). Missing locations remain in the table."
         )
+        st.caption(
+            "Provider frame · 120 × 80 · y down · coordinates unchanged. "
+            + (
+                "Observed team/period goals corroborate a +x shot frame. "
+                if spatial["shot_positive_x_corroborated"]
+                else "Shot attacking direction remains uncertified. "
+            )
+            + "Physical pitch ends are unknown."
+        )
+        with st.expander("Coordinate frame and limits"):
+            st.json(spatial, expanded=False)
     threat = figure(f"Window threat · source xG sum / {width}-minute period bins", 230)
     # Reuse exactly the selected event IDs; bin assignment never reintroduces excluded events.
     full_windows = window_threat(events, team_ids, width * 60000)
     for t in team_ids:
-        bins_t = [r for r in full_windows if r["team_id"] == t]
+        bins_t = [r for r in full_windows if r["team_id"] == t and r["period"] in selected_periods]
         values = []
         for b in bins_t:
             values.append(sum(r["shot_xg"] for r in shot_rows if r["event_id"] in b["event_ids"]))
@@ -343,7 +416,7 @@ def main() -> None:
             values = points[-1].get("customdata", [])
             for i, b in enumerate(bins):
                 if values == [b.period, b.start_ms, b.end_ms]:
-                    st.session_state[f"window_{period_choice}_{width}"] = i
+                    st.session_state["window_selection"] = i
 
     st.plotly_chart(
         threat,
@@ -397,29 +470,26 @@ def main() -> None:
     score_fig.update_yaxes(dtick=1, title="Goals (shootout excluded)")
     score_fig.update_xaxes(title="Chronological event minutes")
     st.plotly_chart(score_fig, use_container_width=True, key="score_state")
+    mark("charts_seconds")
     table_col, evidence_col = st.columns([1.2, 1])
     with table_col:
         st.subheader("Event ledger")
-        table_rows = [
-            {
-                k: r[k]
-                for k in (
-                    "display_clock",
-                    "period",
-                    "provider_index",
-                    "event_type",
-                    "team_name",
-                    "player_name",
-                    "outcome",
-                    "shot_xg",
-                    "score_home_after",
-                    "score_away_after",
-                    "event_id",
-                )
-            }
-            for r in selected.to_pylist()
-        ]
-        st.dataframe(table_rows, use_container_width=True, hide_index=True, height=350)
+        table_rows = selected.select(
+            [
+                "display_clock",
+                "period",
+                "provider_index",
+                "event_type",
+                "team_name",
+                "player_name",
+                "outcome",
+                "shot_xg",
+                "score_home_after",
+                "score_away_after",
+                "event_id",
+            ]
+        )
+        st.dataframe(table_rows, width="stretch", hide_index=True, height=350)
         st.caption(
             f"{selected.num_rows} original records · every row retains its provider event ID"
         )
@@ -438,7 +508,12 @@ def main() -> None:
         if not ids:
             st.info("No events in this selection. Reset filters to explore the full match.")
         else:
-            by_id = {r["event_id"]: r for r in selected.to_pylist()}
+            by_id = {
+                r["event_id"]: r
+                for r in selected.select(
+                    ["event_id", "period", "display_clock", "event_type"]
+                ).to_pylist()
+            }
             chosen = st.selectbox(
                 "Original event",
                 ids,
@@ -448,7 +523,7 @@ def main() -> None:
                     f"{by_id[i]['event_type']} · {i[:8]}"
                 ),
             )
-            r = by_id[chosen]
+            r = selected.slice(ids.index(chosen), 1).to_pylist()[0]
             st.code(chosen, language=None)
             st.caption(
                 f"Provider timestamp {r['period_timestamp']} · index {r['provider_index']} · "
@@ -489,7 +564,12 @@ def main() -> None:
         "· Local noncommercial research only. No tracking, ratings, xT or AI "
         "claims."
     )
+    mark("ledger_evidence_seconds")
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    finally:
+        if path := os.environ.get("FIL_EXPLORER_PROFILE"):
+            Path(path).write_text(json.dumps(_TIMINGS, indent=2) + "\n")

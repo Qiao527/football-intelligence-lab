@@ -58,3 +58,12 @@ Numerical invariants: unique shot IDs, fsum team totals equal raw-source sums;
 last cumulative point equals team total; all bin IDs partition each included
 shot once; independent recomputation agrees at absolute tolerance 1e-12 for
 floating-point regrouping. Raw/canonical/clock/score records remain unchanged.
+
+
+Spatial metadata and uncertainty are defined in [SPATIAL.md](SPATIAL.md).
+`raw_statsbomb_120x80` and a world-fixed frame are distinct. Observed goal
+endpoints corroborate the identity shot display; physical attacking ends remain
+unknown. No team/period flip is applied. Cache keys include input file bytes,
+logical bundle roles and directory structure; invalid/symlink roots fail before
+cached verification can be reused. Every cache miss still recomputes the complete
+source → canonical → clock → score verification chain.

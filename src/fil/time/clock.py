@@ -118,7 +118,7 @@ def derive_clock(
     for key in ("source", "match_id", "source_revision", "source_manifest_sha256"):
         if len(set(canonical[key].to_pylist())) != 1:
             raise ClockError("Clock input must be one verified source/match/revision")
-    rows = canonical.to_pylist()
+    rows = canonical.select(["event_id", "period", "period_timestamp", "event_type"]).to_pylist()
     elapsed = [parse_period_timestamp(r["period_timestamp"]) for r in rows]
     period_order = [r["period"] for r in rows]
     if period_order != sorted(period_order):

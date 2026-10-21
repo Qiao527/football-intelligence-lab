@@ -123,6 +123,7 @@ def to_canonical(events: list[dict[str, Any]], context: SourceContext) -> pa.Tab
         raise SchemaError("Expected nonempty event array")
     rows = []
     ids: set[UUID] = set()
+    source_fields = asdict(context)
     for offset, event in enumerate(events):
         if not isinstance(event, dict):
             raise SchemaError(f"Non-object source record at row {offset}")
@@ -142,7 +143,7 @@ def to_canonical(events: list[dict[str, Any]], context: SourceContext) -> pa.Tab
         if not isinstance(details, dict):
             raise SchemaError(f"Invalid nested action object at row {offset}")
         row = {
-            **asdict(context),
+            **source_fields,
             "source_manifest_path": "manifest.json",
             "raw_event_row": offset,
             "normalizer_version": NORMALIZER_VERSION,

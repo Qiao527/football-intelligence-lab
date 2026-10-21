@@ -12,19 +12,28 @@ import pyarrow.parquet as pq
 
 from fil.metrics.score_artifacts import verify_score_artifact
 from fil.metrics.shots import METRIC_VERSION, build_shots, cumulative, totals, window_threat
+from fil.metrics.spatial import spatial_report
 
 
 def fingerprint(config: dict) -> str:
     """Content-key all source/derived inputs; never serve a stale cache after byte changes."""
     h = hashlib.sha256()
+    h.update(b"fil-input-tree-2\0")
     for key in ("raw", "canonical", "clock", "score"):
         root = Path(config[key])
+        if root.is_symlink() or not root.is_dir():
+            raise ValueError("Expected a real input bundle directory")
+        h.update(key.encode() + b"\0")
         for p in sorted(root.rglob("*")):
             if p.is_symlink():
                 raise ValueError("Symlink inputs are not supported")
+            # Structure participates in the key: an unexpected empty directory
+            # must invalidate a previously verified cache just like changed bytes.
+            h.update(json.dumps([str(p.relative_to(root)), p.is_dir()]).encode() + b"\0")
             if p.is_file():
-                h.update(str(p.relative_to(root)).encode())
-                h.update(p.read_bytes())
+                h.update(hashlib.sha256(p.read_bytes()).digest())
+            elif not p.is_dir():
+                raise ValueError("Unsupported input bundle member")
     return h.hexdigest()
 
 
@@ -48,6 +57,7 @@ def load_match(config: dict) -> tuple[pa.Table, dict]:
         "source_manifest_sha256": verified["source_manifest_sha256"],
         "source_revision": source["upstream_revision"],
         "score_manifest_sha256": hashlib.sha256((score / "manifest.json").read_bytes()).hexdigest(),
+        "spatial": spatial_report(events),
     }
     shots = build_shots(events)
     teams = (identity["home_team_id"], identity["away_team_id"])

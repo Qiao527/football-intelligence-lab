@@ -35,6 +35,31 @@ def main() -> None:
     for r, e in zip(actual, original, strict=True):
         assert r["shot_xg"] == e["shot"]["statsbomb_xg"]
         assert json.loads(r["source_record_json"]) == e
+        assert r["coordinate_system"] == "raw_statsbomb_120x80"
+        for names, values in (
+            (("x", "y"), e.get("location") or []),
+            (("end_x", "end_y"), e["shot"].get("end_location") or []),
+        ):
+            for index, name in enumerate(names):
+                assert r[name] == (values[index] if len(values) > index else None)
+    spatial = json.loads((facts / "quality.json").read_bytes())["match"]["spatial"]
+    assert spatial["coordinate_system"] == "raw_statsbomb_120x80"
+    assert spatial["origin"] == "upper_left" and spatial["y_increases"] == "down"
+    assert spatial["event_count"] == len(events)
+    assert spatial["coordinate_nulls"]["x"] == sum(e.get("location") is None for e in events)
+    expected_groups = {(e["team"]["id"], e["period"]) for e in events if e["period"] < 5}
+    assert {(g["team_id"], g["period"]) for g in spatial["team_period_evidence"]} == expected_groups
+    for group in spatial["team_period_evidence"]:
+        goals = [
+            e
+            for e in original
+            if e["team"]["id"] == group["team_id"]
+            and e["period"] == group["period"]
+            and e["shot"]["outcome"]["name"] == "Goal"
+        ]
+        assert group["goal_event_ids"] == [e["id"] for e in goals]
+        assert group["goal_end_x"] == [e["shot"]["end_location"][0] for e in goals]
+        assert group["physical_attacking_direction"] is None
     identity = source["quality"]["identity"]
     teams = (identity["home_team_id"], identity["away_team_id"])
     points = pq.ParquetFile(facts / "xg_cumulative.parquet").read().to_pylist()
@@ -87,6 +112,8 @@ def main() -> None:
         "verified_cumulative_points": len(points),
         "verified_windows": len(windows),
         "window_widths_minutes": [5, 10, 15],
+        "spatial_native_coordinates": "PASS; original shot start/end coordinates unchanged",
+        "physical_attacking_directions": "UNCERTIFIED; explicitly null",
         "files": {
             p.name: {
                 "sha256": hashlib.sha256(p.read_bytes()).hexdigest(),

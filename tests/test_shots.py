@@ -194,3 +194,28 @@ def test_metrics_cannot_write_inside_raw_bundle(match, tmp_path, monkeypatch):
     monkeypatch.setattr(data, "load_match", lambda c: (match, {}))
     with pytest.raises(ValueError, match="immutable"):
         data.prepare(config, Path(config["raw"]) / "child", "a" * 40)
+
+
+def test_cache_key_cannot_hide_an_added_directory_or_a_symlink_root(tmp_path):
+    config = {key: str(tmp_path / key) for key in ("raw", "canonical", "clock", "score")}
+    for path in config.values():
+        Path(path).mkdir()
+        (Path(path) / "manifest.json").write_text("TEST ONLY")
+    original = data.fingerprint(config)
+    (Path(config["score"]) / "unexpected-empty-directory").mkdir()
+    assert data.fingerprint(config) != original
+    linked = tmp_path / "linked-raw"
+    linked.symlink_to(config["raw"], target_is_directory=True)
+    with pytest.raises(ValueError, match="real input bundle"):
+        data.fingerprint({**config, "raw": str(linked)})
+
+
+def test_cache_key_changes_when_source_bytes_change(tmp_path):
+    config = {key: str(tmp_path / key) for key in ("raw", "canonical", "clock", "score")}
+    for path in config.values():
+        Path(path).mkdir()
+    source = Path(config["raw"]) / "TEST.json"
+    source.write_text("before")
+    original = data.fingerprint(config)
+    source.write_text("after")
+    assert data.fingerprint(config) != original

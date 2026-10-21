@@ -5,6 +5,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 
 import pyarrow as pa
+import pyarrow.compute as pc
 
 from fil.time.clock import CLOCK_SCHEMA, PeriodRange, partition_period, select_segments
 
@@ -37,7 +38,9 @@ def apply_filter(events: pa.Table, state: MatchFilter) -> pa.Table:
         and (state.player_id is None or r["player_id"] == state.player_id)
         and (state.event_type is None or r["event_type"] == state.event_type)
         and (state.outcome is None or r["outcome"] == state.outcome)
-        for r in events.to_pylist()
+        for r in events.select(
+            ["event_id", "team_id", "player_id", "event_type", "outcome"]
+        ).to_pylist()
     ]
     return events.filter(pa.array(mask, type=pa.bool_()))
 
@@ -47,9 +50,9 @@ def build_shots(events: pa.Table) -> pa.Table:
     if len(set(events["event_id"].to_pylist())) != events.num_rows:
         raise MetricError("Duplicate event IDs")
     result = events.filter(
-        pa.array(
-            [r["event_type"] == "Shot" and r["period"] in (1, 2, 3, 4) for r in events.to_pylist()],
-            type=pa.bool_(),
+        pc.and_(
+            pc.equal(events["event_type"], "Shot"),
+            pc.is_in(events["period"], value_set=pa.array([1, 2, 3, 4], type=pa.int64())),
         )
     )
     for r in result.to_pylist():

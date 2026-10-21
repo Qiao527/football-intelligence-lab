@@ -51,6 +51,8 @@ def test_shared_ui_filter_reset_and_empty_state(score_events, tmp_path, monkeypa
     assert [m.value for m in app.metric][:2] == ["9", "3"]
     app.selectbox(key="period_choice").select("Period 2").run()
     assert not app.exception and app.metric[0].value == "5"
+    threat = json.loads(app.get("plotly_chart")[2].proto.spec)
+    assert all(v[0] == 2 for trace in threat["data"] for v in trace["customdata"])
     app.selectbox(key="team_choice").select(1).run()
     assert app.metric[1].value == "1"
     app.selectbox(key="type_choice").select("Own Goal Against").run()
@@ -63,5 +65,21 @@ def test_shared_ui_filter_reset_and_empty_state(score_events, tmp_path, monkeypa
     app.run()  # A later interaction/rerun must not resurrect the old frontend filters.
     assert [m.value for m in app.metric][:2] == ["9", "3"]
     assert app.selectbox(key="period_choice").value == "Full match"
-    assert app.selectbox(key="team_choice").value is None
-    assert app.selectbox(key="type_choice").value is None
+    assert app.selectbox(key="team_choice").index == 0
+    assert app.selectbox(key="type_choice").index == 0
+
+    # A prior period/width must not resurrect a window selected before changing scope.
+    def box(label):
+        return next(s for s in app.selectbox if s.label == label)
+
+    box("Time window").select(1).run()
+    app.selectbox(key="period_choice").select("Period 2").run()
+    assert box("Time window").index == 0
+    app.selectbox(key="period_choice").select("Full match").run()
+    assert box("Time window").index == 0
+    box("Time window").select(1).run()
+    box("Threat window").select(5).run()
+    assert box("Time window").index == 0
+    app.button[0].click().run()
+    assert box("Threat window").value == 15
+    assert not app.exception

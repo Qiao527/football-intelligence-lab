@@ -46,7 +46,7 @@ def _input(raw: Path, canonical: Path, clock: Path, revision: str) -> tuple:
         raise ScoreError("Source manifest changed after verification")
     source = json.loads(source_bytes)
     entries = {e["path"]: e for e in source["files"]}
-    event_paths = {r["raw_event_path"] for r in table.to_pylist()}
+    event_paths = set(table["raw_event_path"].to_pylist())
     if len(event_paths) != 1:
         raise ScoreError("Expected one raw event file")
     event_path = event_paths.pop()
@@ -55,7 +55,7 @@ def _input(raw: Path, canonical: Path, clock: Path, revision: str) -> tuple:
     identity = source["quality"]["identity"]
     metadata_path = f"data/matches/{identity['competition_id']}/{identity['season_id']}.json"
     matches = json.loads(_checked(raw, metadata_path, entries[metadata_path]))
-    rows = table.to_pylist()
+    rows = table.select(["source_record_json"]).to_pylist()
     if len(events) != len(rows) or any(
         json.loads(r["source_record_json"]) != e for r, e in zip(rows, events, strict=True)
     ):

@@ -1,21 +1,16 @@
 # Supported GitHub delivery and one-time setup
 
-Git read/push is authorized through the injected platform Git proxy. REST/GraphQL
-is a different destination and authorization surface. A supported read-only
-repository API request returned Forbidden; no token/credential values were read
-or changed. Current environment config has github.com/Git proxy destinations but
-omits api.github.com. This is consistent with egress denial, not proof that
-repository/API authentication is absent or that an App lacks permission.
+The published environment now permits api.github.com. Repository REST and PR
+GraphQL checks succeed through the inherited platform proxy; PRs #7 and #8
+exist and their hosted CI is independently verified. The prior Forbidden
+problem is resolved. No credentials or proxy routes were changed.
 
-Saved a draft adding only custom host api.github.com, preserving the preset
-allowlist, plus tested install/start instructions. Draft save reports
-requires_publish=true. The owner must review/save and publish in Environment
-settings for activation; saving does not itself apply network policy or prove
-API access. After activation, test the supported API once. If still denied,
-authorize the platform GitHub connection/App for this repository's PR read/write,
-checks/Actions read and contents write for the specifically approved integration.
-Do not request a raw PAT in chat, extract proxy credentials, rewrite the proxy,
-or grant unrelated repositories/organization administration.
+The remaining integration condition is governance: the private repository's
+current plan prevents enforceable branch protection, and PR #7 has no required
+checks. Record this once as an owner-level plan decision and continue product
+engineering. The exact minimal setup and read-back requirements are in
+[MAIN_PROTECTION.md](MAIN_PROTECTION.md). Do not make the repository public,
+purchase a plan, bypass guards, or request the same owner action repeatedly.
 
 ## Optional repository-scoped Actions path
 

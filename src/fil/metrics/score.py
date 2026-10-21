@@ -107,7 +107,30 @@ def reconstruct_score(
         raise ScoreError("Expected full implementation SHA and clock manifest SHA-256")
     if not clock.schema.equals(CLOCK_SCHEMA, check_metadata=True) or not clock.num_rows:
         raise ScoreError("Expected nonempty verified clock schema")
-    rows = clock.to_pylist()
+    # Reconstruct the scoring projection only; append state arrays to the original
+    # Arrow columns below so wide source JSON/nullable fields never round-trip.
+    rows = clock.select(
+        [
+            "event_id",
+            "match_id",
+            "period",
+            "provider_index",
+            "source_manifest_sha256",
+            "canonical_manifest_sha256",
+            "source_revision",
+            "event_type",
+            "team_id",
+            "player_id",
+            "shot_outcome",
+            "shot_type",
+            "period_elapsed_ms",
+            "chronological_ms",
+            "period_timestamp",
+            "display_clock",
+            "quality_flags",
+            "chronological_estimated",
+        ]
+    ).to_pylist()
     by_id = {r["event_id"]: r for r in rows}
     if len(by_id) != len(rows) or any(not k for k in by_id):
         raise ScoreError("Duplicate or missing event IDs")
@@ -155,8 +178,7 @@ def reconstruct_score(
         if type(s.scored) is not bool or type(s.penalty) is not bool:
             raise ScoreError("Scored/penalty must be booleans")
         if s.kind == "shot" and (
-            s.scored != (r["shot_outcome"] == "Goal")
-            or s.penalty != (r["shot_type"] == "Penalty")
+            s.scored != (r["shot_outcome"] == "Goal") or s.penalty != (r["shot_type"] == "Penalty")
         ):
             raise ScoreError("Scoring signal conflicts with canonical shot semantics")
         if s.kind != "shot" and (not s.scored or s.penalty or r["period"] == 5):
@@ -268,7 +290,6 @@ def reconstruct_score(
         )
         state_rows.append(
             {
-                **r,
                 **state,
                 "score_decision_id": d["decision_id"] if d else None,
                 "score_version": SCORE_VERSION,
@@ -326,7 +347,14 @@ def reconstruct_score(
         "goal_event_ids": [d["source_event_ids"] for d in decisions if d["scored"]],
     }
     return (
-        pa.Table.from_pylist(state_rows, schema=SCORE_SCHEMA),
+        pa.Table.from_arrays(
+            [clock[field.name] for field in CLOCK_SCHEMA]
+            + [
+                pa.array([r[field.name] for r in state_rows], type=field.type)
+                for field in _STATE_FIELDS
+            ],
+            schema=SCORE_SCHEMA,
+        ),
         pa.Table.from_pylist(decisions, schema=DECISION_SCHEMA),
         report,
     )
