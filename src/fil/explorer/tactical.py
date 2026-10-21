@@ -123,6 +123,9 @@ def network_figure(edges, nodes, team: int, name: str, color: str, figure):
     fig.add_shape(type="rect", x0=0, x1=120, y0=0, y1=80, line=dict(color="#647a8c"))
     fig.update_xaxes(range=[-3, 123], title="Native x")
     fig.update_yaxes(range=[83, -3], title="Native y (down)", scaleanchor="x", scaleratio=1)
+    # The common legend wraps above the plot on narrow screens and collides
+    # with the title. The nearby caption already explains these two symbols.
+    fig.update_layout(showlegend=False)
     return fig
 
 
@@ -231,7 +234,8 @@ def render(events, selected, meta: dict, state, width: int, content_key: str, fi
         "physical directions. No xT, VAEP or retained-possession claim. Missing/invalid "
         "endpoints remain unresolved; dots mark endpoints, not player tracking."
     )
-    plot = figure("Selected progressive actions · click an endpoint", 350)
+    plot = figure("Progressive passes / carries", 400)
+    plot.update_layout(legend=dict(y=-0.22, yanchor="top"), margin=dict(b=90))
     for kind, color in (("Pass", "#66c9ed"), ("Carry", "#f8a56c")):
         items = [r for r in rows if r["event_type"] == kind and r["progressive"] is True]
         xs, ys = [], []

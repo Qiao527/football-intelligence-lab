@@ -209,6 +209,19 @@ def main():
         checks.append("period/team/pre-event score/type and no-pass state synchronize")
         page.get_by_role("button", name="Reset filters", exact=True).click()
         metrics(raw)
+
+        def in_first_window(e, minutes):
+            h, m, s = e["timestamp"].split(":")
+            return e["period"] == 1 and int(h) * 3600 + int(m) * 60 + float(s) < minutes * 60
+
+        change(
+            "Time window", "P1 · 0–15.00 elapsed min", [e for e in raw if in_first_window(e, 15)]
+        )
+        change("Threat window", "5 minutes", raw)
+        change("Time window", "P1 · 0–5.00 elapsed min", [e for e in raw if in_first_window(e, 5)])
+        page.get_by_role("button", name="Reset filters", exact=True).click()
+        metrics(raw)
+        checks.append("15/5-minute shared windows and width/reset clear stale selections")
         select("Comparison", "Two explicit windows")
         expect(
             page.get_by_test_id("stSelectbox").filter(
@@ -232,6 +245,15 @@ def main():
         ).scroll_into_view_if_needed()
         assert page.evaluate("document.documentElement.scrollWidth<=innerWidth")
         page.screenshot(path=str(args.output / "mobile-overview.png"))
+        page.get_by_test_id("stPlotlyChart").nth(0).scroll_into_view_if_needed()
+        # Regression: horizontal legends wrapped into mobile chart titles.
+        for chart in page.get_by_test_id("stPlotlyChart").all():
+            chart.scroll_into_view_if_needed()
+            assert chart.locator(".js-plotly-plot").evaluate("""e=>{
+              const title=e.querySelector('.gtitle')?.getBoundingClientRect();
+              const legend=e.querySelector('.legend')?.getBoundingClientRect();
+              return !title || !legend || title.bottom<=legend.top || legend.bottom<=title.top;
+            }"""), "Mobile chart title overlaps legend"
         page.get_by_test_id("stPlotlyChart").nth(0).scroll_into_view_if_needed()
         page.screenshot(path=str(args.output / "mobile-network.png"))
         page.get_by_test_id("stExpandSidebarButton").click()
