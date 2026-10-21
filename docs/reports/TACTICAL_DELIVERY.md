@@ -6,9 +6,9 @@ Development branch: `feat/fil-012-tactical-dashboard`, stacked on unchanged
 `363494ccd8b7f42f40526d0b0d54a19c112f1d68`.
 Runtime implementation: `86638f43112e9fd9936a7a7dba5da473aec232aa`;
 independent exposure-check correction: `8cf62b16bef86f6da0ebed19ae5419f7c7a7d81a`;
-final mobile-layout fix and validated artifact revision:
-`c55e14b9cf73e7f41dce8c63ac4a4852fcdac79e`. Later delivery changes add only
-this report/status documentation.
+final native-axis/mobile-layout fix and validated artifact revision:
+`d5dd2f4dbb207227a237a95a44bd6c9114961ed7`. Later delivery changes add only
+report/status documentation only.
 
 ## Delivered behavior and limits
 
@@ -59,7 +59,7 @@ in the provider adapter; explicit null/unknown and unsupported fields are audite
   evidence.
 
 Validated local bundle:
-`data/interim/tactics/8cbc37c73a3e8108f4076a74f6769deb121a561081f953e493f332c6cfd96b97/fil-tactics-1/c55e14b9cf73e7f41dce8c63ac4a4852fcdac79e`.
+`data/interim/tactics/8cbc37c73a3e8108f4076a74f6769deb121a561081f953e493f332c6cfd96b97/fil-tactics-1/d5dd2f4dbb207227a237a95a44bd6c9114961ed7`.
 It contains five typed Parquet tables, quality JSON and hash manifest with input
 chain, code/version, UTC creation and pinned Arrow/writer settings. Provider
 artifacts, screenshots and local configs remain ignored and were not pushed.
@@ -76,13 +76,13 @@ root with `UV_CACHE_DIR=/tmp/fil-uv-cache`; `CONFIG` denotes the existing verifi
 | `uv lock --check` | Lock and manifest agree; no dependency/lock changes |
 | `uv sync --frozen` | Frozen editable environment installed |
 | `uv run --frozen ruff check .` | All checks passed |
-| `uv run --frozen pytest -q` | **318 passed**, zero skipped, 6.70s |
+| `uv run --frozen pytest -q` | **318 passed**, zero skipped, 6.16s |
 | `uv build` | Wheel and source distribution built |
-| `UV_PROJECT_ENVIRONMENT=/tmp/fil-v04-final-regular uv sync --frozen --no-editable --reinstall-package football-intelligence-lab` | Fresh regular environment, current package rebuilt |
+| `UV_PROJECT_ENVIRONMENT=/tmp/fil-v04-native-regular uv sync --frozen --no-editable --reinstall-package football-intelligence-lab` | Fresh regular environment, current package rebuilt |
 | Same environment `uv run --frozen --no-editable ruff check .` | All checks passed |
-| Same environment `uv run --frozen --no-editable pytest -q` | **318 passed**, zero skipped, 9.11s |
+| Same environment `uv run --frozen --no-editable pytest -q` | **318 passed**, zero skipped, 8.98s |
 | Same environment `python -m fil.explorer.tactical_data --help` via frozen uv | Installed CLI works; also added to hosted CI |
-| `uv run --frozen python -m fil.explorer.tactical_data --config CONFIG --pipeline-revision c55e14b9cf73e7f41dce8c63ac4a4852fcdac79e --output data/interim/tactics` | Verified artifact created and reused immutably |
+| `uv run --frozen python -m fil.explorer.tactical_data --config CONFIG --pipeline-revision d5dd2f4dbb207227a237a95a44bd6c9114961ed7 --output data/interim/tactics` | Verified artifact created and reused immutably |
 | `uv run --frozen python scripts/verify_tactics_source.py CONFIG BUNDLE` | Independent tactical reconciliation PASS |
 | `uv run --frozen python scripts/verify_explorer_source.py CONFIG` | Independent existing xG/window/spatial verification PASS |
 | `uv run --frozen python scripts/verify_score_source.py RAW CANONICAL CLOCK SCORE` | Independent original score verification PASS |
@@ -94,7 +94,8 @@ timestamps, period/stoppage/shootout boundaries, acting versus possession team,
 pre-own-goal score state, immutable outputs/tampering and shared UI/reset states.
 Self-review fixes include typed empty Arrow masks, valid native angle rounding,
 null-actor exclusion, reset of tactical focus/chart selection epochs, and mobile
-chart legends separated from titles. Screenshot inspection caught the latter;
+chart legends separated from titles. Aspect-ratio resizing now constrains the
+plot domain rather than extending axes beyond native pitch bounds. Screenshot inspection caught the latter;
 a real-browser title/legend bounding-box regression check now guards it.
 
 Initial development checks exposed fixture/selector mistakes, corrected before
@@ -138,7 +139,7 @@ those earlier acceptance problems are solved. **The ≤3s startup budget fails.*
 A preliminary current-code set (before the reset fix) also measured
 3.472/3.755/5.285s and is retained under `data/interim/v04-benchmark-current`;
 the final measurements above include the reset fix. The subsequent
-tactical-only legend layout fix does not run in the default Explorer cold path.
+tactical-only legend/native-axis layout fixes do not run in the default Explorer cold path.
 
 Final server readiness 0.396–0.488s; Chromium launch 0.468–0.537s. App-side full
 source verification 0.827–1.193s, view preparation 0.024–0.028s, shared filtering
@@ -155,7 +156,7 @@ acceptance. Commands exited **0**, Chromium `/usr/bin/chromium`, Playwright
 
 ```sh
 uv run --frozen --group browser python scripts/check_tactics_browser.py CONFIG \
-  --url http://127.0.0.1:8504 --output data/interim/tactical-review-delivery
+  --url http://127.0.0.1:8504 --output data/interim/tactical-review-final-native
 uv run --frozen --group browser python scripts/check_explorer_browser.py CONFIG \
   --url http://127.0.0.1:8504 --output data/interim/explorer-v04-regression
 ```
@@ -166,13 +167,15 @@ uv run --frozen --group browser python scripts/check_explorer_browser.py CONFIG 
   window/score comparisons; 390px mobile controls with no page overflow; return
   to Explorer preserving Croatia's 15 shots / 1.480 source xG and four charts.
   Mobile chart title/legend bounds do not overlap after the screenshot-driven fix.
+  Desktop/mobile realized axis ranges stay within native bounds after aspect-ratio
+  resizing; source coordinates are untouched.
 - **Ten existing Explorer check groups pass**: all original totals and charts,
   period/team/player/type/window consistency, empty selections, reset and stale
   window prevention, actual shot-map and threat-bar clicks, mobile/sidebar.
 - Zero page exceptions and zero blocked external requests in both suites.
-- Tactical run: navigation → original Explorer ledger **5.188s**; first tactical
-  View selection → synchronized tactical counts **4.893s**; eight measured
-  filter changes **0.736–3.976s**, median **1.792s**. This click-to-count milestone
+- Tactical run: navigation → original Explorer ledger **3.526s**; first tactical
+  View selection → synchronized tactical counts and axis validation **6.545s**; eight measured
+  filter changes **0.703–3.606s**, median **1.838s**. This click-to-count milestone
   is not a claim that every chart has finished painting. Tactical interaction
   performance remains outside the handbook's usual 0.5–1s target.
 - Explorer regression run: ledger **3.819s**; 16 updates including metric/chart
@@ -180,8 +183,8 @@ uv run --frozen --group browser python scripts/check_explorer_browser.py CONFIG 
   the earlier variable v0.3 latency results or establish human acceptance.
 
 Generated and visually inspected final desktop/mobile network screenshots:
-`data/interim/tactical-review-delivery/desktop-network.png` and
-`data/interim/tactical-review-delivery/mobile-network.png`. Additional screenshots
+`data/interim/tactical-review-final-native/desktop-network.png` and
+`data/interim/tactical-review-final-native/mobile-network.png`. Additional screenshots
 in that directory: `mobile-overview.png`, `mobile-filters.png`, `comparison.png`,
 `event-evidence.png`. Source evidence/comparison screenshots were also inspected.
 Original Explorer screenshots and both machine-readable `browser-report.json`
