@@ -52,5 +52,17 @@ DEL-SHOTS-WINDOWS includes DATA-SHOTS and time-window invariants.
 - Master Reference is unchanged. Bootstrap documents remain historical evidence.
 
 No data model, metric definition, failure behavior, phase ordering, rights
-condition or human approval requirement is relaxed. No DEL-* or DATA-* gate
-has passed in this foundation; no football data is present.
+condition or human approval requirement is relaxed. Engineering setup alone
+does not pass any football gate. Consult STATUS.md and milestone evidence for
+current, scoped source/schema validation rather than the historical FIL-001 baseline.
+
+## Stacked work and acceptance
+
+A completed, validated, suitable upstream feature branch may support dependent
+development before it merges (see CODEX_WORKFLOW.md). Record parent branch/SHA,
+dependency PR, validation evidence and assumptions; reconcile parent changes
+and rerun affected tests. Branch ancestry, CI success and local gate checks do
+not themselves constitute human acceptance. Never bypass failing checks or
+expand source rights, merge into main, deploy or make material architecture
+changes without approval. Report implementation, local verification, observed
+hosted results and human acceptance as separate states.

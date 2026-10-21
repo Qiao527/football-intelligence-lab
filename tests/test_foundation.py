@@ -43,11 +43,11 @@ def test_installed_metadata_matches_project() -> None:
     assert installed.get_all("License-File") == ["LICENSE"]
 
 
-def test_foundation_has_no_runtime_dependencies() -> None:
-    """Analytics packages must be introduced in their own reviewed task."""
+def test_runtime_dependencies_match_scoped_project_contract() -> None:
+    """Parquet storage is the only scoped runtime dependency introduced by FIL-003."""
     project = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]
-    assert project["dependencies"] == []
-    assert metadata("football-intelligence-lab").get_all("Requires-Dist", []) == []
+    assert project["dependencies"] == ["pyarrow==21.0.0"]
+    assert metadata("football-intelligence-lab").get_all("Requires-Dist", []) == ["pyarrow==21.0.0"]
 
 
 def test_supported_python_runtime() -> None:

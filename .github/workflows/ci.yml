@@ -38,3 +38,6 @@ jobs:
           uv sync --frozen --no-editable
           uv run --frozen --no-editable ruff check .
           uv run --frozen --no-editable pytest -q
+          uv run --frozen --no-editable python -m fil.ingestion.normalize --help
+          uv run --frozen --no-editable python -m fil.time --help
+          uv run --frozen --no-editable python -m fil.metrics.score_cli --help

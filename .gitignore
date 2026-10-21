@@ -10,6 +10,7 @@ htmlcov/
 build/
 dist/
 data/raw/
+data/interim/
 .env
 .env.*
 !.env.example
