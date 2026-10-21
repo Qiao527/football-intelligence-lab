@@ -227,3 +227,49 @@ count once, match-play penalties count normally, and shootout goals stay separat
 Ambiguity or official final-score disagreement blocks output, never forces a
 match. Repeated runs verify/reuse unchanged artifacts. No data redistribution,
 new dependencies, later analytics implementation or merge is authorized.
+
+## Local v0.3 Match Explorer
+
+The Explorer uses the handbook's Streamlit/Plotly approach: read-only verified
+source xG, cumulative progression, 5/10/15-minute threat windows, source-native
+shot map, score-state progression, shared filters and exact original JSON
+source evidence. It is for local noncommercial research; no deployment or
+provider-data redistribution is included.
+
+After frozen installation, review SOURCE_POLICY.md and acquire the source with
+the existing FIL-002 command if needed. From a clean checkout:
+
+```bash
+uv run --frozen python -m fil.explorer.bootstrap \
+  --raw data/raw/statsbomb/8658/4b73468fc5b0f1950f9f66fada70ad3a4f9327cb \
+  --pipeline-revision "$(git rev-parse HEAD)"
+# Copy the printed config path into the command below:
+uv run --frozen python -m fil.explorer --config PATH_TO_LOCAL_CONFIG
+```
+
+Open the local Streamlit application in your browser (port 8501). The launcher
+binds loopback only and disables telemetry; there are no externally hosted data
+services or provider-data exports. No credentials/services are needed for unit
+tests. A fresh raw acquisition needs source HTTPS and the existing usage rights.
+
+Choose a period/window/team/player/type/outcome in the shared sidebar. Clicking
+a threat bar selects its exact period bin. Clicking a shot opens that source ID,
+original timestamp/JSON, source file link and manifest lineage. Reset restores
+full match. Official 4–2 score and full-match cumulative/score backgrounds stay
+visible under filtering. Threat is a transparent shot-xG sum, not tracking,
+control or a predicted momentum model. See [metric definitions](docs/METRICS.md).
+
+```bash
+# Optional real-browser checks against the running local app (local Chromium required)
+uv sync --frozen --group browser
+uv run --frozen --group browser python scripts/check_explorer_browser.py PATH_TO_LOCAL_CONFIG
+```
+
+The Playwright tool is isolated in the optional browser group; normal offline
+pytest includes Streamlit AppTest with clearly TEST-ONLY data and needs no browser.
+Screenshots/browser reports remain ignored under data/interim/review. Do not
+commit/publish provider-derived datasets or screenshots without rights review.
+See [mission evidence](docs/reports/MISSION.md),
+[integration report](docs/reports/INTEGRATION.md), and
+[GitHub one-time setup](docs/GITHUB_AUTOMATION.md). Hosted checks and product
+acceptance are reported separately from local verification.

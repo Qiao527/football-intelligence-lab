@@ -46,6 +46,7 @@ text-transform:uppercase}
 letter-spacing:-.04em;
 margin:12px 0}.subtle{color:#a9b7ca;
 font-size:13px}
+[data-testid="stToolbar"]{display:none}
 [data-testid="stSidebar"]{background:#101c2a} button{border-radius:8px!important}
 </style>""",
     unsafe_allow_html=True,
@@ -60,7 +61,7 @@ def verified(config_body: str, content_hash: str):
 def figure(title: str, height: int = 320) -> go.Figure:
     fig = go.Figure()
     fig.update_layout(
-        title=title,
+        title=dict(text=title, font=dict(color="#e3edf7", size=15)),
         height=height,
         paper_bgcolor="#0c1420",
         plot_bgcolor="#111e2d",
@@ -93,7 +94,7 @@ def main() -> None:
     full_shots = build_shots(events)
     cv = clock_view(events)
     periods = sorted(set(events["period"].to_pylist()) - {5})
-    st.markdown(
+    st.html(
         f"""<div class="match-head">
     <div class="eyebrow">Football Intelligence Lab · Match Explorer</div>
 
@@ -103,9 +104,8 @@ def main() -> None:
     {html.escape(meta["competition_name"])} · {html.escape(meta["season_name"])}
     · {html.escape(meta["match_date"])}
     · Official full-match score · StatsBomb Open Data</div></div>""",
-        unsafe_allow_html=True,
     )
-    st.caption("LOCAL RESEARCH  /  SOURCE-VERIFIED  /  HISTORICAL MATCH 8658")
+    st.caption(f"LOCAL RESEARCH / SOURCE-VERIFIED / HISTORICAL MATCH {meta['match_id']}")
     with st.sidebar:
         st.markdown("### Explore the match")
         st.caption("One selection drives every foreground panel.")
@@ -214,6 +214,13 @@ def main() -> None:
         "Selected metrics use the shared filter. Full-match score above and "
         "cumulative background below remain fixed. Own goals add to score, not "
         "shot xG."
+    )
+    st.caption(
+        " · ".join(
+            f"{names[t]}: {totals(shots, t)['shot_count']} selected shots / "
+            f"{totals(shots, t)['xg']:.3f} xG / {totals(shots, t)['non_penalty_xg']:.3f} NPxG"
+            for t in team_ids
+        )
     )
     left, right = st.columns([1.18, 1])
     with left:
@@ -346,6 +353,46 @@ def main() -> None:
         "possession, control, or a black-box momentum model. Partial terminal "
         "bins have shorter exposure."
     )
+    score_fig = figure("Match state · full-match score, selected goal markers", 220)
+    awarded = [
+        r
+        for r in rows
+        if r["period"] < 5
+        and (
+            r["score_home_after"] != r["score_home_before"]
+            or r["score_away_after"] != r["score_away_before"]
+        )
+    ]
+    for t, side in zip(team_ids, ("home", "away"), strict=True):
+        score_fig.add_trace(
+            go.Scatter(
+                x=[0] + [r["chronological_ms"] / 60000 for r in awarded] + [end],
+                y=[0] + [r[f"score_{side}_after"] for r in awarded] + [meta[f"{side}_score"]],
+                mode="lines",
+                name=names[t],
+                line=dict(color=colors[t], shape="hv", width=2),
+            )
+        )
+        chosen = [
+            r
+            for r in awarded
+            if r["event_id"] in selected_ids
+            and r[f"score_{side}_after"] != r[f"score_{side}_before"]
+        ]
+        score_fig.add_trace(
+            go.Scatter(
+                x=[r["chronological_ms"] / 60000 for r in chosen],
+                y=[r[f"score_{side}_after"] for r in chosen],
+                mode="markers",
+                marker=dict(size=11, color=colors[t], symbol="star"),
+                showlegend=False,
+                text=[f"{r['display_clock']} · {r['event_type']}" for r in chosen],
+                hovertemplate="%{text}<extra></extra>",
+            )
+        )
+    score_fig.update_yaxes(dtick=1, title="Goals (shootout excluded)")
+    score_fig.update_xaxes(title="Chronological event minutes")
+    st.plotly_chart(score_fig, use_container_width=True, key="score_state")
     table_col, evidence_col = st.columns([1.2, 1])
     with table_col:
         st.subheader("Event ledger")

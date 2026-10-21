@@ -153,3 +153,44 @@ def test_invalid_coordinate_blocks_map(match, name, value):
     rows[1][name] = value
     with pytest.raises(MetricError):
         build_shots(pa.Table.from_pylist(rows, schema=match.schema))
+
+
+@pytest.mark.parametrize("mode", ["manifest", "extra", "symlink"])
+def test_metric_bundle_rejects_tampering(match, tmp_path, monkeypatch, mode):
+    config = {k: str(tmp_path / k) for k in ("raw", "canonical", "clock", "score")}
+    for p in config.values():
+        Path(p).mkdir()
+    meta = {
+        "home_team_id": 1,
+        "away_team_id": 2,
+        "source_manifest_sha256": "a" * 64,
+        "score_manifest_sha256": "b" * 64,
+    }
+    match = match.append_column("clock_manifest_sha256", pa.array(["c" * 64] * match.num_rows))
+    monkeypatch.setattr(data, "load_match", lambda config: (match, meta))
+    folder = data.prepare(config, tmp_path / "out", "a" * 40)
+    if mode == "manifest":
+        path = folder / "manifest.json"
+        body = json.loads(path.read_bytes())
+        body["rights"] = "UNAPPROVED"
+        path.write_text(json.dumps(body))
+    elif mode == "extra":
+        (folder / "unexpected").touch()
+    else:
+        path = folder / "quality.json"
+        body = path.read_bytes()
+        path.unlink()
+        target = tmp_path / "outside"
+        target.write_bytes(body)
+        path.symlink_to(target)
+    with pytest.raises(ValueError):
+        data.prepare(config, tmp_path / "out", "a" * 40)
+
+
+def test_metrics_cannot_write_inside_raw_bundle(match, tmp_path, monkeypatch):
+    config = {k: str(tmp_path / k) for k in ("raw", "canonical", "clock", "score")}
+    for p in config.values():
+        Path(p).mkdir()
+    monkeypatch.setattr(data, "load_match", lambda c: (match, {}))
+    with pytest.raises(ValueError, match="immutable"):
+        data.prepare(config, Path(config["raw"]) / "child", "a" * 40)

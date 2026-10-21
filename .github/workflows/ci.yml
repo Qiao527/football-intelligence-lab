@@ -41,3 +41,5 @@ jobs:
           uv run --frozen --no-editable python -m fil.ingestion.normalize --help
           uv run --frozen --no-editable python -m fil.time --help
           uv run --frozen --no-editable python -m fil.metrics.score_cli --help
+          uv run --frozen --no-editable python -m fil.explorer --help
+          uv run --frozen --no-editable python -m fil.explorer.data --help

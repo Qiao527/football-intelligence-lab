@@ -28,6 +28,12 @@ def main() -> None:
                 "--server.headless=true",
                 "--browser.gatherUsageStats=false",
                 "--server.fileWatcherType=none",
+                "--theme.base=dark",
+                "--theme.primaryColor=#66c9ed",
+                "--theme.backgroundColor=#0c1420",
+                "--theme.secondaryBackgroundColor=#152131",
+                "--theme.textColor=#e8edf3",
+                "--client.toolbarMode=minimal",
             ],
             env=env,
         )

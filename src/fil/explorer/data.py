@@ -97,6 +97,24 @@ def prepare(config: dict, output: Path, revision: str) -> Path:
         row_group_size=65536,
     )
 
+    window_schema = pa.schema(
+        [
+            ("team_id", pa.int64()),
+            ("shot_count", pa.int64()),
+            ("xg", pa.float64()),
+            ("non_penalty_xg", pa.float64()),
+            ("mean_xg", pa.float64()),
+            ("event_ids", pa.list_(pa.field("element", pa.string()))),
+            ("metric_version", pa.string()),
+            ("period", pa.int64()),
+            ("width_ms", pa.int64()),
+            ("start_ms", pa.int64()),
+            ("end_ms", pa.int64()),
+            ("include_terminal", pa.bool_()),
+            ("xg_per_minute", pa.float64()),
+        ]
+    )
+
     def write(candidate: Path) -> None:
         pq.write_table(shots, candidate / "shots.parquet", **writer)
         point_schema = pa.schema(
@@ -119,7 +137,7 @@ def prepare(config: dict, output: Path, revision: str) -> Path:
             **writer,
         )
         pq.write_table(
-            pa.Table.from_pylist([r for v in windows.values() for r in v]),
+            pa.Table.from_pylist([r for v in windows.values() for r in v], schema=window_schema),
             candidate / "window_threat.parquet",
             **writer,
         )
