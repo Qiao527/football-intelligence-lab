@@ -1,6 +1,9 @@
 # FIL v0.3 — local source-verified Interactive Match Explorer
 
-Parent: `integrate/fil-003-005` at `329362e86612d8320f1ee9ccd6d0eb6be01260ae`.
+Development parent: `integrate/fil-003-005`, initially
+`329362e86612d8320f1ee9ccd6d0eb6be01260ae`; latest incorporated parent
+`195a3ef` adds only actual integration verification evidence. The doc-only parent
+update was merged into this product branch without replaying the original stack.
 Integration PR targets main; this product branch stays independently reviewable
 against the integration while hosted delivery is blocked. No automatic product
 merge is claimed or authorized by the integration-only merge grant.

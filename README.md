@@ -2,9 +2,9 @@
 
 FIL provides a reproducible Python foundation, immutable source acquisition and
 canonical event normalization for one pinned historical StatsBomb match. It
-includes period-aware event clocks and traceable goal attribution/score reconstruction.
-Dashboards, xG aggregation and AI agents are not implemented. PyArrow is the sole runtime dependency, used
-for typed Parquet storage. The historical v0.2 notebook reported in the product
+includes period-aware clocks, traceable score reconstruction and a locally runnable
+Streamlit Match Explorer with source xG analytics. Runtime dependencies are
+PyArrow (typed Parquet), Streamlit and Plotly (local UI). AI agents are not implemented. The historical v0.2 notebook reported in the product
 reference is absent here.
 
 ## Clean installation and checks

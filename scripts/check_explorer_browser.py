@@ -156,7 +156,16 @@ def main() -> None:
         "checks": checks,
         "startup_seconds": startup,
         "blocked_external_requests": blocked,
-        "screenshots": [str(p) for p in args.output.glob("*.png")],
+        "screenshots": [
+            str(args.output / name)
+            for name in (
+                "desktop.png",
+                "event-evidence.png",
+                "window-selection.png",
+                "mobile.png",
+                "mobile-filters.png",
+            )
+        ],
         "source": "real verified StatsBomb 8658, no synthetic match observations",
     }
     (args.output / "browser-report.json").write_text(json.dumps(result, indent=2))
