@@ -154,6 +154,11 @@ def reconstruct_score(
             raise ScoreError("Conflicting scorer identity")
         if type(s.scored) is not bool or type(s.penalty) is not bool:
             raise ScoreError("Scored/penalty must be booleans")
+        if s.kind == "shot" and (
+            s.scored != (r["shot_outcome"] == "Goal")
+            or s.penalty != (r["shot_type"] == "Penalty")
+        ):
+            raise ScoreError("Scoring signal conflicts with canonical shot semantics")
         if s.kind != "shot" and (not s.scored or s.penalty or r["period"] == 5):
             raise ScoreError("Invalid own-goal domain/flags")
         if r["period"] == 5 and not s.penalty:

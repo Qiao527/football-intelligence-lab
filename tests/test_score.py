@@ -581,3 +581,26 @@ def test_structurally_valid_parquet_tamper_is_detected(
     (folder / "manifest.json").write_bytes(art._json(manifest))
     with pytest.raises(ScoreError, match="Recomputed score table differs"):
         art.verify_score_artifact(*bundles, folder)
+
+
+def test_scoring_signal_cannot_relabel_a_verified_penalty(events: list) -> None:
+    signals = list(scoring_signals(events))
+    penalty = next(i for i, signal in enumerate(signals) if signal.penalty and signal.scored)
+    signals[penalty] = replace(signals[penalty], penalty=False)
+    with pytest.raises(ScoreError, match="canonical shot"):
+        reconstruct_score(clock(events), tuple(signals), OfficialScore(1, 1, 2, 2, 1), REV, DIGEST)
+
+
+def test_scoring_signal_cannot_swap_goal_and_miss(events: list) -> None:
+    signals = list(scoring_signals(events))
+    # Swap a goal and miss for the same team: final-score reconciliation alone cannot detect it.
+    goal = next(
+        i for i, s in enumerate(signals) if s.kind == "shot" and s.team_id == 2 and s.scored
+    )
+    miss = next(
+        i for i, s in enumerate(signals) if s.kind == "shot" and s.team_id == 2 and not s.scored
+    )
+    signals[goal] = replace(signals[goal], scored=False)
+    signals[miss] = replace(signals[miss], scored=True)
+    with pytest.raises(ScoreError, match="canonical shot"):
+        reconstruct_score(clock(events), tuple(signals), OfficialScore(1, 1, 2, 2, 1), REV, DIGEST)
