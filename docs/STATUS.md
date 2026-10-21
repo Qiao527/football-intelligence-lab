@@ -1,5 +1,15 @@
-# FIL project status — local v0.3 review candidate
+# FIL project status — v0.4 Tactical Dashboard review candidate
 
+- FIL-012 / Issue #9 adds the scoped Tactical Dashboard on a new stacked branch
+  `feat/fil-012-tactical-dashboard`, parent Explorer SHA `363494c`. Source-verified
+  completed passes, directed networks, event-average positions, progression v1,
+  shared filters, comparisons and exact evidence are implemented. Physical
+  directions remain unknown. 318 tests pass in editable and fresh regular installs;
+  independent real-source counts: 650 completed passes, 194 pairs, 151 progressive
+  passes and 73 progressive carries. All 2978 events/4–2/source xG preserved.
+  Current cold-start median 4.134s still misses the 3s budget. See the exact
+  [tactical delivery report](reports/TACTICAL_DELIVERY.md) for commands, browser
+  evidence, performance limits and acceptance items. PR #7/#8 remain untouched.
 - GitHub REST/GraphQL access recovered. PR #7 remains draft at 195a3ef, against
   main 0fd8306, with successful hosted CI. The private repository plan prevents
   enforcing the required protection guard. One owner decision/setup is recorded
@@ -21,7 +31,7 @@
   also preserve bytes/mtimes on reuse. Ten real-browser check groups pass with
   updated desktop/mobile screenshots kept local/ignored.
 - Human product acceptance, cold/interaction budgets and integration governance
-  remain open. No product merge, deployment, new data rights, AI or tactical claims.
-  Exact evidence, executed commands and limitations:
+  remain open. No product merge, deployment, new data rights, AI or causal tactical claims.
+  Prior v0.3 evidence, executed commands and limitations:
   [AUTONOMOUS_DELIVERY.md](reports/AUTONOMOUS_DELIVERY.md). Hosted CI is checked on
   the current pushed PR head separately; earlier local results do not imply it.
