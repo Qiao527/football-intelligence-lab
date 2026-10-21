@@ -4,7 +4,8 @@ FIL provides a reproducible Python foundation, immutable source acquisition and
 canonical event normalization for one pinned historical StatsBomb match. It
 includes period-aware clocks, traceable score reconstruction and a locally runnable
 Streamlit Match Explorer with source xG analytics and a descriptive Tactical
-Dashboard with directed passing networks and progression v1. Runtime dependencies are
+Dashboard with directed passing networks and progression v1, plus source-traceable
+Possession Flow and process analytics. Runtime dependencies are
 PyArrow (typed Parquet), Streamlit and Plotly (local UI). AI agents are not implemented. The historical v0.2 notebook reported in the product
 reference is absent here.
 
@@ -70,6 +71,7 @@ x86_64 / Python 3.11.14 is locally validated; other platforms are unverified.
 - [Stacked development policy](docs/CODEX_WORKFLOW.md)
 - [Canonical schema and normalization CLI](docs/CANONICAL_EVENTS.md)
 - [Tactical definitions, evidence and local QA](docs/TACTICS.md)
+- [Possession definitions, context semantics and local QA](docs/POSSESSIONS.md)
 - [FIL-003 evidence and upstream dependency](docs/FIL-003_VERIFICATION.md)
 - [Period-aware clock contract](docs/MATCH_CLOCK.md)
 - [FIL-004 verification and stack status](docs/FIL-004_VERIFICATION.md)

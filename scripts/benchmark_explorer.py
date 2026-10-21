@@ -23,6 +23,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--runs", type=int, default=3)
     parser.add_argument("--port", type=int, default=8502)
+    parser.add_argument("--tactical", action="store_true")
     args = parser.parse_args()
     if not 1 <= args.runs <= 10 or not 1024 <= args.port <= 65535:
         parser.error("Expected 1..10 runs and an unprivileged port")
@@ -100,6 +101,58 @@ def main() -> None:
                         "navigation_to_evidence_seconds": complete_seconds,
                         "blocked_external_requests": blocked,
                     }
+                    if args.tactical:
+                        config = json.loads(args.config.read_bytes())
+                        raw = json.loads(
+                            (Path(config["raw"]) / "data/events/8658.json").read_bytes()
+                        )
+
+                        def choose(label, value, page=page):
+                            box = (
+                                page.get_by_test_id("stSelectbox")
+                                .filter(has=page.get_by_text(label, exact=True))
+                                .get_by_role("combobox")
+                            )
+                            box.click()
+                            page.get_by_role("option", name=value, exact=True).click()
+
+                        def ready(subset, page=page):
+                            passes = sum(
+                                e["type"]["name"] == "Pass"
+                                and "outcome" not in e["pass"]
+                                and bool(e["pass"].get("recipient"))
+                                for e in subset
+                            )
+                            expect(page.get_by_test_id("stMetricValue").nth(4)).to_have_text(
+                                str(passes)
+                            )
+                            expect(page.get_by_test_id("stPlotlyChart")).to_have_count(3)
+                            page.get_by_role(
+                                "heading", name="Phase and game-state comparisons", exact=True
+                            ).wait_for()
+                            expect(page.get_by_test_id("stApp")).to_have_attribute(
+                                "data-test-script-state", "notRunning"
+                            )
+                            for chart in page.get_by_test_id("stPlotlyChart").all():
+                                assert chart.locator(".js-plotly-plot").evaluate("""e=>{
+                                  const x=e._fullLayout.xaxis.range,y=e._fullLayout.yaxis.range;
+                                  return Math.min(...x)>=-3 && Math.max(...x)<=123 &&
+                                    Math.min(...y)>=-3 && Math.max(...y)<=83;
+                                }""")
+
+                        started = time.perf_counter()
+                        choose("View", "Tactical Dashboard")
+                        ready(raw)
+                        result["tactical_open_seconds"] = time.perf_counter() - started
+                        started = time.perf_counter()
+                        choose("Period", "Period 2")
+                        ready([e for e in raw if e["period"] == 2])
+                        result["tactical_period_filter_seconds"] = time.perf_counter() - started
+                        started = time.perf_counter()
+                        choose("Team", "France")
+                        ready([e for e in raw if e["period"] == 2 and e["team"]["id"] == 771])
+                        result["tactical_team_filter_seconds"] = time.perf_counter() - started
+                        expect(page.get_by_test_id("stException")).to_have_count(0)
                     results.append(result)
                     print(json.dumps(result), flush=True)
                 finally:

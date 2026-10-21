@@ -25,6 +25,7 @@ def network_figure(edges, nodes, team: int, name: str, color: str, figure):
     by_id = {r["player_id"]: r for r in nodes.to_pylist() if r["team_id"] == team}
     bands = {1: ([], []), 2: ([], []), 3: ([], [])}
     points = []
+    arrows = []
     for e in edges.to_pylist():
         if e["team_id"] != team:
             continue
@@ -51,21 +52,26 @@ def network_figure(edges, nodes, team: int, name: str, color: str, figure):
                 f"{a['player_name']} → {b['player_name']}",
             )
         )
-        fig.add_annotation(
-            x=x0 + 0.8 * dx,
-            y=y0 + 0.8 * dy,
-            ax=x0 + 0.6 * dx,
-            ay=y0 + 0.6 * dy,
-            xref="x",
-            yref="y",
-            axref="x",
-            ayref="y",
-            showarrow=True,
-            arrowhead=3,
-            arrowsize=0.8,
-            arrowwidth=1,
-            arrowcolor=color,
+        arrows.append(
+            dict(
+                x=x0 + 0.8 * dx,
+                y=y0 + 0.8 * dy,
+                ax=x0 + 0.6 * dx,
+                ay=y0 + 0.6 * dy,
+                xref="x",
+                yref="y",
+                axref="x",
+                ayref="y",
+                showarrow=True,
+                arrowhead=3,
+                arrowsize=0.8,
+                arrowwidth=1,
+                arrowcolor=color,
+            )
         )
+    # Assign once: add_annotation repeatedly revalidates/copies the growing
+    # array (quadratic work). All directed arrows and source geometry survive.
+    fig.update_layout(annotations=arrows)
     for band, (xs, ys) in bands.items():
         fig.add_trace(
             go.Scatter(

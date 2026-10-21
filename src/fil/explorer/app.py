@@ -109,7 +109,8 @@ def main() -> None:
         config_body = Path(config_path).read_text()
         config = json.loads(config_body)
         mark("page_setup_seconds")
-        events, meta = verified(config_body, fingerprint(config))
+        content_hash = fingerprint(config)
+        events, meta = verified(config_body, content_hash)
         mark("verification_seconds")
     except Exception as exc:
         st.error(f"Source verification failed. No analytics displayed: {exc}")
@@ -178,11 +179,18 @@ def main() -> None:
                 "tactical_event",
                 "last_tactical_network",
                 "last_tactical_action",
+                "possession_choice",
+                "possession_event",
+                "possession_ending",
+                "possession_last_click",
+                "possession_path_click",
             ):
                 st.session_state.pop(key, None)
 
         st.button("Reset filters", on_click=reset, width="stretch")
-        view = st.selectbox("View", ["Match Explorer", "Tactical Dashboard"], key="view_choice")
+        view = st.selectbox(
+            "View", ["Match Explorer", "Tactical Dashboard", "Possession Flow"], key="view_choice"
+        )
 
         def clear_window():
             st.session_state["window_selection"] = ALL_VALUES
@@ -310,10 +318,16 @@ def main() -> None:
             for t in team_ids
         )
     )
+    if view == "Possession Flow":
+        from fil.explorer.possession import render
+
+        render(events, selected, meta, config_body + content_hash, figure)
+        mark("possession_view_seconds")
+        return
     if view == "Tactical Dashboard":
         from fil.explorer.tactical import render
 
-        render(events, selected, meta, state, width, config_body + fingerprint(config), figure)
+        render(events, selected, meta, state, width, config_body + content_hash, figure)
         mark("tactical_view_seconds")
         return
     left, right = st.columns([1.18, 1])
