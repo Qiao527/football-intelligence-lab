@@ -176,7 +176,7 @@ uv run --frozen --group browser python scripts/check_explorer_browser.py CONFIG 
   is not a claim that every chart has finished painting. Tactical interaction
   performance remains outside the handbook's usual 0.5–1s target.
 - Explorer regression run: ledger **3.819s**; 16 updates including metric/chart
-  waits **0.499–1.052s**, median **0.660s**. This better sample does not remove
+  waits **0.499–1.052s**, median **0.672s**. This better sample does not remove
   the earlier variable v0.3 latency results or establish human acceptance.
 
 Generated and visually inspected final desktop/mobile network screenshots:
