@@ -44,10 +44,12 @@ def test_installed_metadata_matches_project() -> None:
 
 
 def test_runtime_dependencies_match_scoped_project_contract() -> None:
-    """Parquet storage is the only scoped runtime dependency introduced by FIL-003."""
+    """Only reviewed storage and Match Explorer runtime dependencies are installed."""
     project = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]
-    assert project["dependencies"] == ["pyarrow==21.0.0"]
-    assert metadata("football-intelligence-lab").get_all("Requires-Dist", []) == ["pyarrow==21.0.0"]
+    assert project["dependencies"] == ["plotly==6.3.1", "pyarrow==21.0.0", "streamlit==1.50.0"]
+    assert set(metadata("football-intelligence-lab").get_all("Requires-Dist", [])) == set(
+        project["dependencies"]
+    )
 
 
 def test_supported_python_runtime() -> None:
