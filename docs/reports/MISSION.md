@@ -1,7 +1,7 @@
 # Autonomous integration and local v0.3 delivery report
 
 Recorded 2026-10-21 UTC. Implemented a locally runnable product-review candidate,
-not a human-accepted release. No merge or deployment was performed. Hosted CI
+not a human-accepted release. No PR/main merge or deployment was performed. Hosted CI
 and API-mediated delivery remain unobserved/blocked; no PASS is manufactured.
 
 ## Built and branch structure

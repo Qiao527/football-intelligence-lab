@@ -3,7 +3,7 @@
 - Main contains FIL-002 squash #3 at 0fd8306. Clean integration branch
   `integrate/fil-003-005` at 195a3ef adds only FIL-003–005, two score-semantics
   regressions/fix and evidence/CI scope. Original stack branches and PRs remain
-  intact with recoverable backup refs. No merge, rebase or deployment performed.
+  intact with recoverable backup refs. No PR/main merge, rebase or deployment.
 - `feat/fil-v03-match-explorer` builds on that validated integration and contains
   the working local Streamlit/Plotly Explorer: source shots/xG/NPxG, cumulative
   steps, transparent 5/10/15-minute threat bins, native shot map, score-state
