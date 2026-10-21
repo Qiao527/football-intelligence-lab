@@ -23,6 +23,18 @@ class MatchFilter:
     player_id: int | None = None
     event_type: str | None = None
     outcome: str | None = None
+    score_state: str | None = None
+    home_team_id: int | None = None
+    away_team_id: int | None = None
+
+
+def event_score_state(row: dict, home: int, away: int) -> str | None:
+    """Acting team's verified score immediately before the event, never possession team."""
+    if row["team_id"] not in (home, away):
+        return None
+    difference = row["score_home_before"] - row["score_away_before"]
+    difference *= 1 if row["team_id"] == home else -1
+    return "level" if difference == 0 else "leading" if difference > 0 else "trailing"
 
 
 def clock_view(events: pa.Table) -> pa.Table:
@@ -32,15 +44,27 @@ def clock_view(events: pa.Table) -> pa.Table:
 def apply_filter(events: pa.Table, state: MatchFilter) -> pa.Table:
     """One selector for every panel; ranges are period-aware and default to no shootout."""
     selected = set(select_segments(clock_view(events), state.segments)["event_id"].to_pylist())
+    fields = ["event_id", "team_id", "player_id", "event_type", "outcome"]
+    if state.score_state is not None:
+        if (
+            state.score_state not in ("level", "leading", "trailing")
+            or state.home_team_id is None
+            or state.away_team_id is None
+            or state.home_team_id == state.away_team_id
+        ):
+            raise MetricError("Score-state filter requires official teams and a supported state")
+        fields += ["score_home_before", "score_away_before"]
     mask = [
         r["event_id"] in selected
         and (state.team_id is None or r["team_id"] == state.team_id)
         and (state.player_id is None or r["player_id"] == state.player_id)
         and (state.event_type is None or r["event_type"] == state.event_type)
         and (state.outcome is None or r["outcome"] == state.outcome)
-        for r in events.select(
-            ["event_id", "team_id", "player_id", "event_type", "outcome"]
-        ).to_pylist()
+        and (
+            state.score_state is None
+            or event_score_state(r, state.home_team_id, state.away_team_id) == state.score_state
+        )
+        for r in events.select(fields).to_pylist()
     ]
     return events.filter(pa.array(mask, type=pa.bool_()))
 

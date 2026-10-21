@@ -167,13 +167,22 @@ def main() -> None:
                     "player_choice": ALL_VALUES,
                     "type_choice": ALL_VALUES,
                     "outcome_choice": ALL_VALUES,
+                    "score_choice": ALL_VALUES,
                     "event_choice": rows[0]["event_id"],
                     "selection_epoch": st.session_state.get("selection_epoch", 0) + 1,
                 }
             )
             st.session_state.pop("last_map_click", None)
+            for key in (
+                "tactical_entity",
+                "tactical_event",
+                "last_tactical_network",
+                "last_tactical_action",
+            ):
+                st.session_state.pop(key, None)
 
         st.button("Reset filters", on_click=reset, width="stretch")
+        view = st.selectbox("View", ["Match Explorer", "Tactical Dashboard"], key="view_choice")
 
         def clear_window():
             st.session_state["window_selection"] = ALL_VALUES
@@ -250,6 +259,12 @@ def main() -> None:
             key="outcome_choice",
         )
         outcome = None if outcome_choice == ALL_VALUES else outcome_choice
+        score_choice = st.selectbox(
+            "Pre-event score state",
+            [ALL_VALUES, "level", "leading", "trailing"],
+            format_func=lambda v: "All score states" if v == ALL_VALUES else v.title(),
+            key="score_choice",
+        )
         st.divider()
         st.caption(
             "Coordinates: provider 120 × 80, y increases downward. "
@@ -259,7 +274,16 @@ def main() -> None:
             "Noncommercial local research. Provider data is not covered by "
             "FIL’s MIT license. No redistribution."
         )
-    state = MatchFilter(segments, team, player, kind, outcome)
+    state = MatchFilter(
+        segments,
+        team,
+        player,
+        kind,
+        outcome,
+        None if score_choice == ALL_VALUES else score_choice,
+        meta["home_team_id"],
+        meta["away_team_id"],
+    )
     st.session_state["match_filter"] = state
     selected = apply_filter(events, state)
     shots = build_shots(selected)
@@ -275,9 +299,9 @@ def main() -> None:
         f"{sum(totals(shots, t)['non_penalty_xg'] for t in team_ids):.3f}",
     )
     st.caption(
-        "Selected metrics use the shared filter. Full-match score above and "
-        "cumulative background below remain fixed. Own goals add to score, not "
-        "shot xG."
+        "Selected metrics use the shared filter. Full-match score above remains fixed. "
+        + ("Cumulative background below remains fixed. " if view == "Match Explorer" else "")
+        + "Own goals add to score, not shot xG."
     )
     st.caption(
         " · ".join(
@@ -286,6 +310,12 @@ def main() -> None:
             for t in team_ids
         )
     )
+    if view == "Tactical Dashboard":
+        from fil.explorer.tactical import render
+
+        render(events, selected, meta, state, width, config_body + fingerprint(config), figure)
+        mark("tactical_view_seconds")
+        return
     left, right = st.columns([1.18, 1])
     with left:
         curve = figure("Source xG progression · full-match context")
