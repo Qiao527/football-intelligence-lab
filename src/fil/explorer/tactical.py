@@ -214,6 +214,7 @@ def render(events, selected, meta: dict, state, width: int, content_key: str, fi
             st.session_state["tactical_event"] = candidate
 
     teams = [t for t in (home, away) if state.team_id in (None, t)]
+    show_names = st.toggle("Show all player names", value=False, key="network_labels")
     for column, team in zip(st.columns(len(teams)), teams, strict=True):
         with column:
             chart = network_figure(
@@ -224,6 +225,10 @@ def render(events, selected, meta: dict, state, width: int, content_key: str, fi
                 "#66c9ed" if team == home else "#f8a56c",
                 figure,
             )
+            if not show_names:
+                chart.update_traces(
+                    mode="markers", selector=dict(name="Event-average pass origins")
+                )
             accept(
                 st.plotly_chart(
                     chart,
@@ -326,7 +331,7 @@ def render(events, selected, meta: dict, state, width: int, content_key: str, fi
             f"Source manifest {row['source_manifest_sha256']} · "
             f"clock manifest {row['clock_manifest_sha256']}"
         )
-    with st.expander("Network tables and action QA"):
+    if st.toggle("Show detailed tactical audit", key="tactical_audit"):
         st.dataframe(edges, hide_index=True)
         st.dataframe(nodes, hide_index=True)
         st.dataframe(actions, hide_index=True)

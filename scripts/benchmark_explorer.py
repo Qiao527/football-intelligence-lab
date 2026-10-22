@@ -24,6 +24,7 @@ def main() -> None:
     parser.add_argument("--runs", type=int, default=3)
     parser.add_argument("--port", type=int, default=8502)
     parser.add_argument("--tactical", action="store_true")
+    parser.add_argument("--possession", action="store_true")
     args = parser.parse_args()
     if not 1 <= args.runs <= 10 or not 1024 <= args.port <= 65535:
         parser.error("Expected 1..10 runs and an unprivileged port")
@@ -153,6 +154,27 @@ def main() -> None:
                         ready([e for e in raw if e["period"] == 2 and e["team"]["id"] == 771])
                         result["tactical_team_filter_seconds"] = time.perf_counter() - started
                         expect(page.get_by_test_id("stException")).to_have_count(0)
+                    if args.possession:
+                        # Return to full-match scope before the separate possession milestone.
+                        reset = page.get_by_role("button", name="Reset filters", exact=True)
+                        reset.click()
+                        expect(page.get_by_test_id("stMetricValue").nth(0)).to_have_text("2978")
+                        box = (
+                            page.get_by_test_id("stSelectbox")
+                            .filter(has=page.get_by_text("View", exact=True))
+                            .get_by_role("combobox")
+                        )
+                        started = time.perf_counter()
+                        box.click()
+                        page.get_by_role("option", name="Possession Flow", exact=True).click()
+                        expect(page.get_by_test_id("stMetricValue").nth(4)).to_have_text("182")
+                        page.get_by_role(
+                            "heading", name="Ordered native action sequence", exact=True
+                        ).wait_for()
+                        expect(page.get_by_test_id("stApp")).to_have_attribute(
+                            "data-test-script-state", "notRunning"
+                        )
+                        result["possession_open_seconds"] = time.perf_counter() - started
                     results.append(result)
                     print(json.dumps(result), flush=True)
                 finally:

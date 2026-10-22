@@ -98,7 +98,10 @@ def render(events, selected, meta: dict, content_key: str, figure) -> None:
     }
     by_pid = {r["possession_id"]: r for r in visible}
     if st.session_state.get("possession_choice") not in by_pid:
-        st.session_state["possession_choice"] = visible[0]["possession_id"]
+        st.session_state["possession_choice"] = next(
+            (r["possession_id"] for r in visible if r["owner_actions"] > 0),
+            visible[0]["possession_id"],
+        )
     pid = st.selectbox(
         "Native possession",
         list(by_pid),
@@ -135,7 +138,19 @@ def render(events, selected, meta: dict, content_key: str, figure) -> None:
         "matches_shared_filter",
         pa.array([i in selected_ids for i in chain["event_id"].to_pylist()], type=pa.bool_()),
     )
-    st.dataframe(display, hide_index=True)
+    foreground = [
+        "sequence",
+        "display_clock",
+        "event_type",
+        "team_id",
+        "player_id",
+        "role",
+        "event_id",
+        "matches_shared_filter",
+        "zone",
+        "end_zone",
+    ]
+    st.dataframe(display.select(foreground), hide_index=True)
     st.subheader("Recorded progression segments")
     path = figure("Observed pass / carry segments", 360)
     path.update_layout(showlegend=False)
@@ -202,7 +217,8 @@ def render(events, selected, meta: dict, content_key: str, figure) -> None:
         f"Source manifest {source['source_manifest_sha256']} · "
         f"clock manifest {source['clock_manifest_sha256']}"
     )
-    with st.expander("Possession QA and full cohort"):
+    if st.toggle("Show detailed possession audit", key="possession_audit"):
+        st.dataframe(display, hide_index=True)
         st.json(summary)
         st.dataframe(cohort, hide_index=True)
         st.json(bundle.quality)

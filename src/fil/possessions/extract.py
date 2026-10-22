@@ -12,7 +12,7 @@ from fil.ingestion.statsbomb_tactics import extract_tactics
 from fil.metrics.tactics import PROGRESSION_VERSION, valid_point
 from fil.metrics.tactics import VERSION as TACTICS_VERSION
 
-VERSION = "fil-possession-1"
+VERSION = "fil-possession-2"
 OWNER_ACTIONS = frozenset(
     {
         "Pass",
@@ -351,13 +351,14 @@ def reconstruct(events: pa.Table, home: int, away: int) -> PossessionFacts:
             and nxt["period"] != end["period"]
             or any(r["event_type"] == "Half End" for r in group)
         )
+        own_goal = any(r["event_type"] in ("Own Goal For", "Own Goal Against") for r in group)
         turnover = bool(
             loss
             and nxt
             and nxt["period"] == last["period"]
             and nxt["possession_team_id"] in (home, away)
             and nxt["possession_team_id"] != team
-            and not (out or foul or boundary)
+            and not (out or foul or boundary or own_goal)
             and not next_restart
             and not any(
                 r["possession_id"] is None
@@ -365,7 +366,6 @@ def reconstruct(events: pa.Table, home: int, away: int) -> PossessionFacts:
                 for r in ordered
             )
         )
-        own_goal = any(r["event_type"] in ("Own Goal For", "Own Goal Against") for r in group)
         reason = (
             "period_boundary"
             if boundary
@@ -386,6 +386,22 @@ def reconstruct(events: pa.Table, home: int, away: int) -> PossessionFacts:
             + ([last["event_id"]] if last else [])
             + ([nxt["event_id"]] if nxt else [])
         )
+        # Include the actual records supporting terminal classifications, even
+        # when subsequent camera/admin context is the group's final record.
+        evidence += [
+            r["event_id"]
+            for r in group
+            if r["event_type"] in ("Own Goal For", "Own Goal Against", "Half End")
+        ]
+        evidence += [
+            e["id"]
+            for e in tail
+            if e.get("out") is True
+            or ((e.get("pass") or {}).get("outcome") or {}).get("name") in ("Out", "Pass Offside")
+            or e["type"]["name"] in ("Foul Won", "Foul Committed")
+        ]
+        if next_restart and next_owner:
+            evidence.append(next_owner["event_id"])
         entry = native[first["event_id"]] if first else {}
         pass_type = (entry.get("pass") or {}).get("type", {}).get("name")
         output.append(

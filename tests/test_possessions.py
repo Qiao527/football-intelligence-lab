@@ -294,3 +294,23 @@ def test_possession_artifact_rejects_tampering(possession_events, tmp_path, monk
         (folder / "quality.json").symlink_to(tmp_path / "missing")
     with pytest.raises((ValueError, KeyError)):
         artifacts.prepare(config, tmp_path / "out", "b" * 40)
+
+
+def test_own_goal_not_turnover(possession_events):
+    possession_events[3].pop("pass")
+    possession_events[3]["type"] = {"id": 3, "name": "Dispossessed"}
+    possession_events[6]["possession"] = 2
+    for e in possession_events[7:]:
+        e["possession"] += 2
+    possession_events[6]["possession_team"] = {"id": 2, "name": "TEST OWNER"}
+    result = reconstruct(score_table(possession_events), 1, 2).possessions.to_pylist()[0]
+    assert result["end_reason"] == "own_goal_recorded" and not result["turnover"]
+    assert {uid(5), uid(6)} <= set(result["boundary_evidence_ids"])
+
+
+def test_foul_terminal_evidence_survives_context(possession_events):
+    possession_events[6].pop("pass")
+    possession_events[6]["type"] = {"id": 21, "name": "Foul Won"}
+    possession_events[7]["type"] = {"id": 40, "name": "Camera off"}
+    result = reconstruct(score_table(possession_events), 1, 2).possessions.to_pylist()[0]
+    assert uid(7) in result["boundary_evidence_ids"]

@@ -184,12 +184,17 @@ def main() -> None:
                 "possession_ending",
                 "possession_last_click",
                 "possession_path_click",
+                "player_evidence_choice",
+                "player_evidence_type",
+                "player_original_event",
             ):
                 st.session_state.pop(key, None)
 
         st.button("Reset filters", on_click=reset, width="stretch")
         view = st.selectbox(
-            "View", ["Match Explorer", "Tactical Dashboard", "Possession Flow"], key="view_choice"
+            "View",
+            ["Match Explorer", "Tactical Dashboard", "Possession Flow", "Player Evidence"],
+            key="view_choice",
         )
 
         def clear_window():
@@ -318,6 +323,12 @@ def main() -> None:
             for t in team_ids
         )
     )
+    if view == "Player Evidence":
+        from fil.explorer.players import render
+
+        render(events, selected, meta, state, config_body + content_hash, config["raw"])
+        mark("player_view_seconds")
+        return
     if view == "Possession Flow":
         from fil.explorer.possession import render
 
