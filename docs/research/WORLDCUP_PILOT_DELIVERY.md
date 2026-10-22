@@ -153,3 +153,11 @@ Current enforced environment policy still omits `api.figshare.com`; no destinati
 bypass/repeated denied request was attempted. No configuration-write tool is
 available here. Owner environment action: add that exact host to resume the
 original Figshare metadata audit, retaining all other restrictions.
+
+
+## Later temporal and predictive-method review
+
+See [forensic and evaluation review](TEMPORAL_REVIEW_DELIVERY.md). It preserves
+this historical experiment and blocked acquisition gate, evaluates separate
+conditional source-marker envelopes, and diagnoses the original rare-event and
+censoring failures. No new matches or passing-gate claim follow from that review.
