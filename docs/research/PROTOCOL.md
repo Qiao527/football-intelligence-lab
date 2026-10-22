@@ -58,8 +58,10 @@ checks these intervals before any future denominator certification.
   boundary in the same source/match/period. This helper checks explicit lineage;
   it cannot detect a feature secretly computed from future information. Independent
   feature-generation/code audit and fit-state lineage remain required.
-- Training-only constant outcome-frequency and context-frequency baselines,
+- Training-only equal-match constant/context-frequency baselines,
   with explicit unsupported-context fallback, reject train/test match overlap.
+  Training weights invert within-match record counts to match the evaluation target;
+  pooled-row priors would be a mismatched baseline.
   The two-training-match software guard is not an evidence-based sample threshold.
 - Equal-match weighted Brier/log-loss comparison, fixed-bin reliability summaries
   (event weighted, counts exposed), and paired match-cluster percentile bootstrap.

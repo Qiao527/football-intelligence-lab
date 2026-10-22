@@ -71,7 +71,7 @@ and progression gains of 5/10/15 units, with team, period and pre-event state co
 All exact action sets and later shot IDs are independently recomputed from original
 JSON. These are descriptive subset comparisons, not held-out probability forecasts.
 
-Constant training priors/context-frequency forecasting and evaluation machinery are
+Equal-match training priors/context-frequency forecasting and evaluation machinery are
 implemented and tested with TEST_ONLY data. They have **not** been empirically
 compared on real held-out matches. No xT/VAEP model was trained; no claim that a
 complex model beat or lost to a baseline is manufactured.
@@ -119,8 +119,8 @@ and prospective decision utility. No automatic discovery label passes meanwhile.
 
 ## Verification and engineering boundaries
 
-- Full editable tests: **376 passed**; all existing 360 tests retained.
-- Frozen regular installation tests: **376 passed**; wheel and sdist build succeed.
+- Full editable tests: **377 passed**; all existing 360 tests retained.
+- Frozen regular installation tests: **377 passed**; wheel and sdist build succeed.
 - `ruff check .`, frozen lock agreement and research CLI help succeed.
 - Independent new research checker: original corpus IDs/JSON/aliases, geometry,
   baseline/contrast sets, score context, shot follow-up and separately integrated

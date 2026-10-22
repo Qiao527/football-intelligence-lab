@@ -392,3 +392,13 @@ def test_research_artifact_idempotence_corruption_and_rights(source_events, tmp_
     monkeypatch.setattr(cli, "AUTHORISED", set())
     with pytest.raises(ValueError, match="authorisation"):
         cli.prepare([configs], tmp_path / "different", "a" * 40)
+
+
+def test_training_prior_matches_equal_match_evaluation_objective():
+    rows = forecast_rows()
+    train = [dict(rows[0], outcome=0)] + [dict(r, outcome=1) for r in rows[4:8]]
+    model = fit_baselines(train)
+    assert model["prior"] == 0.5  # Pooled-row .8 would be an unfairly mismatched baseline.
+    assert model["context"]["TEST_STATE"]["probability"] == 0.5
+    held = baseline_predictions(model, rows[8:])
+    assert evaluate(held)["equal_match_brier_improvement"] == 0

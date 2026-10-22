@@ -65,7 +65,7 @@ def _binary(value):
 
 
 def fit_baselines(train: list[dict]) -> dict:
-    """Training-only event-frequency prior and context-frequency baseline.
+    """Training-only equal-match prior and weighted context-frequency baseline.
 
     Two training matches is a technical guard, not an adequate scientific sample.
     Context must be pre-action, declared beforehand and independently leak-audited.
@@ -74,14 +74,25 @@ def fit_baselines(train: list[dict]) -> dict:
     if len(matches) < 2:
         raise ValueError("At least two training matches required; adequacy remains unestablished")
     labels = [_binary(r["outcome"]) for r in train]
+    match_counts = defaultdict(int)
+    for r in train:
+        match_counts[key(r)] += 1
     groups = defaultdict(list)
+    weighted = []
     for r, y in zip(train, labels, strict=True):
+        w = 1 / match_counts[key(r)]
+        weighted.append((y, w))
         if r.get("context") is not None:
-            groups[r["context"]].append(y)
+            groups[r["context"]].append((y, w))
+
+    def frequency(values):
+        return math.fsum(y * w for y, w in values) / math.fsum(w for _, w in values)
+
     return dict(
         training_matches=matches,
-        prior=statistics.mean(labels),
-        context={k: dict(probability=statistics.mean(v), n=len(v)) for k, v in groups.items()},
+        prior=frequency(weighted),
+        context={k: dict(probability=frequency(v), n=len(v)) for k, v in groups.items()},
+        weighting="inverse within-match record count, aligned with equal-match evaluation",
         status="exploratory_baselines_not_validated",
     )
 
