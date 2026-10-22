@@ -31,14 +31,13 @@ source/version, comparison population, role, state and exposure for every result
 Physical direction and tracking claims require independent source certification.
 No estimated minutes or fabricated role labels may fill these gaps.
 
-Proposed conservative eligibility floors for a future pilot are 10 complete
-matches and 900 certified minutes per player, 200 eligible owner-action records,
-and at least 30 eligible records in each reported comparison stratum. These are
-planning floors, not proven power thresholds or production policy. Perform
-simulation/power and stability analysis on an independently sourced development
-corpus; choose and preregister final thresholds before holdout use. Sparse roles,
-rare shot links and dependent team samples may require substantially more data.
-Until then return insufficient evidence rather than extrapolate this fixture.
+The previous provisional ten-match/900-minute planning floors are withdrawn as
+scientific requirements. They were not power-derived. Use the current
+[research protocol](research/PROTOCOL.md): define the decision-relevant effect,
+estimate independent-cluster pilot variance and dependence, assess rare outcomes,
+learning/calibration curves and strata, then freeze a justified sample plan.
+One fixture cannot establish the required multi-match sample size. Return
+insufficient evidence rather than substituting a universal count threshold.
 
 ## Adjustment and independent validation
 

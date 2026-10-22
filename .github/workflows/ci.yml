@@ -46,3 +46,4 @@ jobs:
           uv run --frozen --no-editable python -m fil.explorer.tactical_data --help
           uv run --frozen --no-editable python -m fil.possessions.artifacts --help
           uv run --frozen --no-editable python -m fil.explorer.player_data --help
+          uv run --frozen --no-editable python -m fil.research --help

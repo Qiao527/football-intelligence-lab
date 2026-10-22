@@ -174,3 +174,11 @@ against raw memberships. Tests include malformed/missing labels, inconsistent
 owners, duplicate/noncontiguous IDs, half boundaries/stoppage, tied timestamps,
 shootout exclusion, zero/multi-shot sequences, no-coordinate/empty states,
 source tampering, immutable rebuilds and shared UI context/reset behavior.
+
+## Research audit clarification
+
+`shot_after_final_third_*` and `box_after_final_third_*` summary fields currently
+measure within-native-ID **co-occurrence**, not verified temporal ordering.
+Their conditional fractions must not be interpreted as ordered transition
+probabilities or tactical effectiveness. See [critical audit](research/ANALYTICS_AUDIT.md).
+The strict later-shot labels in the research case use provider indices explicitly.
