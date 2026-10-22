@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pyarrow.parquet as pq
 
-from fil.explorer.data import load_match
+from fil.explorer.data import fingerprint, load_match
 from fil.metrics.shots import MatchFilter, apply_filter
 from fil.possessions.extract import PossessionFacts, select_possessions
 from fil.time.clock import PeriodRange
@@ -61,6 +61,10 @@ def main():
     raw = json.loads((Path(config["raw"]) / "data/events/8658.json").read_bytes())
     assert len(raw) == table.num_rows == 2978 and (meta["home_score"], meta["away_score"]) == (4, 2)
     manifest = json.loads((folder / "manifest.json").read_bytes())
+    assert manifest["inputs"] == fingerprint(config)
+    assert manifest["code_sha"] == folder.name
+    assert manifest["source_manifest_sha256"] == meta["source_manifest_sha256"]
+    assert manifest["score_manifest_sha256"] == meta["score_manifest_sha256"]
     assert set(p.name for p in folder.iterdir()) == set(manifest["files"]) | {"manifest.json"}
     for name, entry in manifest["files"].items():
         data = (folder / name).read_bytes()
@@ -180,6 +184,26 @@ def main():
         assert r["next_possession_id"] == (nxt["possession"] if nxt else None)
         assert r["next_team_id"] == (nxt["possession_team"]["id"] if nxt else None)
         last = own[-1] if own else None
+        first = own[0] if own else None
+        assert r["entry_event_id"] == (first["id"] if first else None)
+        assert r["exit_event_id"] == (last["id"] if last else None)
+        assert r["participant_ids"] == sorted({e["player"]["id"] for e in own if e.get("player")})
+        assert r["start_zone"] == (expected[first["id"]]["start_zone"] if first else "UNKNOWN")
+        assert r["end_zone"] == (
+            expected[last["id"]]["end_zone"]
+            if last and expected[last["id"]]["moving"]
+            else expected[last["id"]]["start_zone"]
+            if last
+            else "UNKNOWN"
+        )
+        native_type = ((first.get("pass") or {}).get("type") or {}).get("name") if first else None
+        assert r["start_reason"] == (
+            f"native_restart:{native_type}"
+            if native_type in RESTARTS
+            else f"first_owner_record:{first['type']['name']}"
+            if first
+            else "unknown"
+        )
         tail = [e for e in g if last and e["index"] >= last["index"]]
         out = any(
             e.get("out") is True

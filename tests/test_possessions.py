@@ -29,6 +29,8 @@ def test_membership_order_opponent_events_and_zero_shot_nulls(possession_events)
     f = reconstruct(table, 1, 2)
     assert table.to_pylist() == original
     assert f.actions.num_rows == len(possession_events)
+    assert f.actions.schema.metadata[b"fil.progression_version"] == b"fil-progression-1"
+    assert f.quality["native_action_version"] == "fil-tactics-1"
     rows = f.possessions.to_pylist()
     assert [r["possession_id"] for r in rows] == [1, 2, 3]
     assert rows[0]["event_ids"] == [uid(i) for i in range(1, 9)]
@@ -188,6 +190,7 @@ def test_immutable_artifacts(possession_events, tmp_path, monkeypatch):
 def test_shots_rebounds_and_shootout_metrics_are_separate(possession_events):
     # Replace two owner records by shots, keeping TEST ONLY official own-goal award.
     for i in (1, 2):
+        possession_events[i]["location"] = [85 if i == 1 else 105, 40]
         possession_events[i]["type"] = {"id": 16, "name": "Shot"}
         possession_events[i].pop("pass", None)
         possession_events[i]["shot"] = {
@@ -201,6 +204,12 @@ def test_shots_rebounds_and_shootout_metrics_are_separate(possession_events):
     assert not r["shot_ending"]  # later completed passes retain the sequence
     assert r["time_to_first_shot_seconds"] == 899.999
     assert process_summary(f.possessions)["timed_shot_possessions"] == 1
+    summary = process_summary(f.possessions)
+    assert summary["eligible_possessions"] == 3
+    assert summary["shot_after_final_third_denominator"] == 1
+    assert summary["p_shot_given_final_third"] == 1
+    assert summary["p_box_given_final_third"] == 1
+    assert summary["xg_per_possession"] == pytest.approx(0.4 / 3)
 
 
 def test_arrow_batch_preserves_directed_geometry(possession_events):

@@ -66,6 +66,8 @@ def prepare(config: dict, output: Path, revision: str) -> Path:
         }
         manifest = {
             "version": VERSION,
+            "progression_version": facts.quality["progression_version"],
+            "native_action_version": facts.quality["native_action_version"],
             "inputs": content_key,
             "code_sha": revision,
             "files": files,

@@ -9,7 +9,8 @@ import pyarrow as pa
 
 from fil.ingestion.statsbomb_possessions import source_records
 from fil.ingestion.statsbomb_tactics import extract_tactics
-from fil.metrics.tactics import valid_point
+from fil.metrics.tactics import PROGRESSION_VERSION, valid_point
+from fil.metrics.tactics import VERSION as TACTICS_VERSION
 
 VERSION = "fil-possession-1"
 OWNER_ACTIONS = frozenset(
@@ -66,7 +67,10 @@ ACTION_SCHEMA = pa.schema(
             for n in ("is_owner_action", "progressive", "final_third_entry", "box_entry")
         ],
     ],
-    metadata={b"fil.possession_version": VERSION.encode()},
+    metadata={
+        b"fil.possession_version": VERSION.encode(),
+        b"fil.progression_version": PROGRESSION_VERSION.encode(),
+    },
 )
 POSSESSION_SCHEMA = pa.schema(
     [
@@ -130,7 +134,10 @@ POSSESSION_SCHEMA = pa.schema(
         ],
         ("participant_ids", pa.list_(pa.int64())),
     ],
-    metadata={b"fil.possession_version": VERSION.encode()},
+    metadata={
+        b"fil.possession_version": VERSION.encode(),
+        b"fil.progression_version": PROGRESSION_VERSION.encode(),
+    },
 )
 
 
@@ -451,6 +458,8 @@ def reconstruct(events: pa.Table, home: int, away: int) -> PossessionFacts:
         pa.Table.from_pylist(actions, schema=ACTION_SCHEMA),
         {
             "version": VERSION,
+            "progression_version": PROGRESSION_VERSION,
+            "native_action_version": TACTICS_VERSION,
             "source_events": len(ordered),
             "possessions": len(output),
             "unassigned_events": sum(r["possession_id"] is None for r in ordered),
