@@ -277,3 +277,7 @@ See [mission evidence](docs/reports/MISSION.md),
 [integration report](docs/reports/INTEGRATION.md), and
 [GitHub one-time setup](docs/GITHUB_AUTOMATION.md). Hosted checks and product
 acceptance are reported separately from local verification.
+
+For the connected four-view local review, see [product demo and human acceptance](docs/PRODUCT_DEMO.md)
+and [stabilization measurements](docs/STABILIZATION_REPORT.md). Provider-derived screenshots and traces
+stay local; timing evidence and human acceptance are separate from CI.

@@ -1,5 +1,8 @@
 # Player involvement foundation — engineering evidence
 
+Historical PR #12 foundation evidence. Later UX and performance measurements are
+in [the stabilization report](STABILIZATION_REPORT.md) and [local product review](PRODUCT_DEMO.md).
+
 ## Integration and stack
 
 GitHub API access works. PR #7 remains OPEN/DRAFT and unmerged at
