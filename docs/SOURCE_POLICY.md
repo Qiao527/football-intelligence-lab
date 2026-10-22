@@ -99,3 +99,13 @@ model-weight publication or xT/VAEP training. Existing registration attestation
 and attribution/branding conditions remain unchanged. World Cup matches are not
 proof of general football validity; 8658 is development-exposed, never untouched
 validation/test. Wyscout remains separately unapproved.
+
+## Later acceptance of metric-specific eligibility
+
+The owner subsequently accepted `fil-metric-eligibility-proposal-1`, anchored to
+PR #17 commit `a6f64008a352689620971de4887cd48a431d43c9`. Expansion is now
+conditional on **new independent metric-specific pilot gates**, not on altering
+the historical BLOCKED result. The existing 57 matches/114 files and pinned
+revision are the entire scope. See [accepted execution record](research/ACCEPTED_CORPUS_EXECUTION.md).
+No physical-time certification, new provider, archive, training right, release,
+merge or deployment follows from this acceptance.
