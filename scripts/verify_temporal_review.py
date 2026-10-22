@@ -146,6 +146,11 @@ def main():
         assert all(
             ms(e) < low for e in group if e["type"]["name"] not in ("Half Start", "Half End")
         )
+        assert all(
+            Fraction(str(e["duration"])) * 1000 + ms(e) < low
+            for e in group
+            if e.get("duration") is not None and e["type"]["name"] not in ("Half Start", "Half End")
+        )
         assert row["exact_physical_end_ms"] is None and not row["physical_end_certified"]
         prefix = [prefix[0] + low, prefix[1] + high]
     assert f["model"]["conditional_recorded_match_duration_ms"] == prefix
@@ -221,6 +226,28 @@ def main():
     # Full PR15 independent source reconciliation is repeated against the unchanged parent.
     delivery = json.loads(Path(manifest["parent_delivery"]).read_bytes())
     reports = Path(delivery["independent_verification"]).with_name("reports.json")
+    import pyarrow.parquet as pq
+
+    from fil.time.clock import ClockError, derive_clock
+
+    original_folders = [Path(p) for p in json.loads(reports.read_bytes())]
+    original_8656 = next(
+        p
+        for p in original_folders
+        if json.loads((p / "quality.json").read_bytes())["match_id"] == 8656
+    )
+    try:
+        derive_clock(
+            pq.ParquetFile(original_8656 / "canonical.parquet").read(),
+            manifest["implementation_sha"],
+            h(original_8656 / "canonical.parquet"),
+        )
+    except ClockError as error:
+        assert "conflicting Half End" in str(error)
+    else:
+        raise AssertionError("Original v1 clock no longer fails closed")
+    assert f["source_match_play_shots"] == sum(e["type"]["name"] == "Shot" for e in raw)
+    assert abs(f["source_match_play_known_xg_sum"] - q["source_match_play_known_xg_sum"]) < 1e-12
     original = subprocess.run(
         [
             sys.executable,
