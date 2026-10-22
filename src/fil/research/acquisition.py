@@ -81,6 +81,22 @@ def acquire(
             or set(gate.get("pilot_matches", {})) != {str(i) for i in pilot}
         ):
             raise ValueError("Pilot gate failed or incomplete")
+        independent_path = gate.get("independent_verification_path")
+        if not independent_path:
+            raise ValueError("Independent pilot reconciliation required")
+        independent = Path(independent_path)
+        if independent.is_symlink() or digest(independent.read_bytes()) != gate.get(
+            "independent_verification_sha256"
+        ):
+            raise ValueError("Independent pilot evidence changed")
+        proof = json.loads(independent.read_bytes())
+        if (
+            proof.get("status") != "PASS"
+            or set(proof.get("passed_pilot_ids", [])) != set(pilot)
+            or proof.get("pilot_source_manifests")
+            != {i: e["source_manifest_sha256"] for i, e in gate["pilot_matches"].items()}
+        ):
+            raise ValueError("Incomplete independent pilot reconciliation")
         for i, evidence in gate["pilot_matches"].items():
             raw_folder = root / REVISION / i
             verify(raw_folder, proposal)

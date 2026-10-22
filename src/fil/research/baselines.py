@@ -20,13 +20,15 @@ FEATURES = ("context", "location", "forwardness", "gain_5", "gain_10", "gain_15"
 def examples(events: pa.Table, process: dict, home_team_id: int) -> list[dict]:
     """Cutoff record alone supplies features; future evidence supplies labels only."""
     by_id = {r["event_id"]: r for r in events.to_pylist()}
+    if len(by_id) != events.num_rows or len(set(events["match_id"].to_pylist())) != 1:
+        raise ValueError("Expected unique single-match source records")
     output = []
     for w in process["forecast_windows"]:
         if w["outcome"] is None or w["match_id"] == 8658:
             continue
         r = by_id[w["cutoff_event_id"]]
         future = [by_id[i] for i in w["outcome_event_ids"]]
-        if len(future) != 5 or any(
+        if len({s["event_id"] for s in future}) != 5 or any(
             s["provider_index"] <= r["provider_index"]
             or s["period"] != r["period"]
             or s["possession_id"] != r["possession_id"]

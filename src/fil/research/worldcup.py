@@ -43,6 +43,7 @@ def build(
     valid = [MatchEvidence(old, old_meta, roster)]
     canonical = [pa.Table.from_arrays([old[n] for n in EVENT_SCHEMA.names], schema=EVENT_SCHEMA)]
     authorisations = set(AUTHORISED)
+    process_audits = []
     report_rows = []
     rows = []
     metadata = []
@@ -82,6 +83,7 @@ def build(
         valid.append(MatchEvidence(e, match_meta, q["roster"]))
         metadata.append(match_meta)
         authorisations.add(("statsbomb_open_data", mid, q["source_manifest_sha256"]))
+        process_audits.append(json.loads((folder / "process.json").read_bytes()))
         rows.extend(
             examples(
                 e,
@@ -116,6 +118,7 @@ def build(
             ("corpus", quality),
             ("pilot_quality", report_rows),
             ("forecast_rows", rows),
+            ("process_audits", process_audits),
             ("baseline_results", baseline),
             ("baseline_predictions", predictions),
         ]:

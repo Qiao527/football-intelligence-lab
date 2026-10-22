@@ -194,7 +194,9 @@ def audit(folder: Path, proposal: Path, original: Path, output: Path, implementa
                 material.append("unresolved_lineup_chronology")
             facts = reconstruct(scored, *[meta[k][k + "_id"] for k in ("home_team", "away_team")])
             report["possession_quality"] = facts.quality
-            (stage / "process.json").write_text(encode(analyse(facts.actions)))
+            process = analyse(facts.actions)
+            report["process_summary"] = process["summary"]
+            (stage / "process.json").write_text(encode(process))
         except ValueError as error:
             report["downstream_error"] = str(error)
             material.append("clock_score_or_possession_contract_failed")
@@ -228,7 +230,7 @@ def audit(folder: Path, proposal: Path, original: Path, output: Path, implementa
     return target
 
 
-def pilot_gate(reports: list[Path], output: Path) -> dict:
+def pilot_gate(reports: list[Path], output: Path, independent: Path | None = None) -> dict:
     """Bind all six material-quality decisions to immutable raw/report hashes."""
     from fil.research.acquisition import scope
 
@@ -238,8 +240,23 @@ def pilot_gate(reports: list[Path], output: Path) -> dict:
     rows = [json.loads((p / "quality.json").read_bytes()) for p in reports]
     if {r["match_id"] for r in rows} != expected or len(rows) != 6:
         raise ValueError("Complete six-match pilot required")
+    independent_result = json.loads(independent.read_bytes()) if independent else {}
+    independent_ok = (
+        independent_result.get("status") == "PASS"
+        and set(independent_result.get("passed_pilot_ids", [])) == expected
+        and independent_result.get("pilot_source_manifests")
+        == {str(r["match_id"]): r["source_manifest_sha256"] for r in rows}
+    )
     gate = dict(
-        status="PASS" if all(not r["material_failures"] for r in rows) else "BLOCKED",
+        status=(
+            "BLOCKED"
+            if any(r["material_failures"] for r in rows)
+            else "PASS"
+            if independent_ok
+            else "PENDING_INDEPENDENT_RECONCILIATION"
+        ),
+        independent_verification_path=str(independent.resolve()) if independent else None,
+        independent_verification_sha256=digest(independent.read_bytes()) if independent else None,
         proposal_sha256=PROPOSAL_SHA256,
         pilot_matches={
             str(r["match_id"]): dict(

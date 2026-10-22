@@ -6,7 +6,9 @@ labels/features are recomputed without production clock/score/census/model code.
 
 import hashlib
 import json
+import math
 import sys
+from bisect import bisect_left
 from collections import defaultdict
 from pathlib import Path
 
@@ -192,10 +194,29 @@ def main():
             s["id"] for s in future
         ]
         assert r["outcome"] == int(any(s["type"]["name"] == "Shot" for s in future))
-        assert (
-            r["source_feature_geometry"]
-            == e["location"][:2] + e[e["type"]["name"].lower()]["end_location"][:2]
+        start = e.get("location") or [None, None]
+        end = e[e["type"]["name"].lower()].get("end_location") or [None, None]
+        assert r["source_feature_geometry"] == start[:2] + end[:2]
+        endpoint_ok = (
+            all(v is not None for v in end[:2]) and 0 <= end[0] <= 120 and 0 <= end[1] <= 80
         )
+        origin_ok = (
+            all(v is not None for v in start[:2]) and 0 <= start[0] <= 120 and 0 <= start[1] <= 80
+        )
+        expected_location = (
+            f"{min(5, int(end[0] / 20))}:{min(3, int(end[1] / 20))}" if endpoint_ok else None
+        )
+        dx = end[0] - start[0] if origin_ok and endpoint_ok else None
+        assert r["features"]["location"] == expected_location
+        assert r["features"]["forwardness"] == (
+            ["nonpositive", "0to5", "5to10", "above10"][bisect_left([0, 5, 10], dx)]
+            if dx is not None
+            else None
+        )
+        for threshold in [5, 10, 15]:
+            assert r["features"][f"gain_{threshold}"] == (
+                str(dx >= threshold) if dx is not None else None
+            )
         diff = (r["score_home_before"] - r["score_away_before"]) * (
             1 if e["team"]["id"] == teams[0] else -1
         )
@@ -238,11 +259,49 @@ def main():
                 abs(expected - value["comparisons"]["test"]["scores"][field]["equal_match_brier"])
                 < 1e-12
             )
+            probabilities = [p[field] if p["outcome"] else 1 - p[field] for p in test]
+            impossible = sum(v == 0 for v in probabilities)
+            score = value["comparisons"]["test"]["scores"][field]
+            assert score["infinite_log_loss_predictions"] == impossible
+            if impossible:
+                assert score["equal_match_log_loss"] is None
+            else:
+                assert (
+                    abs(
+                        score["equal_match_log_loss"]
+                        - sum(-math.log(v) for v in probabilities) / len(probabilities)
+                    )
+                    < 1e-12
+                )
+            for i, bin_row in enumerate(score["calibration"]):
+                selected = [p for p in test if min(int(p[field] * 5), 4) == i]
+                assert bin_row["n"] == len(selected)
+                if selected:
+                    assert (
+                        abs(
+                            bin_row["mean_probability"]
+                            - sum(p[field] for p in selected) / len(selected)
+                        )
+                        < 1e-12
+                    )
+                    assert (
+                        abs(
+                            bin_row["observed_frequency"]
+                            - sum(p["outcome"] for p in selected) / len(selected)
+                        )
+                        < 1e-12
+                    )
         assert value["comparisons"]["test"]["match_bootstrap_95_interval"] is None
     print(
         json.dumps(
             dict(
                 status="PASS",
+                passed_pilot_ids=sorted(
+                    i for i, q in reports.items() if not q["material_failures"]
+                ),
+                pilot_source_manifests={
+                    str(i): sha(raw_root / str(i) / "manifest.json") for i in reports
+                },
                 canonical_matches=len(originals),
                 canonical_events=len(canonical),
                 validated_matches=len({r["match_id"] for r in validated}),

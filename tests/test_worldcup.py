@@ -2,6 +2,7 @@
 
 import hashlib
 import io
+import json
 from pathlib import Path
 
 import pyarrow as pa
@@ -118,7 +119,7 @@ def test_features_are_owner_relative_and_missing_geometry_is_not_zero():
     assert r["features"]["location"] is None and r["features"]["gain_5"] is None
 
 
-@pytest.mark.parametrize("bad", ["period", "owner", "order", "label", "feature"])
+@pytest.mark.parametrize("bad", ["period", "owner", "order", "label", "feature", "duplicate"])
 def test_future_evidence_and_labels_cannot_change_silently(bad):
     rows, p = fixture()
     if bad == "period":
@@ -129,6 +130,8 @@ def test_future_evidence_and_labels_cannot_change_silently(bad):
         rows[-1]["provider_index"] = 1
     if bad == "label":
         p["forecast_windows"][0]["outcome"] = 0
+    if bad == "duplicate":
+        p["forecast_windows"][0]["outcome_event_ids"][0] = "TEST-6"
     if bad == "feature":
         p["forecast_windows"][0]["feature_event_ids"] = ["TEST-6"]
     with pytest.raises(ValueError):
@@ -174,3 +177,60 @@ def test_temporal_baseline_is_training_only_and_single_match_has_no_interval():
     rows[-1]["match_id"] = 8658
     with pytest.raises(ValueError, match="Development"):
         run(rows, meta)
+
+
+def test_pilot_gate_requires_complete_independent_reconciliation(tmp_path):
+    from fil.research.pilot import pilot_gate
+
+    ids = acq.scope(Path("docs/research/statsbomb_corpus_proposal.json"))["pilot_new_match_ids"]
+    reports = []
+    for i in ids:
+        folder = tmp_path / str(i)
+        folder.mkdir()
+        (folder / "quality.json").write_text(
+            json.dumps(dict(match_id=i, source_manifest_sha256="e" * 64, material_failures=[]))
+        )
+        reports.append(folder)
+    pending = pilot_gate(reports, tmp_path / "pending.json")
+    assert pending["status"] == "PENDING_INDEPENDENT_RECONCILIATION"
+    proof = tmp_path / "TEST_ONLY-independent.json"
+    proof.write_text(
+        json.dumps(
+            dict(
+                status="PASS",
+                passed_pilot_ids=ids[:-1],
+                pilot_source_manifests={str(i): "e" * 64 for i in ids},
+            )
+        )
+    )
+    assert (
+        pilot_gate(reports, tmp_path / "incomplete.json", proof)["status"]
+        == "PENDING_INDEPENDENT_RECONCILIATION"
+    )
+    value = json.loads(proof.read_bytes())
+    value["passed_pilot_ids"] = ids
+    proof.write_text(json.dumps(value))
+    gate = tmp_path / "complete.json"
+    assert pilot_gate(reports, gate, proof)["status"] == "PASS"
+    proof.write_text(proof.read_text() + " ")
+    with pytest.raises(ValueError, match="evidence changed"):
+        acq.acquire(
+            8654,
+            tmp_path,
+            Path("docs/research/statsbomb_corpus_proposal.json"),
+            "a" * 40,
+            pilot_gate=gate,
+        )
+    q = json.loads((reports[-1] / "quality.json").read_bytes())
+    q["material_failures"] = ["TEST_ONLY_CLOCK_CONFLICT"]
+    (reports[-1] / "quality.json").write_text(json.dumps(q))
+    blocked = tmp_path / "blocked.json"
+    assert pilot_gate(reports, blocked, proof)["status"] == "BLOCKED"
+    with pytest.raises(ValueError, match="failed or incomplete"):
+        acq.acquire(
+            8654,
+            tmp_path,
+            Path("docs/research/statsbomb_corpus_proposal.json"),
+            "a" * 40,
+            pilot_gate=blocked,
+        )
