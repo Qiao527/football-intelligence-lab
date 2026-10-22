@@ -128,6 +128,7 @@ def main():
             assert r["shot_xg"] == (e["shot"].get("statsbomb_xg") if kind == "Shot" else None)
     all_expected = {}
     boundary_failures = {}
+    blocked_raw_scores = {}
     checks = []
     for mid, q in reports.items():
         raw = originals[mid]
@@ -152,6 +153,26 @@ def main():
         }
         conflicts = {p: v for p, v in conflicts.items() if len(v) != 1}
         if conflicts:
+            raw_goals = dict.fromkeys(teams, 0)
+            seen = set()
+            for e in raw:
+                if e["period"] == 5:
+                    continue
+                kind = e["type"]["name"]
+                team = e["team"]["id"]
+                if kind == "Shot" and e["shot"]["outcome"]["name"] == "Goal":
+                    raw_goals[team] += 1
+                if kind in {"Own Goal For", "Own Goal Against"} and e["id"] not in seen:
+                    beneficiary = (
+                        team if kind == "Own Goal For" else next(t for t in teams if t != team)
+                    )
+                    raw_goals[beneficiary] += 1
+                    seen.add(e["id"])
+                    seen.update(e.get("related_events", []))
+            assert [raw_goals[t] for t in teams] == [meta["home_score"], meta["away_score"]]
+            blocked_raw_scores[mid] = dict(
+                raw_goal_count=[raw_goals[t] for t in teams], temporal_score_states="blocked"
+            )
             boundary_failures[mid] = conflicts
             assert q["material_failures"] and mid not in {r["match_id"] for r in validated}
             continue
@@ -342,6 +363,7 @@ def main():
                 validated_events=len(validated),
                 independent_scores=checks,
                 boundary_failures=boundary_failures,
+                blocked_raw_score_checks=blocked_raw_scores,
                 source_forecast_rows=len(rows),
                 heldout_test_matches=1,
                 limitations="pilot only; no statistical sufficiency or general football validation",
