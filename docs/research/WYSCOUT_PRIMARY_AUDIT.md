@@ -60,7 +60,7 @@ or production registry change is added.
 
 Proposed purpose: local noncommercial source reconciliation, provider-specific
 event/possession research and transparent empirical baseline evaluation. First
-scope: **one competition-season chosen from verified original release metadata**,
+scope: **2018 World Cup, only if confirmed in the original release metadata**,
 only its event/match/team/player metadata files. Exact article versions, file IDs,
 byte budget, checksums and licence/attribution rows must replace all unknowns in a
 separate immutable proposal before owner authorization. Start with a small identity/

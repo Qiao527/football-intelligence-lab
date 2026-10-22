@@ -35,7 +35,7 @@ jobs:
         env:
           UV_PROJECT_ENVIRONMENT: .venv-wheel
         run: |
-          uv sync --frozen --no-editable
+          uv sync --frozen --no-editable --reinstall-package football-intelligence-lab
           uv run --frozen --no-editable ruff check .
           uv run --frozen --no-editable pytest -q
           uv run --frozen --no-editable python -m fil.ingestion.normalize --help

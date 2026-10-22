@@ -11,6 +11,7 @@ from fil.research.prospective import (
     components,
     fit_weighted_baseline,
     paired_uncertainty,
+    partition_plan,
     predict_weighted,
 )
 
@@ -169,6 +170,47 @@ def test_component_resampling_keeps_unequal_component_size_in_match_estimand():
     assert r["equal_match_effect"] == 1
     assert r["component_interval"] == [0.5, 2]
     assert not r["inferential_independence_certified"]
+
+
+def test_frozen_future_partition_is_whole_match_and_excludes_all_exposed_matches():
+    ids = list(range(1000, 1057))  # TEST_ONLY metadata; no source payload.
+    proposal = dict(expansion_new_match_ids=ids, files=[], metadata_source_sha256="a" * 64)
+    metadata = [
+        dict(
+            match_id=m,
+            match_date=day,
+            home_team=dict(home_team_id=1),
+            away_team=dict(away_team_id=2),
+        )
+        for m, day in zip(
+            ids, ["2018-06-26"] * 30 + ["2018-07-01"] * 20 + ["2018-07-02"] * 7, strict=True
+        )
+    ]
+    plan = partition_plan(proposal, metadata)
+    assert {k: len(v) for k, v in plan["partitions"].items()} == dict(
+        train=30, validation=20, test=7
+    )
+    assert not plan["event_payloads_opened"] and not plan["evaluated"]
+    assert plan["expansion_gate"] == "BLOCKED"
+    proposal["expansion_new_match_ids"][-1] = 8655
+    with pytest.raises(ValueError, match="57 unacquired"):
+        partition_plan(proposal, metadata)
+
+
+def test_proposed_metric_artifact_cannot_unlock_original_expansion_executor(tmp_path):
+    from pathlib import Path
+
+    from fil.research.acquisition import acquire, scope
+
+    proposal = Path("docs/research/statsbomb_corpus_proposal.json")
+    mid = scope(proposal)["expansion_new_match_ids"][0]
+    gate = tmp_path / "proposal.json"
+    gate.write_text(
+        json.dumps(dict(expansion_gate="BLOCKED", policy_status="PROPOSED_NOT_ACCEPTED"))
+    )
+    with pytest.raises(ValueError, match="Pilot gate failed"):
+        acquire(mid, tmp_path / "raw", proposal, "a" * 40, pilot_gate=gate)
+    assert not (tmp_path / "raw").exists()
 
 
 def training_rows():

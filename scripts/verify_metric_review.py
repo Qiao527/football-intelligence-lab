@@ -8,6 +8,7 @@ import json
 import subprocess
 import sys
 from collections import Counter, defaultdict
+from fractions import Fraction
 from pathlib import Path
 
 
@@ -26,6 +27,9 @@ def verify(folder, original, config):
     labels = json.loads((folder / "labels.json").read_bytes())
     matrices = {r["match_id"]: r for r in json.loads((folder / "eligibility.json").read_bytes())}
     counts, seen = {}, set()
+    metadata = {
+        m["match_id"]: m for m in json.loads((original / "data/matches/43/3.json").read_bytes())
+    }
     for mid, matrix in matrices.items():
         if mid == 8658:
             path = original / "data/events/8658.json"
@@ -41,6 +45,33 @@ def verify(folder, original, config):
         assert e["source_identity"]["original_event_count"] == len(raw)
         assert e["source_identity"]["payload_sha256"] == digest(path)
         assert e["score"]["support"] == "fully_supported", (mid, e["score"])
+        assert e["score"]["match_play"] == [
+            metadata[mid]["home_score"],
+            metadata[mid]["away_score"],
+        ]
+        assert {i for d in e["score"]["decisions"] for i in d["source_event_ids"]} == {
+            r["id"]
+            for r in raw
+            if r["type"]["name"] in ("Shot", "Own Goal For", "Own Goal Against")
+        }
+        overlaps, unknown = [], []
+        for period in sorted({r["period"] for r in raw if r["period"] < 5}):
+            period_rows = [r for r in raw if r["period"] == period]
+
+            def ms(r):
+                h, m, s = r["timestamp"].split(":")
+                return (Fraction(h) * 3600 + Fraction(m) * 60 + Fraction(s)) * 1000
+
+            earliest = min(ms(r) for r in period_rows if r["type"]["name"] == "Half End")
+            for r in period_rows:
+                if r["type"]["name"] in ("Half Start", "Half End"):
+                    continue
+                if r.get("duration") is None:
+                    unknown.append(r["id"])
+                elif ms(r) + Fraction(str(r["duration"])) * 1000 > earliest:
+                    overlaps.append(r["id"])
+        assert e["known_completion_boundary_invariance"]["known_duration_overlap_ids"] == overlaps
+        assert e["known_completion_boundary_invariance"]["unknown_duration_event_ids"] == unknown
         assert e["exact_time_exposure"]["official_minutes"] is None
         assert not e["exact_time_exposure"]["per90_eligible"]
         expected_cutoffs = {

@@ -35,7 +35,7 @@ def build(review: Path, reference_raw: Path, output: Path, implementation: str) 
             protected[str(p.resolve())] = digest(p.read_bytes())
     protocol = Path("docs/research/PROSPECTIVE_PROTOCOL.md")
     proposal = Path("docs/research/statsbomb_corpus_proposal.json")
-    for p in [protocol, proposal]:
+    for p in [protocol, proposal, Path("docs/research/METRIC_ELIGIBILITY.md")]:
         protected[str(p.resolve())] = digest(p.read_bytes())
     if any(output.resolve().is_relative_to(Path(p).resolve()) for p in protected) or any(
         output.resolve().is_relative_to(p.resolve())
