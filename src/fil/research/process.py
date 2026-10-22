@@ -117,7 +117,9 @@ def analyse(actions: pa.Table) -> dict:
                     cutoff_provider_index=r["provider_index"],
                     cutoff_period_elapsed_ms=r["period_elapsed_ms"],
                     source_manifest_sha256=r["source_manifest_sha256"],
-                    availability_assumption="complete source record observed; not a live physical clock guarantee",
+                    availability_assumption=(
+                        "complete source record observed; not a live physical clock guarantee"
+                    ),
                     period=r["period"],
                     window_version=WINDOW_VERSION,
                     outcome_event_ids=[s["event_id"] for s in future] if complete else [],
