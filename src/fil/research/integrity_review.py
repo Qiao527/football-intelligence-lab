@@ -2,8 +2,10 @@
 
 import argparse
 import json
+import math
 import re
 import tempfile
+from collections import defaultdict
 from pathlib import Path
 
 import pyarrow.parquet as pq
@@ -87,6 +89,19 @@ def forensic(raw: list[dict], metadata: dict, roster: list[dict]) -> dict:
         ],
         invariant_source_score=[score[t] for t in order],
         original_event_count=len(raw),
+        source_match_play_shots=sum(e["type"]["name"] == "Shot" and e["period"] != 5 for e in raw),
+        source_match_play_known_xg_sum=math.fsum(
+            e["shot"]["statsbomb_xg"]
+            for e in raw
+            if e["type"]["name"] == "Shot"
+            and e["period"] != 5
+            and e["shot"].get("statsbomb_xg") is not None
+        ),
+        source_missing_shot_xg_ids=[
+            e["id"]
+            for e in raw
+            if e["type"]["name"] == "Shot" and e["shot"].get("statsbomb_xg") is None
+        ],
         diagnosis=(
             "Reciprocal multi-team representations observed; unequal timestamps are not "
             "explained by ordinary 1ms rounding. Provider cause and physical whistle unresolved."
@@ -236,12 +251,30 @@ def build(delivery: Path, output: Path, implementation: str) -> Path:
             )
         )
     f["primary_documentation"] = docs
+    canonical = pq.ParquetFile(bundle / "canonical_all_matches.parquet").read().to_pylist()
+    pairs = defaultdict(list)
+    for r in canonical:
+        if r["event_type"] == "Half End" and r["period"] in (1, 2, 3, 4):
+            pairs[r["match_id"], r["period"]].append(json.loads(r["source_record_json"]))
+    f["pilot_marker_representation"] = dict(
+        playing_periods=len(pairs),
+        two_team_pairs=sum(
+            len(v) == 2 and len({e["team"]["id"] for e in v}) == 2 for v in pairs.values()
+        ),
+        reciprocal_pairs=sum(
+            len(v) == 2
+            and v[1]["id"] in v[0].get("related_events", [])
+            and v[0]["id"] in v[1].get("related_events", [])
+            for v in pairs.values()
+        ),
+        equal_timestamp_pairs=sum(len({e["timestamp"] for e in v}) == 1 for v in pairs.values()),
+    )
     rows = json.loads((bundle / "forecast_rows.json").read_bytes())
     a = audit(
         rows,
         json.loads((bundle / "baseline_predictions.json").read_bytes()),
         json.loads((bundle / "process_audits.json").read_bytes()),
-        pq.ParquetFile(bundle / "canonical_all_matches.parquet").read().to_pylist(),
+        canonical,
         json.loads((bundle / "baseline_results.json").read_bytes()),
     )
     s = shrinkage_development([r for r in rows if r["match_id"] in DEVELOPMENT])
