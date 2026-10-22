@@ -50,3 +50,6 @@ jobs:
           uv run --frozen --no-editable python -m fil.research.worldcup --help
           uv run --frozen --no-editable python -m fil.research.integrity_review --help
           uv run --frozen --no-editable python -m fil.research.metric_review --help
+          uv run --frozen --no-editable python -m fil.research.corpus_expansion --help
+          uv run --frozen --no-editable python -m fil.research.corpus_baselines --help
+          uv run --frozen --no-editable python -m fil.research.complete_corpus --help

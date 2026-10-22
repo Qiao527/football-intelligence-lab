@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from fil.research import corpus_baselines as b
+from fil.research import corpus_expansion as expansion
 from fil.research.acquisition import REVISION, digest
 from fil.research.pilot import encode
 
@@ -40,6 +41,55 @@ def test_cannot_create_model_freeze_after_any_test_payload_is_opened(tmp_path, m
     (tmp_path / REVISION / "999").mkdir(parents=True)
     with pytest.raises(ValueError, match="Test payloads already opened"):
         b.freeze(Path("UNREAD"), Path("UNREAD"), tmp_path, tmp_path, "a" * 40)
+
+
+def test_test_acquisition_requires_independent_development_proof(tmp_path, monkeypatch):
+    from fil.research.accepted_corpus import policy
+
+    monkeypatch.setattr(expansion, "verify_gate", lambda *a: {})
+    monkeypatch.setattr(
+        expansion,
+        "frozen_plan",
+        lambda *a: (
+            {"partitions": {"test": [dict(match_id=999, match_date="2018-07-14")]}},
+            "TEST",
+        ),
+    )
+    model = tmp_path / "freeze"
+    model.mkdir()
+    (model / "freeze.json").write_text(
+        encode(
+            dict(
+                plan_sha256="TEST",
+                policy=policy(),
+                frozen_before_test_acquisition=True,
+                test_match_ids=[999],
+            )
+        )
+    )
+    monkeypatch.setattr(expansion, "verify_artifact", lambda *a: {})
+    with pytest.raises(ValueError, match="Independent development-model verification"):
+        expansion.expand(
+            Path("UNREAD"),
+            Path("UNREAD"),
+            Path("UNREAD"),
+            tmp_path,
+            tmp_path,
+            "a" * 40,
+            "test",
+            model_freeze=model,
+        )
+    assert not (tmp_path / REVISION).exists()
+
+
+def test_immutable_run_json_preserves_bytes_and_modification_time(tmp_path):
+    p = tmp_path / "run.json"
+    expansion.immutable_json(p, dict(status="PASS"))
+    before = (p.read_bytes(), p.stat().st_mtime_ns)
+    expansion.immutable_json(p, dict(status="PASS"))
+    assert (p.read_bytes(), p.stat().st_mtime_ns) == before
+    with pytest.raises(ValueError, match="Immutable"):
+        expansion.immutable_json(p, dict(status="BLOCKED"))
 
 
 def test_score_state_lineage_contains_only_original_past_goals(tmp_path):
