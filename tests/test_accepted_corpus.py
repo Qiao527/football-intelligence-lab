@@ -108,3 +108,17 @@ def test_policy_and_study_are_bound_to_accepted_file_identities(monkeypatch):
     monkeypatch.setattr(c, "POLICY_SHA256", "0" * 64)
     with pytest.raises(ValueError, match="policy file changed"):
         c.policy()
+
+
+def test_documented_context_types_are_reviewed_without_remapping_original_flags():
+    raw = [
+        dict(id="TEST-CARD", type=dict(id=24, name="Bad Behaviour")),
+        dict(id="TEST-CONTEST", type=dict(id=33, name="50/50")),
+    ]
+    before = copy.deepcopy(raw)
+    review = c.supplemental_semantics(raw)
+    assert not review["unreviewed_event_ids"] and raw == before
+    assert review["canonical_warning_flags_preserved"]
+    assert not review["numeric_attribute_remapping_performed"]
+    raw[1]["type"]["id"] = 999
+    assert c.supplemental_semantics(raw)["unreviewed_event_ids"] == ["TEST-CONTEST"]

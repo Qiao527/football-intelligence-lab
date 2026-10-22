@@ -11,7 +11,7 @@ import pyarrow.parquet as pq
 from fil.ingestion.statsbomb_adapter import RECOGNIZED_TYPES, to_canonical
 from fil.research.acquisition import PROPOSAL_SHA256, REVISION, digest, scope, verify
 from fil.research.eligibility import assess
-from fil.research.integrity_review import verify_artifact
+from fil.research.integrity_review import DOCUMENTS, verify_artifact
 from fil.research.pilot import encode, reference
 from fil.research.possession_target import label_segments, label_support, possession_weights
 from fil.schema import SourceContext
@@ -24,6 +24,28 @@ POLICY_SHA256 = "bda88c4231376c467dd2be90387d5fdae2139d3b121bfd24a8b414f2ebc6856
 PROTOCOL_SHA256 = "5f96b250935483eda4fd01816e5a4e816cef8a00bf0c9f4c7af6fdabe3d7161e"
 REQUIRED = ("source_identity", "event_order", "score", "native_spatial")
 PROPOSAL = Path("docs/research/statsbomb_corpus_proposal.json")
+
+
+def supplemental_semantics(raw: list[dict]) -> dict:
+    """Pinned spec p14: these context records were absent from the original 8658 recognizer.
+
+    Preserve original canonical warning flags. Do not infer old numeric outcome/card
+    mappings from a later documentation version; neither type is a pass/carry cutoff
+    or Shot label. Census still reads explicit source card names and stays uncertain.
+    """
+    reviewed = {"Bad Behaviour": 24, "50/50": 33}
+    remaining = [
+        e["id"]
+        for e in raw
+        if e["type"]["name"] not in RECOGNIZED_TYPES
+        and reviewed.get(e["type"]["name"]) != e["type"]["id"]
+    ]
+    return dict(
+        reviewed_context_type_ids=reviewed,
+        unreviewed_event_ids=remaining,
+        numeric_attribute_remapping_performed=False,
+        canonical_warning_flags_preserved=True,
+    )
 
 
 def policy() -> dict:
@@ -60,6 +82,12 @@ def write_bundle(stage: Path, folder: Path) -> Path:
 def audit_match(rawroot: Path, mid: int, original: Path, output: Path, implementation: str) -> Path:
     """Canonicalize all records; gate only named supported source-record domains."""
     accepted = policy()
+    documentation = []
+    for name, (local, expected) in DOCUMENTS.items():
+        doc = Path("data/interim/spatial-docs") / local
+        if digest(doc.read_bytes()) != expected:
+            raise ValueError("Pinned provider semantics documentation changed")
+        documentation.append(dict(upstream_path=name, sha256=expected))
     if not re.fullmatch("[0-9a-f]{40}", implementation):
         raise ValueError("Full implementation SHA required")
     manifest = verify(rawroot / REVISION / str(mid), PROPOSAL)
@@ -130,8 +158,8 @@ def audit_match(rawroot: Path, mid: int, original: Path, output: Path, implement
     unknown = dict(
         Counter(e["type"]["name"] for e in raw if e["type"]["name"] not in RECOGNIZED_TYPES)
     )
-    # Unknown required semantics must be reviewed before a source-record research gate passes.
-    if unknown:
+    semantics = supplemental_semantics(raw)
+    if semantics["unreviewed_event_ids"]:
         material.append("unreviewed_provider_event_semantics")
     labels = [] if material else possession_weights(label_segments(raw, source_hash, mid))
     report = dict(
@@ -150,6 +178,8 @@ def audit_match(rawroot: Path, mid: int, original: Path, output: Path, implement
         unrostered=unrostered,
         unsupported_pass_event_ids=bad_passes,
         unknown_types=unknown,
+        supplemental_semantics_review=semantics,
+        semantics_documentation=documentation,
         canonical_null_counts={name: table[name].null_count for name in table.column_names},
         metric_eligibility=eligibility["eligibility"],
         label_support=label_support(labels),
