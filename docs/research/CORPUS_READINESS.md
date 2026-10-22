@@ -204,3 +204,65 @@ and prespecified ordinal decision relevance. Analyze paired query/analyst result
 with match-dependent uncertainty and sensitivity to relevance adjudication.
 No player rating, importance ranking or underrated claim is an endpoint. Pogba's
 8658 example remains development-exposed exploratory evidence only.
+
+## Verification delivery
+
+Implementation/source verification at `69783f4861742a38de520ddd1d502d1adde153b6` (full implementation SHA is
+recorded in each local bundle; final documentation-only commits may follow):
+
+| Check | Actual outcome |
+| --- | --- |
+| `uv run --frozen ruff check .` | exit 0 |
+| `uv run --frozen pytest -q` | 394 passed, 8.58 s; no skips |
+| Fresh `uv sync --frozen --no-editable --reinstall-package football-intelligence-lab`, then installed Python `-m pytest -q` | 394 passed, 10.25 s; no skips |
+| `uv lock --check`; `uv build` | exit 0; wheel and source distribution built |
+| `scripts/verify_research_source.py CONFIG BUNDLE` | exit 0; original 2,978 events, 45 roster identities, seven lineup/transition records, official 4–2 score reconciled |
+| `scripts/verify_process_source.py CONFIG BUNDLE` | exit 0; independent original-JSON reach/order/window recomputation, including exact exported summary |
+| `scripts/check_product_browser.py CONFIG --url http://127.0.0.1:8516 --output data/interim/corpus-readiness-review` | exit 0; Chromium desktop and 390 px mobile, four-view shared selection/reset/drilldown, corrected co-occurrence heading/caption, zero page errors/external requests |
+| `scripts/verify_possessions_source.py CONFIG V3_BUNDLE` | exit 0; original 2,978 events, 182 native IDs, 23 shots, 36 supported turnovers, source xG 2.5782512977 and 480 filter/team/score queries |
+| Original input immutability | 23 previously recorded file hashes **and mtimes** unchanged |
+
+Initial browser/server/build invocations without the tool's network capability
+failed on local sockets/package resolution, before product interaction. Enabling
+the supported per-command networking capability allowed the local server,
+Chromium and pinned package build to run; no outbound policy or source-rights
+restriction was bypassed. An intervening browser attempt found the server absent;
+it was restarted successfully before the completed run.
+
+Actual fixture findings (descriptive, not predictive validation): 182 native
+possession IDs; 113 order-eligible observed-final-third possessions; 69 with no
+observed final-third reach; one unresolved cross-half native ID (91); opening
+administrative ID (1) has no owner actions, separately ineligible. Co-occurring
+shot/final-third possessions: 21; strictly later observed shots: 20. Co-occurring
+box/final-third possessions: 41; strictly later observed box records: 37.
+The fixed forecasting contract produces 889 complete windows and 319 censored or
+unresolved windows. Missingness and longer-sequence selection bias remain visible.
+No new real match, trained baseline result, analyst acceptance, xT/VAEP or
+player-importance validation is claimed.
+
+Local evidence: `data/interim/corpus-readiness-review/product-browser-report.json`
+and 12 desktop/mobile/detail PNGs; source-derived artifacts and screenshots remain
+ignored and are not attached to the PR. The latest generated research bundle
+path is in `/tmp/fil-corpus-readiness-bundle.json`; its `process.json` contains all
+original-ID evidence and predefined forecast windows. Existing older corpus and
+possession bundles remain intact. Source xG remains 2.5782512977. This mission did
+not rerun the interleaved performance benchmark or resolve existing startup/filter
+budgets; prior performance limitations remain in the product review documentation.
+
+Reproduce from an existing **authorized** config (no downloader invoked):
+
+```sh
+uv run --frozen python -m fil.research --config /absolute/local-config.json \
+  --pipeline-revision FULL_BRANCH_SHA --output data/interim/research
+uv run --frozen python scripts/verify_research_source.py /absolute/local-config.json /absolute/new-bundle
+uv run --frozen python scripts/verify_process_source.py /absolute/local-config.json /absolute/new-bundle
+uv run --frozen python -m fil.explorer --config /absolute/local-config.json --port 8516
+# In a second terminal:
+uv run --frozen --group browser python scripts/check_product_browser.py /absolute/local-config.json \
+  --url http://127.0.0.1:8516 --output data/interim/corpus-readiness-review
+```
+
+Full corpus quality, unseen-file SHA-256 verification, genuine temporal holdout
+baselines and blinded analyst results remain pending authorization and real data.
+Wyscout primary-source verification additionally needs the narrowly identified
+network-policy change. No approval is inferred from a completed implementation.
