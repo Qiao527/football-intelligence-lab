@@ -109,7 +109,11 @@ def main():
         count(2978)
         select("Team", "Croatia")
         count(sum(e["team"]["id"] == 785 for e in raw))
-        assert "785" in box("Player evidence record").inner_text()
+        expect(
+            page.get_by_test_id("stSelectbox").filter(
+                has=page.get_by_text("Player evidence record", exact=True)
+            )
+        ).to_contain_text("785:")
         page.get_by_role("button", name="Reset filters", exact=True).click()
         count(2978)
         select("Event type", "Camera On")
@@ -125,7 +129,31 @@ def main():
         )
         page.get_by_role("button", name="Reset filters", exact=True).click()
         count(2978)
+        for view, toggle in (
+            ("Possession Flow", "Show detailed possession audit"),
+            ("Tactical Dashboard", "Show detailed tactical audit"),
+        ):
+            select("View", view)
+            before = page.get_by_test_id("stDataFrame").count()
+            page.get_by_text(toggle, exact=True).click()
+            expect(page.get_by_test_id("stDataFrame")).to_have_count(
+                before + (2 if view == "Possession Flow" else 3)
+            )
+            idle()
+            count(2978)
+            page.get_by_text(toggle, exact=True).click()
+            expect(page.get_by_test_id("stDataFrame")).to_have_count(before)
+            idle()
+        names = page.get_by_text("Show all player names", exact=True)
+        names.click()
+        idle()
+        expect(page.get_by_test_id("stPlotlyChart")).to_have_count(3)
+        checks.append(
+            "Opt-in full audits restore tables without changing source KPIs; network name toggle"
+        )
+        select("View", "Player Evidence")
         page.set_viewport_size({"width": 390, "height": 844})
+        page.wait_for_timeout(600)  # Complete Streamlit sidebar resize animation.
         page.get_by_role("heading", name="Player Evidence", exact=True).scroll_into_view_if_needed()
         assert page.evaluate("document.documentElement.scrollWidth<=innerWidth")
         page.screenshot(path=str(args.output / "mobile-players.png"))

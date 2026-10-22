@@ -242,6 +242,10 @@ def main():
             and nxt["period"] == last["period"]
             and nxt["possession_team"]["id"] != team
             and not (out or foul or boundary or restart)
+            and not (
+                manifest["version"] == "fil-possession-2"
+                and any(e["type"]["name"] in ("Own Goal For", "Own Goal Against") for e in g)
+            )
         )
         shot_end = bool(last and last["type"]["name"] == "Shot")
         assert r["turnover"] is turnover and r["shot_ending"] is shot_end
@@ -261,6 +265,26 @@ def main():
             else "provider_boundary_unresolved"
         )
         assert r["end_reason"] == reason
+        if manifest["version"] == "fil-possession-2":
+            evidence = set(r["boundary_evidence_ids"])
+            allowed = {e["id"] for e in g}
+            if nxt:
+                allowed.update(e["id"] for e in group_list[i + 1])
+            assert evidence <= allowed
+            assert g[-1]["id"] in evidence
+            for e in g:
+                if e["type"]["name"] in ("Own Goal For", "Own Goal Against", "Half End"):
+                    assert e["id"] in evidence
+            for e in tail:
+                if (
+                    e.get("out") is True
+                    or (e.get("pass", {}).get("outcome") or {}).get("name")
+                    in ("Out", "Pass Offside")
+                    or e["type"]["name"] in ("Foul Won", "Foul Committed")
+                ):
+                    assert e["id"] in evidence
+            if restart:
+                assert next_own["id"] in evidence
     # Actual shared-selector queries compared to independently selected native IDs.
     facts = PossessionFacts(possessions, actions, {})
     durations = {p: max(ms(e) for e in raw if e["period"] == p) for p in (1, 2)}

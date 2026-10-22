@@ -101,6 +101,7 @@ def main() -> None:
                         "navigation_to_ledger_seconds": ledger_seconds,
                         "navigation_to_evidence_seconds": complete_seconds,
                         "blocked_external_requests": blocked,
+                        "explorer_profile": json.loads(profile.read_bytes()),
                     }
                     if args.tactical:
                         config = json.loads(args.config.read_bytes())
@@ -145,6 +146,7 @@ def main() -> None:
                         choose("View", "Tactical Dashboard")
                         ready(raw)
                         result["tactical_open_seconds"] = time.perf_counter() - started
+                        result["tactical_profile"] = json.loads(profile.read_bytes())
                         started = time.perf_counter()
                         choose("Period", "Period 2")
                         ready([e for e in raw if e["period"] == 2])
@@ -175,6 +177,7 @@ def main() -> None:
                             "data-test-script-state", "notRunning"
                         )
                         result["possession_open_seconds"] = time.perf_counter() - started
+                        result["possession_profile"] = json.loads(profile.read_bytes())
                     results.append(result)
                     print(json.dumps(result), flush=True)
                 finally:
