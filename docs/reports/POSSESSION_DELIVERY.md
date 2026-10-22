@@ -193,8 +193,8 @@ uv run --frozen --group browser python scripts/check_explorer_browser.py CONFIG 
   actual shot-map and threat-bar clicks, mobile/sidebar.
 - Zero browser page exceptions and zero blocked external requests in all suites.
 - Final possession opening **3.293s**; eight measured filter changes
-  **0.434–1.095s**, median **0.716s**. A prior run measured 1.903s opening and
-  is retained; neither is a universal startup promise. These measurements wait
+  **0.434–1.095s**, median **0.716s**. The earlier run in `data/interim/v05-possession-review` measured 3.200s
+  opening and is retained; neither is a universal startup promise. These measurements wait
   for expected metrics and app completion; they do not individually certify
   every browser pixel's paint time.
 - Full Tactical regression opening **2.918s**; eight measured filters
