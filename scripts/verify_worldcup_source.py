@@ -92,6 +92,40 @@ def main():
         projected = [r for r in canonical if r["match_id"] == mid]
         assert [json.loads(r["source_record_json"]) for r in projected] == raw
         assert [r["event_id"] for r in projected] == [e["id"] for e in raw]
+        for r, e in zip(projected, raw, strict=True):
+            assert (r["provider_index"], r["period"], r["period_timestamp"]) == (
+                e["index"],
+                e["period"],
+                e["timestamp"],
+            )
+            assert (r["team_id"], r["player_id"], r["possession_id"], r["possession_team_id"]) == (
+                e["team"]["id"],
+                e.get("player", {}).get("id"),
+                e.get("possession"),
+                e.get("possession_team", {}).get("id"),
+            )
+            point = e.get("location") or [None, None]
+            assert [r["x"], r["y"]] == point[:2]
+            assert r["z"] == (point[2] if len(point) > 2 else None)
+            kind = e["type"]["name"]
+            detail = e.get(
+                {
+                    "Pass": "pass",
+                    "Carry": "carry",
+                    "Shot": "shot",
+                    "Goal Keeper": "goalkeeper",
+                    "Dribble": "dribble",
+                    "Duel": "duel",
+                    "Interception": "interception",
+                    "Ball Receipt*": "ball_receipt",
+                    "50/50": "50_50",
+                }.get(kind, "TEST_NON_ACTION"),
+                {},
+            )
+            end = (detail or {}).get("end_location") or [None, None]
+            assert [r["end_x"], r["end_y"]] == end[:2]
+            assert r["end_z"] == (end[2] if len(end) > 2 else None)
+            assert r["shot_xg"] == (e["shot"].get("statsbomb_xg") if kind == "Shot" else None)
     all_expected = {}
     boundary_failures = {}
     checks = []

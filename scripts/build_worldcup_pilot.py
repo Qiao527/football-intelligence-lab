@@ -79,7 +79,7 @@ def main():
         pilot_gate=gate["status"],
         independent_verification=str(independent.resolve()),
         new_raw_matches=6,
-        remaining_57_acquired=False,
+        expansion_performed=False,
     )
     write_once(run / "delivery.json", encode(result))
     print(encode(result))

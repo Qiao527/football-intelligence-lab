@@ -35,6 +35,32 @@ def reference(raw: Path) -> tuple[list, dict]:
         manifest_sha256=digest((raw / "manifest.json").read_bytes()),
         match_metadata_sha256=digest((raw / "data/matches/43/3.json").read_bytes()),
         upstream_revision=verified["upstream_revision"],
+        rights_review=dict(
+            owner_approved_enumeration_sha256=PROPOSAL_SHA256,
+            terms=[
+                dict(
+                    path=name,
+                    sha256=digest((raw / name).read_bytes()),
+                    url=f"https://raw.githubusercontent.com/hudl/open-data/{REVISION}/{name}",
+                )
+                for name in ("README.md", "LICENSE.pdf")
+            ],
+            agreement_date="2023-09-08",
+            attribution=(
+                "StatsBomb credit and brand logo required for publication; "
+                "publication not authorized here"
+            ),
+            scope=(
+                "local noncommercial research and empirical baselines "
+                "consistent with provider agreement"
+            ),
+            excluded=(
+                "redistribution, publication, commercial use, external AI upload, "
+                "deployment, model-weight publication, xT/VAEP"
+            ),
+            registration="prior owner attestation; no independent account verification",
+            interpretation="research scope, not an express general machine-learning licence",
+        ),
     )
 
 

@@ -182,7 +182,9 @@ def test_temporal_baseline_is_training_only_and_single_match_has_no_interval():
 def test_pilot_gate_requires_complete_independent_reconciliation(tmp_path):
     from fil.research.pilot import pilot_gate
 
-    ids = acq.scope(Path("docs/research/statsbomb_corpus_proposal.json"))["pilot_new_match_ids"]
+    approved = acq.scope(Path("docs/research/statsbomb_corpus_proposal.json"))
+    ids = approved["pilot_new_match_ids"]
+    expansion_mid = approved["expansion_new_match_ids"][0]
     reports = []
     for i in ids:
         folder = tmp_path / str(i)
@@ -215,7 +217,7 @@ def test_pilot_gate_requires_complete_independent_reconciliation(tmp_path):
     proof.write_text(proof.read_text() + " ")
     with pytest.raises(ValueError, match="evidence changed"):
         acq.acquire(
-            8654,
+            expansion_mid,
             tmp_path,
             Path("docs/research/statsbomb_corpus_proposal.json"),
             "a" * 40,
@@ -228,7 +230,7 @@ def test_pilot_gate_requires_complete_independent_reconciliation(tmp_path):
     assert pilot_gate(reports, blocked, proof)["status"] == "BLOCKED"
     with pytest.raises(ValueError, match="failed or incomplete"):
         acq.acquire(
-            8654,
+            expansion_mid,
             tmp_path,
             Path("docs/research/statsbomb_corpus_proposal.json"),
             "a" * 40,

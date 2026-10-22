@@ -131,6 +131,7 @@ def build(
                     proposal_sha256=PROPOSAL_SHA256,
                     protocol_sha256=digest(protocol.read_bytes()),
                     source_revision=REVISION,
+                    rights_review=report_rows[0]["reference"]["rights_review"],
                     input_pilot_manifests=fingerprints,
                     original_source_manifest_sha256=old_meta["source_manifest_sha256"],
                     canonical_match_count=7,
@@ -187,7 +188,7 @@ def main():
         a.output,
         a.pipeline_revision,
     )
-    print(encode(dict(bundle=str(folder.resolve()), status="pilot_corpus_only_expansion_blocked")))
+    print(encode(dict(bundle=str(folder.resolve()), status="audited_pilot_corpus_built")))
 
 
 if __name__ == "__main__":
