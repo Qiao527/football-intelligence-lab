@@ -71,3 +71,11 @@ Our strict-future feature-lineage checker is not a full VAEP conformance validat
 No model weights, xT grids, VAEP values or player value sums were generated. No
 complex model has been claimed to outperform a baseline. The current data cannot
 support that experiment honestly.
+
+
+## Multi-match readiness follow-up
+
+See [primary-source audit and approval proposal](CORPUS_READINESS.md). Figshare
+original terms/file hashes remain unverified because its primary API is blocked.
+The 126 enumerated new StatsBomb files are proposed only, not acquired or allowed.
+No Wyscout licence or unrestricted machine-learning permission is inferred.

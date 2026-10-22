@@ -12,7 +12,7 @@ from fil.ingestion.statsbomb_tactics import extract_tactics
 from fil.metrics.tactics import PROGRESSION_VERSION, valid_point
 from fil.metrics.tactics import VERSION as TACTICS_VERSION
 
-VERSION = "fil-possession-2"
+VERSION = "fil-possession-3"
 OWNER_ACTIONS = frozenset(
     {
         "Pass",
@@ -512,17 +512,19 @@ def process_summary(possessions: pa.Table) -> dict:
         r["time_to_first_shot_seconds"] for r in rows if r["time_to_first_shot_seconds"] is not None
     )
     return {
+        "summary_version": "fil-process-cooccurrence-2",
+        "semantics": "same native possession; temporal order not tested",
         "eligible_possessions": len(rows),
         "final_third_possessions": len(reached),
-        "shot_after_final_third_numerator": sum(r["shot_count"] > 0 for r in reached),
-        "shot_after_final_third_denominator": len(reached),
+        "shot_and_final_third_numerator": sum(r["shot_count"] > 0 for r in reached),
+        "observed_final_third_denominator": len(reached),
         "p_shot_given_final_third": sum(r["shot_count"] > 0 for r in reached) / len(reached)
         if reached
         else None,
         "p_box_given_final_third": sum(r["reached_box"] for r in reached) / len(reached)
         if reached
         else None,
-        "box_after_final_third_numerator": sum(r["reached_box"] for r in reached),
+        "box_and_final_third_numerator": sum(r["reached_box"] for r in reached),
         "xg_per_possession": math.fsum(r["shot_xg_sum"] for r in rows) / len(rows)
         if rows
         else None,

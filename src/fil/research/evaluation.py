@@ -19,6 +19,8 @@ def chronological_split(matches: list[dict], train_end: str, validation_end: str
     a, b = date.fromisoformat(train_end), date.fromisoformat(validation_end)
     if a >= b:
         raise ValueError("Training boundary must precede validation boundary")
+    if len({r["source"] for r in matches}) > 1:
+        raise ValueError("Provider-specific evaluation required; no silent pooling")
     output = {"train": set(), "validation": set(), "test": set()}
     seen = set()
     for row in matches:
@@ -28,6 +30,8 @@ def chronological_split(matches: list[dict], train_end: str, validation_end: str
         seen.add(k)
         day = date.fromisoformat(row["match_date"])
         label = "train" if day <= a else "validation" if day <= b else "test"
+        if k == ("statsbomb_open_data", 8658) and label != "train":
+            raise ValueError("Match 8658 is development-exposed; never a validation/test holdout")
         output[label].add(k)
     if any(not s for s in output.values()):
         raise ValueError("Insufficient distinct dated matches for train/validation/test")

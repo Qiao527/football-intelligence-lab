@@ -74,6 +74,15 @@ def main():
             expect(
                 page.get_by_text("Shared selection · Period 2 · Croatia", exact=True)
             ).to_be_visible()
+            if view == "Possession Flow":
+                expect(
+                    page.get_by_role(
+                        "heading", name="Same-possession co-occurrence · whole touched possessions"
+                    )
+                ).to_be_visible()
+                expect(
+                    page.get_by_text("Co-occurrence does not establish event order.", exact=False)
+                ).to_be_visible()
             eid = page.get_by_test_id("stCode").inner_text()
             assert eid in by_id
             if view == "Match Explorer":

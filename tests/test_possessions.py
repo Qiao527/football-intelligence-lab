@@ -207,7 +207,7 @@ def test_shots_rebounds_and_shootout_metrics_are_separate(possession_events):
     assert process_summary(f.possessions)["timed_shot_possessions"] == 1
     summary = process_summary(f.possessions)
     assert summary["eligible_possessions"] == 3
-    assert summary["shot_after_final_third_denominator"] == 1
+    assert summary["observed_final_third_denominator"] == 1
     assert summary["p_shot_given_final_third"] == 1
     assert summary["p_box_given_final_third"] == 1
     assert summary["xg_per_possession"] == pytest.approx(0.4 / 3)

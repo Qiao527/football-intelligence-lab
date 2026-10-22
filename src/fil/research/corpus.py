@@ -9,7 +9,7 @@ import pyarrow as pa
 from fil.ingestion.statsbomb_possessions import source_records
 from fil.research.exposure import chronology
 
-VERSION = "fil-research-corpus-1"
+VERSION = "fil-research-corpus-2"
 # Exact scope in SOURCE_POLICY.md. Adding another match requires a rights review.
 AUTHORISED = frozenset(
     {

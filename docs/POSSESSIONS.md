@@ -177,8 +177,13 @@ source tampering, immutable rebuilds and shared UI context/reset behavior.
 
 ## Research audit clarification
 
-`shot_after_final_third_*` and `box_after_final_third_*` summary fields currently
-measure within-native-ID **co-occurrence**, not verified temporal ordering.
+Historical v1/v2 `shot_after_final_third_*` and `box_after_final_third_*` summary
+fields measure within-native-ID **co-occurrence**, not verified temporal ordering.
+Possession v3 replaces these misleading keys with `shot_and_final_third_numerator`,
+`box_and_final_third_numerator` and `observed_final_third_denominator`; summary
+metadata is `fil-process-cooccurrence-2`. Existing v1/v2 artifacts are retained.
+The new research bundle separately exports `fil-process-order-1`; see
+[corpus protocol](research/CORPUS_READINESS.md) for estimands and eligibility.
 Their conditional fractions must not be interpreted as ordered transition
 probabilities or tactical effectiveness. See [critical audit](research/ANALYTICS_AUDIT.md).
 The strict later-shot labels in the research case use provider indices explicitly.

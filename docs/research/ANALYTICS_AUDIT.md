@@ -129,7 +129,7 @@ METRICS.md, TACTICS.md, POSSESSIONS.md and PLAYER_EVIDENCE.md.
 - Question: how often do the selected eligible native chains contain specified zone/shot features?
 - Measures: P(contains shot | reaches final third), P(reaches box | reaches final third), explicit numerators/denominators.
 - Assumptions/missing: native segmentation, start location, length/exposure, repeated players, selected chains and shot scarcity.
-- Cannot infer: transition probabilities or that the shot/box entry occurred after the first final-third observation. Current `shot_after_final_third_*` keys are potentially misleading: implementation tests co-occurrence, not temporal order.
+- Cannot infer: transition probabilities or that the shot/box entry occurred after the first final-third observation. Historical v1/v2 `shot_after_final_third_*` keys were misleading. Possession v3 renames them as co-occurrence; the separate `fil-process-order-1` research export tests strict source order with explicit exclusions. See [migration and eligibility](CORPUS_READINESS.md).
 - Class: descriptive conditional co-occurrence; predictive/process-model interpretation insufficient evidence.
 - Baseline: unconditional shot/box frequencies, starting zone and action count.
 - Usefulness evidence: temporal event-order audit before any "after" claim, held-out baseline lift/calibration and segmentation sensitivity. Do not reuse these names as ordered labels.

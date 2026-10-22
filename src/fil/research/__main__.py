@@ -11,8 +11,10 @@ import pyarrow.parquet as pq
 
 from fil.explorer.data import fingerprint, load_match
 from fil.ingestion.player_roster import load_roster
+from fil.possessions.extract import reconstruct
 from fil.research.case import investigate
 from fil.research.corpus import AUTHORISED, VERSION, MatchEvidence, assemble
+from fil.research.process import analyse
 
 
 def prepare(configs: list[dict], output: Path, revision: str) -> Path:
@@ -39,6 +41,12 @@ def prepare(configs: list[dict], output: Path, revision: str) -> Path:
         matches.append(MatchEvidence(events, meta, roster))
     matches.sort(key=lambda m: m.metadata["match_id"])
     table, report = assemble(matches)
+    processes = [
+        analyse(
+            reconstruct(m.events, m.metadata["home_team_id"], m.metadata["away_team_id"]).actions
+        )
+        for m in matches
+    ]
     # This illustrative case has one named source fixture; never fabricate a corpus case.
     case_match = next((m for m in matches if m.metadata["match_id"] == 8658), None)
     case = (
@@ -57,7 +65,7 @@ def prepare(configs: list[dict], output: Path, revision: str) -> Path:
         stage = Path(tmp) / "bundle"
         stage.mkdir()
         pq.write_table(table, stage / "events.parquet", compression="zstd", use_dictionary=False)
-        for name, value in [("corpus", report), ("case", case)]:
+        for name, value in [("corpus", report), ("case", case), ("process", processes)]:
             (stage / f"{name}.json").write_text(
                 json.dumps(value, sort_keys=True, indent=2, allow_nan=False) + "\n"
             )

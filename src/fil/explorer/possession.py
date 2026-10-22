@@ -49,21 +49,22 @@ def render(events, selected, meta: dict, content_key: str, figure) -> None:
         st.info("No native possession matches this event selection. No sequence inferred.")
         return
     summary = process_summary(cohort)
-    st.subheader("Process conversion · whole touched possessions")
+    st.subheader("Same-possession co-occurrence · whole touched possessions")
     rates = st.columns(3)
-    denominator = summary["shot_after_final_third_denominator"]
+    denominator = summary["observed_final_third_denominator"]
     rates[0].metric(
         "Shot / final-third possessions",
-        f"{summary['shot_after_final_third_numerator']} / {denominator}",
+        f"{summary['shot_and_final_third_numerator']} / {denominator}",
     )
     rates[1].metric(
         "Box / final-third possessions",
-        f"{summary['box_after_final_third_numerator']} / {denominator}",
+        f"{summary['box_and_final_third_numerator']} / {denominator}",
     )
     value = summary["xg_per_possession"]
     rates[2].metric("Source xG / eligible possession", "NA" if value is None else f"{value:.4f}")
     st.caption(
-        "Final-third conversion denominators count eligible possessions with observed "
+        "Co-occurrence does not establish event order. Denominators count eligible "
+        "possessions with observed "
         "native final-third evidence, including ones starting there. Not pass counts. "
         "Time-to-shot includes only shot-producing same-period possessions. "
         "The fixed official score and selected-event xG above retain their original scope."
