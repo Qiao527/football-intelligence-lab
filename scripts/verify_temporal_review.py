@@ -194,6 +194,22 @@ def main():
             positive.append(Fraction(sum(r["outcome"] for r in v), n))
         if sum(masses) and b["bin"] is not None:
             assert abs(b["predicted_probability"] - float(sum(positive) / sum(masses))) < 1e-12
+    original_results = json.loads((parent / "baseline_results.json").read_bytes())
+    for feature in ("context", "location"):
+        actual = sum(
+            b["test_equal_match_brier_excess"] for b in a["bin_support"] if b["feature"] == feature
+        )
+        scores = original_results["results"][feature]["comparisons"]["test"]["scores"]
+        assert (
+            abs(
+                actual
+                - (
+                    scores["candidate"]["equal_match_brier"]
+                    - scores["baseline"]["equal_match_brier"]
+                )
+            )
+            < 1e-12
+        )
     original_process = json.loads((parent / "process_audits.json").read_bytes())
     expected_counts = Counter(
         (w["match_id"], w["eligibility"]) for p in original_process for w in p["forecast_windows"]

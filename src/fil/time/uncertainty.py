@@ -129,8 +129,9 @@ def exposure_sensitivity(records: list[dict], roster: list[dict], model: dict) -
     for e in records:
         if e["type"]["name"] == "Starting XI":
             t = e["team"]["id"]
-            players = {p["player"]["id"] for p in e["tactics"]["lineup"]}
-            if t not in active or active[t] or len(players) != 11:
+            entries = e["tactics"]["lineup"]
+            players = {p["player"]["id"] for p in entries}
+            if t not in active or active[t] or len(players) != 11 or len(entries) != 11:
                 issues.append("invalid_starting_xi")
             else:
                 active[t] = players

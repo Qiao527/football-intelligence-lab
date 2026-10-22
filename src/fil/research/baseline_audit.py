@@ -2,7 +2,7 @@
 
 import math
 import statistics
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 from fil.time.clock import parse_period_timestamp
 
@@ -82,6 +82,18 @@ def audit(
         for r in rows:
             groups[r["features"][feature]][partitions[r["match_id"]]].append(r)
         prior = results["results"][feature]["training_prior"]
+        feature_predictions = [p for p in predictions if p["baseline_feature"] == feature]
+        contributions = defaultdict(lambda: defaultdict(float))
+        part_counts = Counter((p["partition"], p["match_id"]) for p in feature_predictions)
+        part_matches = {
+            part: len({mid for label, mid in part_counts if label == part})
+            for part in ("validation", "test")
+        }
+        for p in feature_predictions:
+            weight = 1 / (part_counts[p["partition"], p["match_id"]] * part_matches[p["partition"]])
+            contributions[p["context"]][p["partition"]] += weight * (
+                (p["candidate"] - p["outcome"]) ** 2 - (p["baseline"] - p["outcome"]) ** 2
+            )
         for name, parts in sorted(groups.items(), key=lambda v: str(v[0])):
             train = parts["train"]
             mass = sum(1 / len(by_match[r["match_id"]]) for r in train)
@@ -95,6 +107,8 @@ def audit(
                     train_match_count=len({r["match_id"] for r in train}),
                     training_weight_mass=mass,
                     training_positive_mass=positives,
+                    test_equal_match_brier_excess=contributions[name]["test"],
+                    validation_equal_match_brier_excess=contributions[name]["validation"],
                     predicted_probability=positives / mass if mass and name is not None else prior,
                     validation_n=len(parts["validation"]),
                     validation_positive=sum(r["outcome"] for r in parts["validation"]),
@@ -179,7 +193,7 @@ def audit(
         censoring_selection=selection,
         original_calibration={
             f: {
-                part: r["scores"]["candidate"]["calibration"]
+                part: {name: r["scores"][name]["calibration"] for name in ("baseline", "candidate")}
                 for part, r in v["comparisons"].items()
             }
             for f, v in results["results"].items()
