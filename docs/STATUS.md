@@ -1,5 +1,19 @@
-# FIL project status — v0.4 Tactical Dashboard review candidate
+# FIL project status — first v0.5 Possession Flow review candidate
 
+- The first factual v0.5 slice adds source-traceable possession reconstruction and
+  interactive Possession Flow on `feat/fil-v05-possession-flow`, stacked on
+  unchanged PR #10 at `2645eb9`. All 2978 records / 182 native possession IDs and
+  594 opposition-context records are preserved; cross-half ID 91 stays flagged.
+  Independent raw verification passes 480 window/team/score queries, official
+  4–2 and source xG. 342 tests pass in editable and fresh regular installations;
+  lint/build pass. No ratings, player candidate labels, off-ball movement or intent.
+- Tactical arrow construction now assigns all 194 annotations once; complete
+  real-team chart payloads equal the parent. Three-run tactical opening median
+  4.925 → 2.309s, period filter 3.261 → 1.628s, team filter 1.818 → 1.043s.
+  Default cold ledger median 3.706s still misses the 3s budget. Several tactical
+  filters remain outside normal latency targets. Acceptance remains pending.
+  Exact commands, source/UX evidence and limitations:
+  [possession delivery report](reports/POSSESSION_DELIVERY.md).
 - FIL-012 / Issue #9 adds the scoped Tactical Dashboard on a new stacked branch
   `feat/fil-012-tactical-dashboard`, parent Explorer SHA `363494c`. Source-verified
   completed passes, directed networks, event-average positions, progression v1,
