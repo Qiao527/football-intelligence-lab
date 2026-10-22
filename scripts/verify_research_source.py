@@ -41,6 +41,13 @@ def main():
     identities = {p["provider_player_id"]: p for p in corpus["identities"]}
     assert set(identities) == {p["player_id"] for t in roster for p in t["lineup"]}
     assert len(identities) == 45
+    for player, identity in identities.items():
+        aliases = {
+            p["player_name"] for t in roster for p in t["lineup"] if p["player_id"] == player
+        }
+        aliases.update(e["player"]["name"] for e in raw if e.get("player", {}).get("id") == player)
+        assert identity["aliases"] == sorted(aliases)
+
     scores = {771: 0, 785: 0}
     counted = set()
     states = {}

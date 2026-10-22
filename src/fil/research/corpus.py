@@ -82,6 +82,24 @@ def assemble(matches: list[MatchEvidence], *, authorisations=AUTHORISED) -> tupl
             if r.get("player_name"):
                 row["aliases"].add(r["player_name"])
             row["memberships"].add((mid, r["team_id"]))
+        for r in events.select(["player_id", "player_name", "team_id"]).to_pylist():
+            if r["player_id"] is None:
+                continue
+            identity = (source, r["player_id"])
+            row = players.setdefault(
+                identity,
+                dict(
+                    source=source,
+                    provider_player_id=r["player_id"],
+                    identity_key=f"{source}:player:{r['player_id']}",
+                    aliases=set(),
+                    memberships=set(),
+                ),
+            )
+            if r["player_name"]:
+                row["aliases"].add(r["player_name"])
+            if r["team_id"] is not None:
+                row["memberships"].add((mid, r["team_id"]))
         census = chronology(events, roster)
         reports.append(
             dict(

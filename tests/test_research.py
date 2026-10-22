@@ -46,13 +46,23 @@ def test_multimatch_identity_not_names_and_no_event_loss(source_events):
     table, report = assemble([first, second], authorisations=authorisations)
     assert table.num_rows == 2 * first.events.num_rows
     assert table["event_id"].to_pylist() == first.events["event_id"].to_pylist() * 2
-    assert all(p["aliases"] == ["TEST ALIAS", "TEST PLAYER"] for p in report["identities"])
+    assert all(
+        {"TEST ALIAS", "TEST PLAYER", "TEST ONLY"} <= set(p["aliases"])
+        for p in report["identities"]
+    )
     assert all({m["match_id"] for m in p["memberships"]} == {1, 2} for p in report["identities"])
     assert report["identity_conflicts"]  # TEST actor IDs repeat across opponent teams.
     assert len({p["identity_key"] for p in report["identities"]}) == len(
         {r["player_id"] for r in first.roster}
     )
     assert report["generalisation_status"] == "insufficient_evidence"
+    incomplete = MatchEvidence(
+        first.events, first.metadata, [r for r in first.roster if r["player_id"] != 11]
+    )
+    _, missing = assemble([incomplete], authorisations=authorisations)
+    assert missing["matches"][0]["unrostered_actors"]
+    assert any(p["provider_player_id"] == 11 for p in missing["identities"])
+
     with pytest.raises(ValueError, match="Duplicate corpus"):
         assemble([first, first], authorisations=authorisations)
     with pytest.raises(ValueError, match="authorisation"):

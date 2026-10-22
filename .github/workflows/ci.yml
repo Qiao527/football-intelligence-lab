@@ -2,7 +2,7 @@ name: Engineering foundation
 
 on:
   push:
-    branches: [main, "feat/**", "integrate/**"]
+    branches: [main, "feat/**", "integrate/**", "research/**"]
   pull_request:
   workflow_dispatch:
 
