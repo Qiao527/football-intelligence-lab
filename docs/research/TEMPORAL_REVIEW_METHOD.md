@@ -68,3 +68,15 @@ on 8655 or describe it as untouched again. Do not claim four development folds
 establish adequacy or calibration. Freeze chosen parameters/input hashes locally;
 new confirmation requires genuinely new independent matches, presently unavailable
 under the blocked expansion gate. No xT/VAEP, ratings or model-weight publication.
+
+
+## Collection-version evidence from the pinned primary specification
+
+Specification v1.1 p8 defines `metadata.data_version` as the **collection method**
+version, not an interchangeable JSON file-format version. Its Appendix 11 p45
+records 1.0.2 only as “Bug fixes and QA improvements”; it does not explain unequal
+Half End timestamps. The 1.1 changelog p44 adds late-video-start/early-video-end/
+match-suspended flags. Their absence in a 1.0.2-labelled match does not prove
+video completeness. Existing records also contain Carry events; no undocumented
+conversion or retrospective enrichment is inferred. The proposed envelope remains
+an explicitly conditional sensitivity exercise, never certified physical time.

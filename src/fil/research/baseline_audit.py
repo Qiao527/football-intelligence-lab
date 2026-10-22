@@ -4,8 +4,11 @@ import math
 import statistics
 from collections import defaultdict
 
+from fil.time.clock import parse_period_timestamp
+
 DEVELOPMENT = frozenset({8649, 8650, 8651, 8652})
 ALPHAS = (0.25, 0.5, 1.0, 2.0, 4.0)
+
 VERSION = "fil-frozen-baseline-audit-1"
 
 
@@ -41,24 +44,30 @@ def audit(
                 native_horizon_seconds=dict(
                     minimum=min(
                         (
-                            by_id[mid, r["outcome_event_ids"][-1]]["period_elapsed_ms"]
-                            - by_id[mid, r["event_id"]]["period_elapsed_ms"]
+                            parse_period_timestamp(
+                                by_id[mid, r["outcome_event_ids"][-1]]["period_timestamp"]
+                            )
+                            - parse_period_timestamp(by_id[mid, r["event_id"]]["period_timestamp"])
                         )
                         / 1000
                         for r in values
                     ),
                     median=statistics.median(
                         (
-                            by_id[mid, r["outcome_event_ids"][-1]]["period_elapsed_ms"]
-                            - by_id[mid, r["event_id"]]["period_elapsed_ms"]
+                            parse_period_timestamp(
+                                by_id[mid, r["outcome_event_ids"][-1]]["period_timestamp"]
+                            )
+                            - parse_period_timestamp(by_id[mid, r["event_id"]]["period_timestamp"])
                         )
                         / 1000
                         for r in values
                     ),
                     maximum=max(
                         (
-                            by_id[mid, r["outcome_event_ids"][-1]]["period_elapsed_ms"]
-                            - by_id[mid, r["event_id"]]["period_elapsed_ms"]
+                            parse_period_timestamp(
+                                by_id[mid, r["outcome_event_ids"][-1]]["period_timestamp"]
+                            )
+                            - parse_period_timestamp(by_id[mid, r["event_id"]]["period_timestamp"])
                         )
                         / 1000
                         for r in values

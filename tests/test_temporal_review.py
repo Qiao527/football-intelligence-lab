@@ -126,3 +126,40 @@ def test_development_shrinkage_never_accepts_reported_test_or_exposed_fixture():
     for mid in (8655, 8658):
         with pytest.raises(ValueError, match="forbidden"):
             shrinkage_development(rows + [dict(rows[0], match_id=mid)])
+
+
+def test_baseline_audit_parses_native_canonical_timestamps_without_clock_fields():
+    from fil.research.baseline_audit import audit
+
+    canonical = [
+        dict(
+            match_id=8649,
+            event_id=f"TEST-{i}",
+            period=1,
+            period_timestamp=f"00:00:0{i}.000",
+            team_id=1,
+            possession_team_id=1,
+            possession_id=1,
+            event_type="Shot" if i == 6 else "Pass",
+            provider_index=i,
+        )
+        for i in range(1, 7)
+    ]
+    rows = [
+        dict(
+            match_id=8649,
+            event_id="TEST-1",
+            outcome_event_ids=[f"TEST-{i}" for i in range(2, 7)],
+            outcome=1,
+            features=dict(context="TEST", location="0:0"),
+        )
+    ]
+    results = dict(
+        partitions=dict(train=[["statsbomb_open_data", 8649]]),
+        results={f: dict(training_prior=1, comparisons={}) for f in ("context", "location")},
+        dependence={},
+    )
+    out = audit(rows, [], [], canonical, results)
+    assert out["match_prevalence"][0]["native_horizon_seconds"] == dict(
+        minimum=5, median=5, maximum=5
+    )
