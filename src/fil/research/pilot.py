@@ -75,8 +75,16 @@ def audit(folder: Path, proposal: Path, original: Path, output: Path, implementa
     ]
     keys = {(r["team_id"], r["player_id"]) for r in roster}
     material = []
-    if {t["team_id"] for t in lineups} != teams or len(keys) != len(roster):
+    if len(lineups) != 2 or {t["team_id"] for t in lineups} != teams or len(keys) != len(roster):
         material.append("lineup_identity_mismatch")
+    if len({r["player_id"] for r in roster}) != len(roster):
+        material.append("player_rostered_on_opposing_teams")
+    if any(
+        (e.get("half_end") or {}).get(k)
+        for e in raw
+        for k in ("early_video_end", "match_suspended")
+    ):
+        material.append("uncertified_video_or_suspended_boundary")
     missing = []
     for e in raw:
         if (
