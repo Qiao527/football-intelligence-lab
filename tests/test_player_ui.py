@@ -40,6 +40,16 @@ def test_player_view_shared_filters_and_evidence(possession_events, tmp_path, mo
     app = AppTest.from_file(str(Path(data.__file__).with_name("app.py")), default_timeout=30).run()
     app.selectbox(key="view_choice").select("Player Evidence").run()
     assert not app.exception and app.metric[6].value == "5"
+    assert app.dataframe[0].value.shape[1] == 4
+    app.selectbox(key="player_table_group").select("Passing").run()
+    assert list(app.dataframe[0].value.columns) == [
+        "player_name",
+        "completed_passes",
+        "failed_passes",
+        "unknown_passes",
+    ]
+    assert not app.exception and app.metric[6].value == "5"
+
     app.selectbox(key="player_evidence_choice").select("1:11").run()
     assert app.code[0].value == table["event_id"][0].as_py()
     app.selectbox(key="player_evidence_type").select("Progressive passes/carries").run()
@@ -50,3 +60,14 @@ def test_player_view_shared_filters_and_evidence(possession_events, tmp_path, mo
     assert any("No player actor" in i.value for i in app.info)
     app.button[0].click().run()
     assert not app.exception and app.metric[6].value == "5"
+
+    # A changed input hash must reach verification before any display/player cache.
+    Path(config["canonical"]).joinpath("TEST_CHANGED_INPUT").write_text("TEST ONLY")
+
+    def reject(_):
+        raise ValueError("TEST corrupt lineage")
+
+    monkeypatch.setattr(data, "load_match", reject)
+    app.run()
+    assert not app.exception and any("Source verification failed" in e.value for e in app.error)
+    assert not app.metric and not app.dataframe

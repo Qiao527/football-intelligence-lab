@@ -48,7 +48,9 @@ letter-spacing:-.035em}
 border:1px solid #29374b;
 border-radius:12px;
 padding:18px}
-[data-testid="stMetricLabel"]{color:#a9b7ca} [data-testid="stMetricValue"]{color:#f3f6fa}
+[data-testid="stMetricLabel"]{color:#a9b7ca}
+[data-testid="stMetricLabel"] p{white-space:normal;overflow:visible}
+[data-testid="stMetricValue"]{color:#f3f6fa}
 .match-head{padding:26px 32px;
 border:1px solid #334259;
 border-radius:16px;
@@ -66,7 +68,7 @@ font-size:13px}
 @media(max-width:600px){
   .match-head{padding:20px}.score{font-size:28px}
   [data-testid="stHorizontalBlock"]:has([data-testid="stMetric"]){
-    display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
   [data-testid="stHorizontalBlock"]:has([data-testid="stMetric"]) >
     [data-testid="stColumn"]{width:100%!important;min-width:0!important}
   [data-testid="stMetric"]{padding:12px}
@@ -80,6 +82,36 @@ font-size:13px}
 @st.cache_resource(show_spinner="Verifying source, clock and score lineage…")
 def verified(config_body: str, content_hash: str):
     return load_match(json.loads(config_body))
+
+
+@st.cache_resource(show_spinner=False, max_entries=8)
+def prepared(_events, content_key: str):
+    """Read-only display context, reused only after the per-rerun content hash check."""
+    from types import MappingProxyType
+
+    rows = _events.select(
+        [
+            "event_id",
+            "period",
+            "provider_index",
+            "period_end_ms",
+            "chronological_ms",
+            "player_id",
+            "player_name",
+            "team_id",
+            "outcome",
+            "event_type",
+            "display_clock",
+            "score_home_before",
+            "score_home_after",
+            "score_away_before",
+            "score_away_after",
+        ]
+    ).to_pylist()
+    full_shots = build_shots(_events)
+    cv = clock_view(_events)
+    periods = sorted(set(_events["period"].to_pylist()) - {5})
+    return tuple(MappingProxyType(r) for r in rows), full_shots, cv, periods
 
 
 def figure(title: str, height: int = 320) -> go.Figure:
@@ -118,33 +150,12 @@ def main() -> None:
     team_ids = (meta["home_team_id"], meta["away_team_id"])
     names = dict(zip(team_ids, (meta["home_team_name"], meta["away_team_name"]), strict=True))
     colors = {team_ids[0]: "#66c9ed", team_ids[1]: "#f8a56c"}
-    rows = events.select(
-        [
-            "event_id",
-            "period",
-            "provider_index",
-            "period_end_ms",
-            "chronological_ms",
-            "player_id",
-            "player_name",
-            "team_id",
-            "outcome",
-            "event_type",
-            "display_clock",
-            "score_home_before",
-            "score_home_after",
-            "score_away_before",
-            "score_away_after",
-        ]
-    ).to_pylist()
-    full_shots = build_shots(events)
-    cv = clock_view(events)
-    periods = sorted(set(events["period"].to_pylist()) - {5})
+    rows, full_shots, cv, periods = prepared(events, config_body + content_hash)
     spatial = meta.get("spatial") or spatial_report(events)
     mark("view_preparation_seconds")
     st.html(
         f"""<div class="match-head">
-    <div class="eyebrow">Football Intelligence Lab · Match Explorer</div>
+    <div class="eyebrow">Football Intelligence Lab</div>
 
     <div class="score">{html.escape(names[team_ids[0]])}
     &nbsp; {meta["home_score"]} : {meta["away_score"]}
@@ -170,6 +181,8 @@ def main() -> None:
                     "outcome_choice": ALL_VALUES,
                     "score_choice": ALL_VALUES,
                     "event_choice": rows[0]["event_id"],
+                    "network_min_weight": 1,
+                    "player_roster_rows": False,
                     "selection_epoch": st.session_state.get("selection_epoch", 0) + 1,
                 }
             )
@@ -303,6 +316,22 @@ def main() -> None:
     shot_rows = shots.to_pylist()
     selected_ids = set(selected["event_id"].to_pylist())
     mark("filter_seconds")
+    scope = [period_choice, names.get(team, "Both teams")]
+    if player is not None:
+        scope.append(players[player])
+    if window is not None:
+        scope.append(
+            f"P{bins[window].period} {bins[window].start_ms / 60000:g}–"
+            f"{bins[window].end_ms / 60000:g} elapsed min"
+        )
+    if kind:
+        scope.append(kind)
+    if outcome:
+        scope.append(outcome)
+    if score_choice != ALL_VALUES:
+        scope.append(f"Pre-event state: {score_choice}")
+    st.caption("Shared selection · " + " · ".join(scope))
+
     cols = st.columns(4)
     cols[0].metric("Selected events", str(selected.num_rows))
     cols[1].metric("Selected shots", str(shots.num_rows))

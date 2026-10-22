@@ -38,6 +38,13 @@ def test_tactical_filters_context_and_exact_edge_drilldown(source_events, tmp_pa
     app.selectbox(key="view_choice").select("Tactical Dashboard").run()
     assert not app.exception
     assert app.metric[4].value == "5" and app.metric[5].value == "3"
+    app.selectbox(key="network_min_weight").select(3).run()
+    assert app.metric[4].value == "5" and app.metric[5].value == "3"
+    chart = json.loads(app.get("plotly_chart")[0].proto.spec)
+    links = next(t for t in chart["data"] if t.get("name") == "Pass links · click diamond")
+    assert all(p[1] >= 3 for p in links["customdata"])
+    app.selectbox(key="network_min_weight").select(1).run()
+
     app.selectbox(key="tactical_entity").select("edge:1:11:12").run()
     assert app.selectbox(key="tactical_event").options[0].endswith(uid(2))
     assert app.code[0].value == uid(2)

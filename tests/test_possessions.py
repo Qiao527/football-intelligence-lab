@@ -1,6 +1,7 @@
 """TEST-ONLY possession semantics, never observed fixture evidence."""
 
 import copy
+import math
 from pathlib import Path
 
 import pyarrow as pa
@@ -221,7 +222,10 @@ def test_arrow_batch_preserves_directed_geometry(possession_events):
     f = extract_tactics(score_table(possession_events), 1, 2)
     fig = network_figure(f.edges, f.nodes, 1, "TEST", "blue", lambda *args: go.Figure())
     nodes = {r["player_id"]: r for r in f.nodes.to_pylist() if r["team_id"] == 1}
-    arrows = list(fig.layout.annotations)
+    trace = next(t for t in fig.data if t.name == "Directed arrowheads")
+    arrows = list(zip(trace.x, trace.y, trace.marker.angle, trace.customdata, strict=True))
+    assert not fig.layout.annotations
+    assert trace.marker.symbol == "triangle-up"
     expected = [
         e
         for e in f.edges.to_pylist()
@@ -231,11 +235,15 @@ def test_arrow_batch_preserves_directed_geometry(possession_events):
         != (nodes[e["recipient_id"]]["x"], nodes[e["recipient_id"]]["y"])
     ]
     assert len(arrows) == len(expected)
-    for arrow, edge in zip(arrows, expected, strict=True):
+    for (x, y, angle, custom), edge in zip(arrows, expected, strict=True):
         a, b = nodes[edge["passer_id"]], nodes[edge["recipient_id"]]
-        assert (arrow.x - arrow.ax) * (b["x"] - a["x"]) + (arrow.y - arrow.ay) * (
-            b["y"] - a["y"]
-        ) > 0
+        dx, dy = b["x"] - a["x"], b["y"] - a["y"]
+        length = math.hypot(dx, dy)
+        assert x == pytest.approx(a["x"] - dy / length * 0.7 + 0.8 * dx)
+        assert y == pytest.approx(a["y"] + dx / length * 0.7 + 0.8 * dy)
+        # Plotly triangle-up angle is clockwise from screen-up; native y is down.
+        assert math.sin(math.radians(angle)) * dx - math.cos(math.radians(angle)) * dy > 0
+        assert custom[0] == f"edge:1:{edge['passer_id']}:{edge['recipient_id']}"
 
 
 def test_restart_is_not_open_play_turnover(possession_events):
@@ -314,3 +322,33 @@ def test_foul_terminal_evidence_survives_context(possession_events):
     possession_events[7]["type"] = {"id": 40, "name": "Camera off"}
     result = reconstruct(score_table(possession_events), 1, 2).possessions.to_pylist()[0]
     assert uid(7) in result["boundary_evidence_ids"]
+
+
+@pytest.mark.parametrize("dx,dy", [(10, 0), (0, 10), (-10, 0), (0, -10), (10, 10), (-10, -10)])
+def test_arrowhead_cardinal_and_diagonal_orientation(dx, dy):
+    import plotly.graph_objects as go
+
+    from fil.explorer.tactical import network_figure
+
+    nodes = pa.Table.from_pylist(
+        [
+            dict(
+                team_id=1,
+                player_id=i,
+                player_name=f"TEST {i}",
+                x=x,
+                y=y,
+                sent=1,
+                received=1,
+                sample_count=1,
+            )
+            for i, x, y in [(11, 60.0, 40.0), (12, 60.0 + dx, 40.0 + dy)]
+        ]
+    )
+    edges = pa.Table.from_pylist([dict(team_id=1, passer_id=11, recipient_id=12, weight=1)])
+    fig = network_figure(edges, nodes, 1, "TEST", "blue", lambda *args: go.Figure())
+    arrow = next(t for t in fig.data if t.name == "Directed arrowheads")
+    angle = math.radians(arrow.marker.angle[0])
+    assert math.sin(angle) == pytest.approx(dx / math.hypot(dx, dy), abs=1e-12)
+    assert -math.cos(angle) == pytest.approx(dy / math.hypot(dx, dy), abs=1e-12)
+    assert arrow.customdata[0][0] == "edge:1:11:12"

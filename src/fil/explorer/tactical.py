@@ -7,6 +7,7 @@ import math
 from dataclasses import replace
 
 import plotly.graph_objects as go
+import pyarrow as pa
 import streamlit as st
 
 from fil.ingestion.statsbomb_tactics import extract_tactics
@@ -52,26 +53,16 @@ def network_figure(edges, nodes, team: int, name: str, color: str, figure):
                 f"{a['player_name']} → {b['player_name']}",
             )
         )
+        # Native y increases down on this fixed-aspect plot. Plotly marker angles
+        # rotate clockwise from up: +x=90°, +y=180°. Display geometry only.
         arrows.append(
-            dict(
-                x=x0 + 0.8 * dx,
-                y=y0 + 0.8 * dy,
-                ax=x0 + 0.6 * dx,
-                ay=y0 + 0.6 * dy,
-                xref="x",
-                yref="y",
-                axref="x",
-                ayref="y",
-                showarrow=True,
-                arrowhead=3,
-                arrowsize=0.8,
-                arrowwidth=1,
-                arrowcolor=color,
+            (
+                x0 + 0.8 * dx,
+                y0 + 0.8 * dy,
+                (math.degrees(math.atan2(dy, dx)) + 90 + 180) % 360 - 180,
+                key,
             )
         )
-    # Assign once: add_annotation repeatedly revalidates/copies the growing
-    # array (quadratic work). All directed arrows and source geometry survive.
-    fig.update_layout(annotations=arrows)
     for band, (xs, ys) in bands.items():
         fig.add_trace(
             go.Scatter(
@@ -124,6 +115,20 @@ def network_figure(edges, nodes, team: int, name: str, color: str, figure):
                 "<br>Sent %{customdata[3]} / received %{customdata[4]}<extra></extra>"
             ),
             name="Event-average pass origins",
+        )
+    )
+    # A single marker trace replaces one SVG annotation tree per directed edge.
+    # Keep midpoint and node trace order stable for existing click interactions.
+    fig.add_trace(
+        go.Scatter(
+            x=[a[0] for a in arrows],
+            y=[a[1] for a in arrows],
+            mode="markers",
+            marker=dict(symbol="triangle-up", size=7, color=color, angle=[a[2] for a in arrows]),
+            customdata=[[a[3]] for a in arrows],
+            hoverinfo="skip",
+            showlegend=False,
+            name="Directed arrowheads",
         )
     )
     fig.add_shape(type="rect", x0=0, x1=120, y0=0, y1=80, line=dict(color="#647a8c"))
@@ -214,11 +219,21 @@ def render(events, selected, meta: dict, state, width: int, content_key: str, fi
             st.session_state["tactical_event"] = candidate
 
     teams = [t for t in (home, away) if state.team_id in (None, t)]
+    min_weight = st.selectbox(
+        "Minimum passes per displayed link", [1, 2, 3, 5], key="network_min_weight"
+    )
+    shown_edges = edges.filter(
+        pa.array([r["weight"] >= min_weight for r in edges.to_pylist()], type=pa.bool_())
+    )
+    st.caption(
+        f"Displaying {shown_edges.num_rows} of {edges.num_rows} directed pairs. "
+        "Display threshold only; all selected passes remain in metrics and evidence."
+    )
     show_names = st.toggle("Show all player names", value=False, key="network_labels")
     for column, team in zip(st.columns(len(teams)), teams, strict=True):
         with column:
             chart = network_figure(
-                edges,
+                shown_edges,
                 nodes,
                 team,
                 html.escape(names[team]),
