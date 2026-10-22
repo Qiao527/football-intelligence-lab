@@ -75,6 +75,8 @@ def canonical(raw, mid=99):
             end_x=e.get("pass", {}).get("end_location", [None, None])[0],
             end_y=e.get("pass", {}).get("end_location", [None, None])[1],
             coordinate_system="raw_statsbomb_120x80",
+            duration_s=e.get("duration"),
+            related_event_ids=e.get("related_events"),
         )
         for n, e in enumerate(raw)
     ]
@@ -121,7 +123,10 @@ def test_8656_spread_regression_is_conditional_and_prefix_uncertainty_cancels():
     assert not result["expansion_authorized"] and result["expansion_gate"] == "BLOCKED"
 
 
-@pytest.mark.parametrize("change", ["count", "json", "coordinate", "timestamp", "identity"])
+@pytest.mark.parametrize(
+    "change",
+    ["count", "json", "coordinate", "timestamp", "identity", "pass_semantics", "source_namespace"],
+)
 def test_source_corruption_blocks_all_analytical_outputs(change):
     raw, meta = fixture()
     rows = canonical(raw)
@@ -131,7 +136,13 @@ def test_source_corruption_blocks_all_analytical_outputs(change):
         rows[2]["source_record_json"] = "{}"
     else:
         rows[2][
-            {"coordinate": "x", "timestamp": "period_timestamp", "identity": "event_id"}[change]
+            {
+                "coordinate": "x",
+                "timestamp": "period_timestamp",
+                "identity": "event_id",
+                "pass_semantics": "pass_outcome",
+                "source_namespace": "source",
+            }[change]
         ] = 999
     result = run(raw, meta, rows)
     assert all(v["support"] == "blocked" for v in result["eligibility"].values())
@@ -200,3 +211,13 @@ def test_source_hash_and_reversing_native_clock_fail_independent_gates():
     assert e["source_identity"]["support"] == "fully_supported"
     assert e["within_period_source_clock"]["support"] == "blocked"
     assert e["score"]["support"] == "fully_supported"
+
+
+def test_completion_invariance_is_separate_from_observed_timestamp_arithmetic():
+    raw, meta = fixture()
+    raw[2]["timestamp"], raw[2]["duration"] = "00:00:09.999", 0.0015
+    e = run(raw, meta)["eligibility"]
+    assert e["within_period_source_clock"]["support"] == "fully_supported"
+    assert e["known_completion_boundary_invariance"]["support"] == "blocked"
+    assert e["known_completion_boundary_invariance"]["known_duration_overlap_ids"] == [raw[2]["id"]]
+    assert e["physical_spatial"]["support"] == "blocked"

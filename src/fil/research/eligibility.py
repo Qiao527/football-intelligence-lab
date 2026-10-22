@@ -95,6 +95,8 @@ def source_clock_difference(first: dict, second: dict, model: dict) -> dict:
     """Propagate correlated period prefixes once; never report physical elapsed time."""
     if first["index"] >= second["index"] or first["period"] > second["period"]:
         raise ValueError("Strict provider-order pair required")
+    if any(e["id"] not in model["event_ids"] for e in (first, second)):
+        raise ValueError("Foreign source event identity")
     a, b = first["period"], second["period"]
     if a not in (1, 2, 3, 4) or b not in (1, 2, 3, 4):
         raise ValueError("Match-play source periods required")
@@ -166,17 +168,32 @@ def assess(
             "upstream_revision": REVISION,
         }
         detail_key = {
+            "Pass": "pass",
+            "Shot": "shot",
+            "Carry": "carry",
+            "Dribble": "dribble",
+            "Duel": "duel",
+            "Interception": "interception",
             "Ball Receipt*": "ball_receipt",
             "Goal Keeper": "goalkeeper",
             "50/50": "50_50",
-        }.get(e["type"]["name"], e["type"]["name"].lower())
-        detail = e.get(detail_key) or {}
+        }.get(e["type"]["name"])
+        detail = e.get(detail_key, {}) if detail_key else {}
         for point, prefix in [(e.get("location"), ""), (detail.get("end_location"), "end_")]:
             for offset, axis in enumerate(("x", "y", "z")):
                 projection[prefix + axis] = point[offset] if point and len(point) > offset else None
         projection["shot_xg"] = detail.get("statsbomb_xg") if e["type"]["name"] == "Shot" else None
         projection["duration_s"] = e.get("duration")
         projection["coordinate_system"] = "raw_statsbomb_120x80"
+        projection["related_event_ids"] = e.get("related_events")
+        projection["recipient_player_id"] = (detail.get("recipient") or {}).get("id")
+        for kind in ("Pass", "Shot"):
+            projection[kind.lower() + "_outcome"] = (
+                (detail.get("outcome") or {}).get("name") if e["type"]["name"] == kind else None
+            )
+        projection["shot_type"] = (
+            (detail.get("type") or {}).get("name") if e["type"]["name"] == "Shot" else None
+        )
         if (
             any(r.get(k) != v for k, v in projection.items())
             or json.loads(r.get("source_record_json", "null")) != e
@@ -196,7 +213,9 @@ def assess(
             "event_order",
             "score",
             "native_spatial",
+            "physical_spatial",
             "within_period_source_clock",
+            "known_completion_boundary_invariance",
             "cross_period_envelope",
             "recorded_census_envelope",
             "exact_time_exposure",
@@ -247,6 +266,7 @@ def assess(
         **dict(spatial),
         missing_as_zero=False,
     )
+    result("physical_spatial", "blocked", ["no_physical_orientation_or_tracking_certification"])
     clocks = defaultdict(list)
     try:
         for e in raw:
@@ -275,6 +295,21 @@ def assess(
             model=model,
         )
         overlap = [i for p in model["periods"] for i in p["known_duration_overlap_ids"]]
+        unknown_duration = [
+            e["id"]
+            for e in raw
+            if e["period"] < 5
+            and e["type"]["name"] not in ("Half Start", "Half End")
+            and e.get("duration") is None
+        ]
+        result(
+            "known_completion_boundary_invariance",
+            "fully_supported" if native and not overlap else "blocked",
+            [] if native and not overlap else ["overlap_or_boundary_unresolved"],
+            known_duration_overlap_ids=overlap,
+            unknown_duration_event_ids=unknown_duration,
+            scope="supplied source durations only, never physical completion certification",
+        )
         census = exposure_sensitivity(raw, roster, model) if roster is not None else None
         census_ok = census is not None and not census["issues"]
         result(
@@ -287,7 +322,11 @@ def assess(
             per90_eligible=False,
         )
     except ValueError as exc:
-        for name in ("cross_period_envelope", "recorded_census_envelope"):
+        for name in (
+            "cross_period_envelope",
+            "recorded_census_envelope",
+            "known_completion_boundary_invariance",
+        ):
             result(name, "blocked", [str(exc)])
     result(
         "exact_time_exposure",

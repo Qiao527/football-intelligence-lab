@@ -49,3 +49,4 @@ jobs:
           uv run --frozen --no-editable python -m fil.research --help
           uv run --frozen --no-editable python -m fil.research.worldcup --help
           uv run --frozen --no-editable python -m fil.research.integrity_review --help
+          uv run --frozen --no-editable python -m fil.research.metric_review --help

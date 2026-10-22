@@ -14,7 +14,7 @@ from fil.research.acquisition import REVISION, digest, scope, verify
 from fil.research.eligibility import assess
 from fil.research.integrity_review import verify_artifact
 from fil.research.pilot import encode
-from fil.research.possession_target import label_segments, possession_weights
+from fil.research.possession_target import label_segments, label_support, possession_weights
 from fil.research.prospective import components, partition_plan
 
 VERSION = "fil-metric-specific-review-1"
@@ -80,6 +80,11 @@ def build(review: Path, reference_raw: Path, output: Path, implementation: str) 
             source_manifest_sha256=source_hash,
         )
         matrices.append(m)
+        if any(
+            m["eligibility"][name]["support"] == "blocked"
+            for name in ("source_identity", "event_order")
+        ):
+            raise ValueError("Source identity/order failure blocks label construction")
         # This is exposed-source label QA only. Never predict or score this new target here.
         labels.extend(label_segments(json.loads(body), source_hash, mid))
     labels = possession_weights(labels)
@@ -96,6 +101,7 @@ def build(review: Path, reference_raw: Path, output: Path, implementation: str) 
         version=VERSION,
         label_audit_status="development_exposed_source_reconciliation_only",
         predictive_evaluation_performed=False,
+        exposed_label_support=label_support(labels),
         per_match=[
             dict(
                 match_id=mid,

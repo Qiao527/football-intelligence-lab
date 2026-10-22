@@ -6,7 +6,7 @@ import json
 import pytest
 
 from fil.research.figshare_metadata import inventory, read_response
-from fil.research.possession_target import label_segments, possession_weights
+from fil.research.possession_target import label_segments, label_support, possession_weights
 from fil.research.prospective import (
     components,
     fit_weighted_baseline,
@@ -150,6 +150,25 @@ def test_possession_weighting_prevents_long_annotation_chains_domination():
     assert [r["within_match_possession_weight"] for r in weighted] == [0.25, 0.25, 0.5, None]
     with pytest.raises(ValueError, match="Duplicate"):
         possession_weights(rows + [rows[0]])
+    support = label_support(rows)
+    assert support["unweighted_all_cutoff_prevalence_bounds"] == [0.75, 1]
+    assert support["max_positive_cutoffs_sharing_one_shot"] == 3
+    assert support["distinct_linked_shots"] == 1
+    assert not support["independent_observations_certified"]
+
+
+def test_component_resampling_keeps_unequal_component_size_in_match_estimand():
+    ms = [
+        dict(source="statsbomb_open_data", match_id=i, team_ids=t, player_ids=[])
+        for i, t in [(1, [1, 2]), (2, [2, 3]), (3, [4, 5])]
+    ]
+    effects = [
+        dict(source=m["source"], match_id=m["match_id"], effect=float(i)) for i, m in enumerate(ms)
+    ]
+    r = paired_uncertainty(effects, ms)
+    assert r["equal_match_effect"] == 1
+    assert r["component_interval"] == [0.5, 2]
+    assert not r["inferential_independence_certified"]
 
 
 def training_rows():

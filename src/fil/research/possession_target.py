@@ -153,3 +153,33 @@ def possession_weights(rows: list[dict]) -> list[dict]:
         for indices in possessions.values():
             weights.update({n: 1 / (len(possessions) * len(indices)) for n in indices})
     return [dict(r, within_match_possession_weight=weights.get(n)) for n, r in enumerate(rows)]
+
+
+def label_support(rows: list[dict]) -> dict:
+    """Descriptive support and missing-label bounds, never independent trials or CI."""
+    shot_reuse = defaultdict(int)
+    by_possession = defaultdict(list)
+    for r in rows:
+        by_possession[r["source"], r["match_id"], r["possession_id"]].append(r)
+        if r["outcome"] == 1:
+            for i in r["later_shot_event_ids"]:
+                shot_reuse[r["source"], r["match_id"], i] += 1
+    n = len(rows)
+    positive = sum(r["outcome"] == 1 for r in rows)
+    unresolved = sum(r["outcome"] is None for r in rows)
+    return dict(
+        all_cutoffs=n,
+        confirmed_positives=positive,
+        confirmed_negatives=sum(r["outcome"] == 0 for r in rows),
+        unresolved=unresolved,
+        unweighted_all_cutoff_prevalence_bounds=[positive / n, (positive + unresolved) / n]
+        if n
+        else None,
+        bounds_interpretation="missing-label extremes, not confidence or physical-coverage bounds",
+        distinct_linked_shots=len(shot_reuse),
+        max_positive_cutoffs_sharing_one_shot=max(shot_reuse.values(), default=0),
+        source_possessions=len(by_possession),
+        positive_possessions=sum(any(r["outcome"] == 1 for r in v) for v in by_possession.values()),
+        max_cutoffs_per_possession=max(map(len, by_possession.values()), default=0),
+        independent_observations_certified=False,
+    )
