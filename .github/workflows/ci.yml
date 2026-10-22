@@ -53,3 +53,4 @@ jobs:
           uv run --frozen --no-editable python -m fil.research.corpus_expansion --help
           uv run --frozen --no-editable python -m fil.research.corpus_baselines --help
           uv run --frozen --no-editable python -m fil.research.complete_corpus --help
+          uv run --frozen --no-editable python -m fil.research.accepted_corpus --help

@@ -349,6 +349,14 @@ def verify_gate(gate_path: Path, rawroot: Path) -> dict:
         ):
             raise ValueError("Pilot source changed")
         q = json.loads((folder / "quality.json").read_bytes())
+        if (
+            e["metric_outcomes"] != {k: v["support"] for k, v in q["metric_eligibility"].items()}
+            or e["exclusion_counts"] != q["label_exclusion_counts"]
+            or e["source_manifest_sha256"] != q["source_manifest_sha256"]
+            or e["status"] != q["status"]
+            or e["material_failures"] != q["material_failures"]
+        ):
+            raise ValueError("Accepted gate metric/exclusion binding changed")
         _, ref = reference(Path(q["reference_raw_path"]))
         if ref != q["reference"]:
             raise ValueError("Reviewed metadata/terms changed")
@@ -360,3 +368,32 @@ def verify_gate(gate_path: Path, rawroot: Path) -> dict:
         ):
             raise ValueError("Pilot metric decision changed")
     return gate
+
+
+def main() -> None:
+    """Reassess existing pilots; no acquisition and no modification of historical gates."""
+    import argparse
+
+    from fil.research.corpus_expansion import immutable_json, independent
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--reference-raw", type=Path, required=True)
+    parser.add_argument("--pipeline-revision", required=True)
+    parser.add_argument("--raw-root", type=Path, default=Path("data/raw/statsbomb-corpus"))
+    parser.add_argument("--output", type=Path, default=Path("data/interim/accepted-corpus"))
+    a = parser.parse_args()
+    reports = [
+        audit_match(a.raw_root, mid, a.reference_raw, a.output / "quality", a.pipeline_revision)
+        for mid in scope(PROPOSAL)["pilot_new_match_ids"]
+    ]
+    run = a.output / "runs" / a.pipeline_revision / "pilot"
+    listing = run / "reports.json"
+    immutable_json(listing, [str(p.resolve()) for p in reports])
+    proof = independent(reports, a.reference_raw, run / "pilot")
+    gate = create_gate(reports, proof, run / "accepted-gate.json")
+    verify_gate(gate, a.raw_root)
+    print(encode(dict(gate=str(gate.resolve()), pilot_reports=str(listing.resolve()))))
+
+
+if __name__ == "__main__":
+    main()

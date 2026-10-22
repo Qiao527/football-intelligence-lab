@@ -1,13 +1,16 @@
 """Independent streaming source reconciliation. BUNDLE CONFIG."""
 
 import hashlib
+import itertools
 import json
 import math
 import sys
 from collections import Counter
+from fractions import Fraction
 from pathlib import Path
 
 import pyarrow.parquet as pq
+from verify_temporal_review import census
 
 
 def sha(p):
@@ -80,6 +83,42 @@ def verify(root, config):
             assert new[mid]["canonical_null_counts"] == dict(
                 Counter({k: sum(r[k] is None for r in rows) for k in rows[0]})
             )
+            detail = json.loads((Path(new[mid]["quality_path"]) / "quality.json").read_bytes())
+            model = detail["metric_eligibility"]["cross_period_envelope"]["model"]
+
+            def ms(e):
+                h, m, s = e["timestamp"].split(":")
+                return (int(h) * 3600 + int(m) * 60 + Fraction(s)) * 1000
+
+            bounds = []
+            for period in model["periods"]:
+                native = [e for e in raw if e["period"] == period["period"]]
+                ends = [ms(e) for e in native if e["type"]["name"] == "Half End"]
+                assert period["observed_end_envelope_ms"] == [min(ends), max(ends)]
+                assert (
+                    period["exact_physical_end_ms"] is None and not period["physical_end_certified"]
+                )
+                bounds.append([int(min(ends)), int(max(ends))])
+                for e in native:
+                    if e["type"]["name"] not in ("Half Start", "Half End"):
+                        assert ms(e) < min(ends)
+                        if e.get("duration") is not None:
+                            assert ms(e) + Fraction(str(e["duration"])) * 1000 <= min(ends)
+            scenarios = [
+                census(raw, list(ends) + [0] * (4 - len(ends)))
+                for ends in set(itertools.product(*bounds))
+            ]
+            exposure = detail["metric_eligibility"]["recorded_census_envelope"]["census"]
+            assert not exposure["issues"]
+            for player in exposure["players"]:
+                key = player["team_id"], player["player_id"]
+                expected = (
+                    [min(v[key] for v in scenarios), max(v[key] for v in scenarios)]
+                    if key in scenarios[0]
+                    else None
+                )
+                assert player["conditional_recorded_exposure_ms"] == expected
+                assert player["official_minutes"] is None and not player["per90_eligible"]
     assert seen == set(metadata) and len(seen) == q["match_count"] == 64
     assert sum(counts.values()) == q["original_event_count"]
     assert counts[8658] == 2978 and math.isclose(known_xg[8658], 2.5782512977, abs_tol=1e-12)

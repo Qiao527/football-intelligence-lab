@@ -68,7 +68,7 @@ def test_new_gate_is_distinct_immutable_and_binds_all_six_reports(tmp_path, monk
         c.verify_gate(gate, raw)
 
 
-@pytest.mark.parametrize("bad", ["missing", "metric", "proof", "policy", "raw"])
+@pytest.mark.parametrize("bad", ["missing", "metric", "proof", "policy", "raw", "metric_binding"])
 def test_no_accepted_policy_waiver_of_material_or_identity_failure(tmp_path, monkeypatch, bad):
     reports, proof, raw = fake_evidence(tmp_path, monkeypatch, blocked=bad == "metric")
     if bad == "missing":
@@ -88,6 +88,10 @@ def test_no_accepted_policy_waiver_of_material_or_identity_failure(tmp_path, mon
         gate.write_text(encode(obj))
     if bad == "raw":
         (raw / c.REVISION / "8656/manifest.json").write_text("CHANGED")
+    if bad == "metric_binding":
+        obj = json.loads(gate.read_bytes())
+        obj["pilot_matches"]["8656"]["metric_outcomes"]["score"] = "blocked"
+        gate.write_text(encode(obj))
     with pytest.raises(ValueError):
         c.verify_gate(gate, raw)
 
