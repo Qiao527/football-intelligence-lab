@@ -266,3 +266,13 @@ Full corpus quality, unseen-file SHA-256 verification, genuine temporal holdout
 baselines and blinded analyst results remain pending authorization and real data.
 Wyscout primary-source verification additionally needs the narrowly identified
 network-policy change. No approval is inferred from a completed implementation.
+
+
+## Later approved pilot execution
+
+The owner conditionally approved PR #14’s exact StatsBomb file scope on
+22 October 2026. See [real pilot delivery](WORLDCUP_PILOT_DELIVERY.md) and
+[SOURCE_POLICY.md](../SOURCE_POLICY.md) for the subsequent acquisition and
+blocked expansion gate. Earlier pending-authorization/one-match descriptions
+remain historical records. The original config-based CLI retains its 8658-only
+registry; the new approved pilot command verifies the exact enumerated scope.

@@ -79,3 +79,13 @@ See [primary-source audit and approval proposal](CORPUS_READINESS.md). Figshare
 original terms/file hashes remain unverified because its primary API is blocked.
 The 126 enumerated new StatsBomb files are proposed only, not acquired or allowed.
 No Wyscout licence or unrestricted machine-learning permission is inferred.
+
+
+## Later approved pilot execution
+
+The owner conditionally approved PR #14’s exact StatsBomb file scope on
+22 October 2026. See [real pilot delivery](WORLDCUP_PILOT_DELIVERY.md) and
+[SOURCE_POLICY.md](../SOURCE_POLICY.md) for the subsequent acquisition and
+blocked expansion gate. Earlier pending-authorization/one-match descriptions
+remain historical records. The original config-based CLI retains its 8658-only
+registry; the new approved pilot command verifies the exact enumerated scope.

@@ -159,3 +159,13 @@ reference downloads stay local/ignored; publication requires rights review.
 
 Existing startup and interaction limitations remain documented in
 `STABILIZATION_REPORT.md`; no new performance improvement is claimed by this work.
+
+
+## Later approved pilot execution
+
+The owner conditionally approved PR #14’s exact StatsBomb file scope on
+22 October 2026. See [real pilot delivery](WORLDCUP_PILOT_DELIVERY.md) and
+[SOURCE_POLICY.md](../SOURCE_POLICY.md) for the subsequent acquisition and
+blocked expansion gate. Earlier pending-authorization/one-match descriptions
+remain historical records. The original config-based CLI retains its 8658-only
+registry; the new approved pilot command verifies the exact enumerated scope.
