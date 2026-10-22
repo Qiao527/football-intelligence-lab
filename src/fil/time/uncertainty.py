@@ -26,8 +26,8 @@ def envelopes(records: list[dict], teams: set[int]) -> dict:
     groups = defaultdict(list)
     for e in records:
         groups[e["period"]].append(e)
-    play = sorted(p for p in groups if p in (1,2,3,4))
-    missing_periods = play != list(range(1,max(play,default=0)+1))
+    play = sorted(p for p in groups if p in (1, 2, 3, 4))
+    missing_periods = play != list(range(1, max(play, default=0) + 1))
     output = []
     offset = [0, 0]
     for period, group in sorted(groups.items()):
