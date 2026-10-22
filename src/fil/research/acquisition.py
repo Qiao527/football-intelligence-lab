@@ -65,13 +65,27 @@ def verify(folder: Path, proposal: Path) -> dict:
 
 
 def acquire(
-    mid: int, root: Path, proposal: Path, implementation: str, *, pilot_gate: Path | None = None
+    mid: int,
+    root: Path,
+    proposal: Path,
+    implementation: str,
+    *,
+    pilot_gate: Path | None = None,
+    accepted_gate: Path | None = None,
 ) -> Path:
     approved = scope(proposal)
     if not re.fullmatch("[0-9a-f]{40}", implementation):
         raise ValueError("Full implementation SHA required")
     pilot = approved["pilot_new_match_ids"]
-    if mid not in pilot:
+    if accepted_gate is not None and pilot_gate is not None:
+        raise ValueError("Choose a versioned gate; do not mix historical and accepted gates")
+    if mid not in pilot and accepted_gate is not None:
+        from fil.research.accepted_corpus import verify_gate
+
+        if mid not in approved["expansion_new_match_ids"]:
+            raise ValueError("Match outside exact approved expansion")
+        verify_gate(accepted_gate, root)
+    elif mid not in pilot:
         if mid not in approved["expansion_new_match_ids"] or pilot_gate is None:
             raise ValueError("Expansion requires passing pilot gate")
         gate = json.loads(pilot_gate.read_bytes())
