@@ -241,6 +241,8 @@ def test_training_only_shrinkage_avoids_hard_zero_and_preserves_missing_fallback
     assert predict_weighted(model, held) == [model["prior"]]
     with pytest.raises(ValueError, match="overlap"):
         predict_weighted(model, train)
+    with pytest.raises(ValueError, match="overlap"):
+        predict_weighted(json.loads(json.dumps(model)), train)
     train[0]["partition"] = "test"
     with pytest.raises(ValueError, match="Training-only"):
         fit_weighted_baseline(train, "context", 1)

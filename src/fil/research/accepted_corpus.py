@@ -33,7 +33,7 @@ def supplemental_semantics(raw: list[dict]) -> dict:
     mappings from a later documentation version; neither type is a pass/carry cutoff
     or Shot label. Census still reads explicit source card names and stays uncertain.
     """
-    reviewed = {"Bad Behaviour": 24, "50/50": 33}
+    reviewed = {"Bad Behaviour": 24, "50/50": 33, "Offside": 8}
     remaining = [
         e["id"]
         for e in raw

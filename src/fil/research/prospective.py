@@ -163,7 +163,8 @@ def fit_weighted_baseline(rows: list[dict], feature: str, alpha: float) -> dict:
 
 def predict_weighted(model: dict, rows: list[dict]) -> list[float]:
     """Held-match record-order forecasts, no implicit scoring or silent refitting."""
-    if any((r["source"], r["match_id"]) in model["training_matches"] for r in rows):
+    training_matches = {tuple(k) for k in model["training_matches"]}
+    if any((r["source"], r["match_id"]) in training_matches for r in rows):
         raise ValueError("Training/prediction match overlap")
     if any(
         r["source"] != "statsbomb_open_data"

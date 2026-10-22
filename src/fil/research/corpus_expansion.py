@@ -86,7 +86,7 @@ def expand(
     reports, batches = [], []
     for number, start in enumerate(range(0, len(items), batch_size), 1):
         current = []
-        for name, item in items[start : start + batch_size]:
+        for _name, item in items[start : start + batch_size]:
             mid = item["match_id"]
             acquire(mid, root, PROPOSAL, implementation, accepted_gate=gate)
             folder = audit_match(root, mid, original, output / "quality", implementation)
