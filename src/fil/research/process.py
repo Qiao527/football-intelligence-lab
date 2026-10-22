@@ -49,8 +49,6 @@ def analyse(actions: pa.Table) -> dict:
             for r in all_rows
         ):
             reasons.append("noncontiguous_or_unassigned_membership")
-        if not own:
-            reasons.append("no_owner_actions")
         if any(r["period"] not in (1, 2, 3, 4) for r in members):
             reasons.append("unsupported_period")
         clocks = [r["period_elapsed_ms"] for r in members]
@@ -90,6 +88,11 @@ def analyse(actions: pa.Table) -> dict:
                 same_possession_box_and_final_third=bool(ft and box),
                 order_eligible=eligible,
                 ordering_unresolved_reasons=reasons,
+                eligibility_exclusion_reasons=(
+                    reasons
+                    + (["no_owner_actions"] if not own else [])
+                    + (["no_observed_final_third"] if not ft else [])
+                ),
                 shot_strictly_after_observed_final_third=bool(later_shots) if eligible else None,
                 box_strictly_after_observed_final_third=bool(later_box) if eligible else None,
                 later_shot_event_ids=later_shots if eligible else [],

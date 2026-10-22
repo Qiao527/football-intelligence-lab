@@ -197,3 +197,12 @@ def test_wyscout_missingness_and_clock_reversal_are_explicit():
     assert table["ordering_status"].to_pylist() == ["array_order_only", "clock_reversal"]
     assert report["unrostered_actors"] == [(10, 20)]
     assert report["unknown_type_count"] == 1 and report["missing_positions"] == 1
+
+
+def test_no_owner_actions_is_eligibility_exclusion_not_unresolved_order():
+    row = action(1)
+    row["is_owner_action"] = False
+    r = process([row])["possessions"][0]
+    assert not r["order_eligible"]
+    assert r["ordering_unresolved_reasons"] == []
+    assert r["eligibility_exclusion_reasons"] == ["no_owner_actions", "no_observed_final_third"]

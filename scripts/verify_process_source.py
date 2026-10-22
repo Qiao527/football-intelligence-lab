@@ -84,6 +84,17 @@ def main():
     assert len(report["possessions"]) == len(groups)
     all_windows = {w["cutoff_event_id"]: w for w in report["forecast_windows"]}
     seen_windows = set()
+    expected_summary = dict(
+        native_possessions=len(groups),
+        cooccurrence_shot_final_third=0,
+        order_eligible_possessions=0,
+        ordering_unresolved_possessions=0,
+        no_observed_final_third_possessions=0,
+        shot_after_observed_final_third=0,
+        box_after_observed_final_third=0,
+        complete_forecast_windows=0,
+        censored_or_unresolved_forecast_windows=0,
+    )
     for r in report["possessions"]:
         group = groups[r["possession_id"]]
         own = [
@@ -107,12 +118,14 @@ def main():
         assert r["shot_event_ids"] == [e["id"] for e in shot]
         assert r["same_possession_shot_and_final_third"] == bool(ft and shot)
         assert r["same_possession_box_and_final_third"] == bool(ft and box)
-        unresolved = (
-            len({e["period"] for e in group}) != 1
-            or not own
-            or any(elapsed(a) > elapsed(b) for a, b in zip(group, group[1:], strict=False))
+        unresolved = len({e["period"] for e in group}) != 1 or any(
+            elapsed(a) > elapsed(b) for a, b in zip(group, group[1:], strict=False)
         )
         assert r["order_eligible"] == bool(ft and not unresolved)
+        expected_summary["cooccurrence_shot_final_third"] += bool(ft and shot)
+        expected_summary["order_eligible_possessions"] += bool(ft and not unresolved)
+        expected_summary["ordering_unresolved_possessions"] += bool(unresolved)
+        expected_summary["no_observed_final_third_possessions"] += not ft
         for targets, key in [(shot, "later_shot_event_ids"), (box, "later_box_event_ids")]:
             expected = (
                 [e["id"] for e in targets if e["index"] > ft[0]["index"]]
@@ -120,6 +133,11 @@ def main():
                 else []
             )
             assert r[key] == expected
+            expected_summary[
+                "shot_after_observed_final_third"
+                if key == "later_shot_event_ids"
+                else "box_after_observed_final_third"
+            ] += bool(expected)
         for i, e in enumerate(own):
             if not successful_move(e):
                 continue
@@ -127,6 +145,8 @@ def main():
             w = all_windows[e["id"]]
             future = own[i + 1 : i + 6]
             complete = not unresolved and len(future) == 5
+            expected_summary["complete_forecast_windows"] += complete
+            expected_summary["censored_or_unresolved_forecast_windows"] += not complete
             assert w["feature_event_ids"] == [e["id"]]
             assert w["cutoff_provider_index"] == e["index"]
             assert w["outcome_event_ids"] == ([x["id"] for x in future] if complete else [])
@@ -134,6 +154,7 @@ def main():
                 int(any(x["type"]["name"] == "Shot" for x in future)) if complete else None
             )
     assert seen_windows == set(all_windows)
+    assert report["summary"] == expected_summary
     print(
         json.dumps(
             dict(
