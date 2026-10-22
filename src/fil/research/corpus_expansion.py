@@ -58,6 +58,7 @@ def expand(
     phase: str,
     batch_size: int = 6,
     model_freeze: Path | None = None,
+    model_proof: Path | None = None,
 ) -> Path:
     """Acquire only the named partition, validate each source, independently audit each batch."""
     accepted_gate = verify_gate(gate, root)
@@ -75,6 +76,18 @@ def expand(
             raise ValueError("Freeze development models before opening test payloads")
         verify_artifact(model_freeze)
         freeze = json.loads((model_freeze / "freeze.json").read_bytes())
+        if model_proof is None:
+            raise ValueError("Independent development-model verification required before test")
+        proof = json.loads(model_proof.read_bytes())
+        if (
+            proof.get("status") != "PASS"
+            or proof.get("test_evaluated") is not False
+            or proof.get("model_manifest_sha256")
+            != digest((model_freeze / "manifest.json").read_bytes())
+            or proof.get("verifier_sha256")
+            != digest(Path("scripts/verify_corpus_baselines.py").read_bytes())
+        ):
+            raise ValueError("Independent development-model proof mismatch")
         if (
             freeze.get("plan_sha256") != plan_hash
             or freeze.get("policy") != policy()
@@ -124,6 +137,7 @@ def expand(
             model_freeze_manifest_sha256=digest((model_freeze / "manifest.json").read_bytes())
             if model_freeze
             else None,
+            model_proof_sha256=digest(model_proof.read_bytes()) if model_proof else None,
         ),
     )
     return index
@@ -137,6 +151,7 @@ def main() -> None:
     p.add_argument("--phase", choices=("development", "test"), required=True)
     p.add_argument("--pipeline-revision", required=True)
     p.add_argument("--model-freeze", type=Path)
+    p.add_argument("--model-proof", type=Path)
     p.add_argument("--raw-root", type=Path, default=Path("data/raw/statsbomb-corpus"))
     p.add_argument("--output", type=Path, default=Path("data/interim/accepted-corpus"))
     a = p.parse_args()
@@ -149,6 +164,7 @@ def main() -> None:
         a.pipeline_revision,
         a.phase,
         model_freeze=a.model_freeze,
+        model_proof=a.model_proof,
     )
     print(encode(dict(index=str(index.resolve()))))
 

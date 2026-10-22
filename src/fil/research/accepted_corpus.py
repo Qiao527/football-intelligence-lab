@@ -1,6 +1,7 @@
 """Owner-accepted, metric-specific corpus audit and independent pilot gate."""
 
 import json
+import math
 import re
 import tempfile
 from collections import Counter
@@ -162,6 +163,22 @@ def audit_match(rawroot: Path, mid: int, original: Path, output: Path, implement
     if semantics["unreviewed_event_ids"]:
         material.append("unreviewed_provider_event_semantics")
     labels = [] if material else possession_weights(label_segments(raw, source_hash, mid))
+    missing_xg = [
+        e["id"]
+        for e in raw
+        if e["type"]["name"] == "Shot" and e["period"] < 5 and e["shot"].get("statsbomb_xg") is None
+    ]
+    invalid_xg = [
+        e["id"]
+        for e in raw
+        if e["type"]["name"] == "Shot"
+        and e["shot"].get("statsbomb_xg") is not None
+        and not (math.isfinite(e["shot"]["statsbomb_xg"]) and 0 <= e["shot"]["statsbomb_xg"] <= 1)
+    ]
+    for row in labels:
+        if set(row["later_shot_event_ids"]) & set(invalid_xg):
+            row["complete_later_shot_xg_sum"] = None
+            row["chance_evidence_exclusion_reasons"] = ["invalid_source_xg"]
     report = dict(
         version=VERSION,
         implementation_sha=implementation,
@@ -181,6 +198,16 @@ def audit_match(rawroot: Path, mid: int, original: Path, output: Path, implement
         supplemental_semantics_review=semantics,
         semantics_documentation=documentation,
         canonical_null_counts={name: table[name].null_count for name in table.column_names},
+        source_xg_quality=dict(
+            support="blocked"
+            if invalid_xg
+            else "conditionally_supported"
+            if missing_xg
+            else "fully_supported",
+            missing_event_ids=missing_xg,
+            invalid_event_ids=invalid_xg,
+            physical_chance_quality_certified=False,
+        ),
         metric_eligibility=eligibility["eligibility"],
         label_support=label_support(labels),
         label_exclusion_counts=dict(
