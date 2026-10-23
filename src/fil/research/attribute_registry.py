@@ -5,13 +5,31 @@ from importlib.resources import files
 
 VERSION = "fil-attribute-registry-1"
 FIELDS = {
-    "attribute_id", "version", "name", "football_interpretation", "latent_construct",
-    "observable_behavior", "required_features", "opportunity_denominator",
-    "data_quality_requirements", "confounders", "baselines", "estimation_strategy",
-    "reliability_construct_tests", "incremental_validity_tests",
-    "independent_validation_requirements", "falsification_criteria", "research_status",
+    "attribute_id",
+    "version",
+    "name",
+    "football_interpretation",
+    "latent_construct",
+    "observable_behavior",
+    "required_features",
+    "opportunity_denominator",
+    "data_quality_requirements",
+    "confounders",
+    "baselines",
+    "estimation_strategy",
+    "reliability_construct_tests",
+    "incremental_validity_tests",
+    "independent_validation_requirements",
+    "falsification_criteria",
+    "research_status",
 }
-STATUSES = {"proposed", "descriptive", "exploratory", "independently_validated", "insufficient_evidence"}
+STATUSES = {
+    "proposed",
+    "descriptive",
+    "exploratory",
+    "independently_validated",
+    "insufficient_evidence",
+}
 
 
 def validate(registry: dict) -> dict:
@@ -37,4 +55,6 @@ def validate(registry: dict) -> dict:
 
 def load() -> dict:
     """Load packaged definitions in editable and regular installations."""
-    return validate(json.loads(files("fil.research").joinpath("attribute_registry.json").read_text()))
+    return validate(
+        json.loads(files("fil.research").joinpath("attribute_registry.json").read_text())
+    )
