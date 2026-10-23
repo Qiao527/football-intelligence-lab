@@ -1,0 +1,162 @@
+{
+  "schema_version": "fil-attribute-registry-1",
+  "attributes": [
+    {
+      "data_quality_requirements": [
+        "Pinned source identity and hashes; canonical preservation",
+        "Unique increasing original event order and reconciled score",
+        "Native spatial metrics gate for geometric descriptors",
+        "Strict contiguous single-owner, single-period native possession for sequence attribution",
+        "Explicit missingness; no physical direction, certified minutes or per90"
+      ],
+      "confounders": [
+        "Team/opponent and selection into observed actions",
+        "Starting zone, period and pre-event score state",
+        "Native position annotations are not stable tactical roles",
+        "Substitutions, unequal opportunity, tournament progression and annotation density"
+      ],
+      "estimation_strategy": "Descriptive counts and explicitly conditional fractions only in this implementation; no ability estimation or model fitting.",
+      "independent_validation_requirements": [
+        "Untouched authorized cross-league, multi-season data",
+        "Frozen definitions and outcome/selection rules before opening replication data",
+        "Independent blinded analyst adjudication with licensed video where required"
+      ],
+      "research_status": "proposed",
+      "attribute_id": "attacking_connectivity",
+      "version": "fil-attacking-connectivity-1",
+      "name": "Attacking Connectivity",
+      "football_interpretation": "Observable source-order links connecting passers and recipients across native zones; not player importance.",
+      "latent_construct": "Repeatable context-dependent ability to connect attacking actions, currently unidentifiable.",
+      "observable_behavior": "Verified A\u2192B then B\u2192C completed-pass chains; cross-zone non-return subset and subsequent recorded Shot evidence.",
+      "required_features": [
+        "Original pass actor/recipient, absent outcome key, native endpoints",
+        "Provider order, native possession owner/period, roster, source position and pre-event score evidence"
+      ],
+      "opportunity_denominator": "Eligible observed two-pass chains through B for a conditional chain fraction; team completed passes for opportunity context only, never playing-time exposure.",
+      "baselines": [
+        "Completed and received pass volume",
+        "Simple directed in/out degree",
+        "Original source-order player action counts",
+        "Zone-conditioned completed-pass frequencies",
+        "Native possession participation"
+      ],
+      "reliability_construct_tests": [
+        "Within-player match ranges, odd/even chronological split with support counts",
+        "6\u00d74 versus 3\u00d72 native-grid sensitivity",
+        "No iid event bootstrap; dependency components and withheld population reliability"
+      ],
+      "incremental_validity_tests": [
+        "Check whether descriptors are deterministic transformations of volume",
+        "Compare within common starting-zone/period/score strata with overlap reporting",
+        "Future held-team/match baseline ablation and blinded retrieval comparison"
+      ],
+      "falsification_criteria": [
+        "High pass volume with zero cross-zone chains",
+        "Return chains and long cross-zone chains with no subsequent recorded Shot",
+        "Apparent player difference disappears within shared contextual support"
+      ]
+    },
+    {
+      "data_quality_requirements": [
+        "Pinned source identity and hashes; canonical preservation",
+        "Unique increasing original event order and reconciled score",
+        "Native spatial metrics gate for geometric descriptors",
+        "Strict contiguous single-owner, single-period native possession for sequence attribution",
+        "Explicit missingness; no physical direction, certified minutes or per90"
+      ],
+      "confounders": [
+        "Team/opponent and selection into observed actions",
+        "Starting zone, period and pre-event score state",
+        "Native position annotations are not stable tactical roles",
+        "Substitutions, unequal opportunity, tournament progression and annotation density"
+      ],
+      "estimation_strategy": "Descriptive counts and explicitly conditional fractions only in this implementation; no ability estimation or model fitting.",
+      "independent_validation_requirements": [
+        "Untouched authorized cross-league, multi-season data",
+        "Frozen definitions and outcome/selection rules before opening replication data",
+        "Independent blinded analyst adjudication with licensed video where required"
+      ],
+      "research_status": "proposed",
+      "attribute_id": "risk_adjusted_progression",
+      "version": "fil-risk-adjusted-progression-1",
+      "name": "Risk-Adjusted Progression",
+      "football_interpretation": "Observed native progression conditional on recorded attempt context; risk is not observed physical difficulty.",
+      "latent_construct": "Repeatable choice/execution tendency balancing progression and failure, not identified by native dx alone.",
+      "observable_behavior": "Potential completed/failed pass and carry outcomes under explicit provider semantics.",
+      "required_features": [
+        "All attempted actions including failures and missing outcomes",
+        "Native endpoints, context and validated future-outcome definitions"
+      ],
+      "opportunity_denominator": "All eligible recorded attempts in comparable starting contexts, including failures; withhold if endpoint/outcome selection prevents adequate denominator.",
+      "baselines": [
+        "Attempt and completion counts",
+        "Native location and dx bins",
+        "Transparent progression v1 alternatives"
+      ],
+      "reliability_construct_tests": [
+        "Outcome/endpoint missingness sensitivity",
+        "Within-player cross-match/context overlap diagnostics"
+      ],
+      "incremental_validity_tests": [
+        "Increment beyond location, attempt volume and transparent progression on untouched matches"
+      ],
+      "falsification_criteria": [
+        "Survivorship from analysing completed passes only",
+        "Physical direction unavailable",
+        "Unobserved defender pressure explains apparent risk differences"
+      ]
+    },
+    {
+      "data_quality_requirements": [
+        "Pinned source identity and hashes; canonical preservation",
+        "Unique increasing original event order and reconciled score",
+        "Native spatial metrics gate for geometric descriptors",
+        "Strict contiguous single-owner, single-period native possession for sequence attribution",
+        "Explicit missingness; no physical direction, certified minutes or per90"
+      ],
+      "confounders": [
+        "Team/opponent and selection into observed actions",
+        "Starting zone, period and pre-event score state",
+        "Native position annotations are not stable tactical roles",
+        "Substitutions, unequal opportunity, tournament progression and annotation density"
+      ],
+      "estimation_strategy": "Descriptive counts and explicitly conditional fractions only in this implementation; no ability estimation or model fitting.",
+      "independent_validation_requirements": [
+        "Untouched authorized cross-league, multi-season data",
+        "Frozen definitions and outcome/selection rules before opening replication data",
+        "Independent blinded analyst adjudication with licensed video where required"
+      ],
+      "research_status": "proposed",
+      "attribute_id": "possession_continuity",
+      "version": "fil-possession-continuity-1",
+      "name": "Possession Continuity",
+      "football_interpretation": "Observed continuation after an action within native source membership, not tactical retention intent.",
+      "latent_construct": "Repeatable context-dependent tendency to sustain recorded possession, currently unvalidated.",
+      "observable_behavior": "Potential source-order continuation, verified turnover and closed/censored segment evidence.",
+      "required_features": [
+        "Native possession owner/order, completed and failed actions",
+        "Verified closure and censoring, roster and context"
+      ],
+      "opportunity_denominator": "Eligible recorded actions with predeclared continuation horizon; unresolved closure remains censored, not failure.",
+      "baselines": [
+        "Action counts",
+        "Completed-pass fraction",
+        "Native possession participation",
+        "Location and score-state frequencies"
+      ],
+      "reliability_construct_tests": [
+        "Alternative source-order horizons",
+        "Annotation-density and closure sensitivity",
+        "Cross-match within-player variation"
+      ],
+      "incremental_validity_tests": [
+        "Increment beyond pass completion and possession length under prospective leakage-safe evaluation"
+      ],
+      "falsification_criteria": [
+        "Native membership is not physical control",
+        "Censoring or provider density changes apparent continuity",
+        "Continuation after an action does not establish causal contribution"
+      ]
+    }
+  ]
+}
