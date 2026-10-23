@@ -118,11 +118,13 @@ def checks(bundle: Path) -> dict:
                     if not admissible:
                         invalid.append(e["id"])
                         good = False
-                        if not (
-                            same
-                            and kind == "Dribble"
-                            and e.get("dribble", {}).get("outcome", {}).get("name") == "Complete"
-                        ):
+                        d = e.get("dribble")
+                        complete = (
+                            isinstance(d, dict)
+                            and isinstance(d.get("outcome"), dict)
+                            and d["outcome"].get("name") == "Complete"
+                        )
+                        if not (same and kind == "Dribble" and complete):
                             relaxed = False
                 expected = dict(
                     original=linked and good,

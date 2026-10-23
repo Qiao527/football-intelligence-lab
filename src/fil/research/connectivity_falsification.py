@@ -92,13 +92,16 @@ def analyze_match(parent: dict, raw: list[dict]) -> dict:
                 if e["team"]["id"] != team or e.get("player", {}).get("id") != player:
                     return False
                 kind = e["type"]["name"]
+                data = e.get("dribble")
+                outcome = data.get("outcome") if isinstance(data, dict) else None
                 return (
                     kind == "Carry"
                     or kind == "Ball Receipt*"
                     and "outcome" not in e.get("ball_receipt", {})
                     or dribble
                     and kind == "Dribble"
-                    and e.get("dribble", {}).get("outcome", {}).get("name") == "Complete"
+                    and isinstance(outcome, dict)
+                    and outcome.get("name") == "Complete"
                 )
 
             original = shared and all(allowed(e) for e in middle)

@@ -236,3 +236,10 @@ def test_changed_frozen_protocol_stops_before_source_or_output(tmp_path, monkeyp
     with pytest.raises(ValueError, match="Frozen falsification protocol changed"):
         module.run(tmp_path / "nonexistent", tmp_path / "output", "a" * 40)
     assert not (tmp_path / "output").exists()
+
+
+@pytest.mark.parametrize("payload", [None, {}, {"outcome": None}])
+def test_null_or_absent_dribble_semantics_remain_ineligible(payload):
+    parent, result = audit(sample([event(3, kind="Dribble", dribble=payload)]))
+    assert not parent["chains"] and not result["rows"]
+    assert not result["candidates"][0]["eligibility"]["permit_complete_dribble"]
