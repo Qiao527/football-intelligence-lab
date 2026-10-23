@@ -424,6 +424,22 @@ def summarize(matches: list[dict], metadata: list[dict]) -> dict:
         teams=len({t for m in matches for t in m["team_ids"]}),
         rostered_players=len(all_by_player),
         active_player_matches=len(active),
+        active_players=len({r["player_id"] for r in active}),
+        chain_players=len({r["player_id"] for r in active if r["observed_chains"]}),
+        chain_memberships=len(
+            {(m["match_id"], c["possession_id"]) for m in matches for c in m["chains"]}
+        ),
+        chain_distinct_pass_events=len(
+            {(m["match_id"], i) for m in matches for c in m["chains"] for i in c["pass_event_ids"]}
+        ),
+        chain_distinct_later_shots=len(
+            {
+                (m["match_id"], i)
+                for m in matches
+                for c in m["chains"]
+                for i in c["later_recorded_shot_ids"]
+            }
+        ),
         original_events=sum(m["source_event_count"] for m in matches),
         completed_passes=sum(r["completed_passes"] for r in rows),
         observed_chains=sum(len(m["chains"]) for m in matches),
@@ -457,6 +473,48 @@ def summarize(matches: list[dict], metadata: list[dict]) -> dict:
         physical_timing_certified=False,
         physical_direction_certified=False,
     )
+
+
+def render_report(summary: dict) -> str:
+    """Human-readable LOCAL evidence, including protected IDs; never publish this bundle."""
+    lines = [
+        "# LOCAL ONLY — Attacking Connectivity exploratory evidence",
+        "",
+        "INCONCLUSIVE as a player ability. No ranking, causal attribution or physical timing.",
+        "All current matches are exposed; none is independent confirmation.",
+        "",
+        "## Outcome-blind player illustrations (hash order, no ability scores)",
+        "",
+        "| Player ID | Match ID | Completed | Received | Chains | Known geometry | Cross-zone |",
+        "| --- | --- | ---: | ---: | ---: | ---: | ---: |",
+    ]
+    for r in summary["selected_player_matches"]:
+        lines.append(
+            f"| {r['player_id']} | {r['match_id']} | {r['completed_passes']} | "
+            f"{r['received_passes']} | {r['observed_chains']} | "
+            f"{r['known_geometry_chains']} | {r['cross_zone_nonreturn']} |"
+        )
+    lines += [
+        "",
+        "Denominators describe selected observed chains, not playing availability.",
+        "Team opportunities include periods when the player may be absent.",
+        "",
+        "## Original-event retrieval",
+    ]
+    for name, c in summary["retrieval"].items():
+        lines += ["", f"### {name}", "", "```json", encode(c).rstrip(), "```"]
+    lines += [
+        "",
+        "## All diagnostic support and limitations",
+        "",
+        "See summary.json for all eligible players' split/range diagnostics, missingness,",
+        "context overlap, redundant baseline correlations and dependence components.",
+        "See evidence.json for each original pass, exclusion, chain and per-player context.",
+        "See source-inputs.json for immutable raw paths and original metadata.",
+        "Conditional fractions and observed shot follow-up are not player importance.",
+        "",
+    ]
+    return "\n".join(lines)
 
 
 def run(corpus: Path, output: Path, implementation: str) -> Path:
@@ -538,13 +596,15 @@ def run(corpus: Path, output: Path, implementation: str) -> Path:
     with tempfile.TemporaryDirectory(prefix=".connectivity-", dir=target.parent) as tmp:
         stage = Path(tmp) / "bundle"
         stage.mkdir()
+        summary = summarize(matches, metadata)
         for name, value in (
             ("evidence.json", matches),
-            ("summary.json", summarize(matches, metadata)),
+            ("summary.json", summary),
             ("source-inputs.json", source_inputs),
             ("registry.json", registry),
         ):
             (stage / name).write_text(encode(value))
+        (stage / "study.md").write_text(render_report(summary))
         (stage / "manifest.json").write_text(
             encode(
                 dict(
