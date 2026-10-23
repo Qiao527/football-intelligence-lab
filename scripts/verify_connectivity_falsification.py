@@ -276,6 +276,107 @@ def checks(bundle: Path) -> dict:
         assert v["chain_ids"] == [r["chain_id"] for r in selected]
         assert v["eligible"] == len(selected)
         assert v["cross_zone"] == sum(r["outcomes"]["original"]["6x4"] is True for r in selected)
+    # Independent summary arithmetic after source-by-source reconciliation.
+    for name, groups in summary["partitions"].items():
+        multi = [g for g in groups.values() if len(g["players"]) >= 2]
+        strong = [
+            g for g in groups.values() if sum(v["n"] >= 5 for v in g["players"].values()) >= 2
+        ]
+        row = summary["partition_summary"][name]
+        assert row["strata"] == len(groups)
+        assert row["opportunities_in_multi_player_strata"] == sum(g["n"] for g in multi)
+        assert row["strata_with_two_players_at_least5"] == len(strong)
+        assert row["opportunities_in_supported_strata"] == sum(g["n"] for g in strong)
+        assert row["player_opportunities_at_least5_in_supported_strata"] == sum(
+            v["n"] for g in strong for v in g["players"].values() if v["n"] >= 5
+        )
+        assert math.isclose(
+            row["fraction_of_unstratified_sse"],
+            row["within_stratum_sse"] / summary["unstratified_sse"],
+            abs_tol=1e-12,
+        )
+    original_players = {(m["match_id"], p["player_id"]): p for m in parents for p in m["players"]}
+    assert len(summary["decomposition"]) == len(original_players)
+    assert {
+        (d["match_id"], d["player_id"]) for d in summary["decomposition"]
+    } == original_players.keys()
+    for d in summary["decomposition"]:
+        p = original_players[d["match_id"], d["player_id"]]
+        for field in (
+            "completed_passes",
+            "received_passes",
+            "in_degree",
+            "out_degree",
+            "possession_participation",
+            "team_completed_pass_opportunities",
+            "team_eligible_possessions",
+        ):
+            assert d[field] == p[field]
+    active = [d for d in summary["decomposition"] if d["actor_records"] or d["received_passes"]]
+    fraction = [d for d in active if d["conditional_fraction"] is not None]
+    assert summary["correlation_support"] == dict(
+        count_rows=len(active), fraction_rows=len(fraction)
+    )
+    for feature, result in summary["redundancy"].items():
+        for field, sample, outcome in (
+            ("count_correlation", active, "K"),
+            ("fraction_correlation", fraction, "conditional_fraction"),
+        ):
+            x = [d[feature] for d in sample]
+            y = [d[outcome] for d in sample]
+            mx, my = sum(x) / len(x), sum(y) / len(y)
+            denominator = math.sqrt(sum((v - mx) ** 2 for v in x) * sum((v - my) ** 2 for v in y))
+            value = (
+                sum((a - mx) * (b - my) for a, b in zip(x, y, strict=True)) / denominator
+                if denominator
+                else None
+            )
+            assert (
+                result[field] is None
+                if value is None
+                else math.isclose(result[field], value, abs_tol=1e-12)
+            )
+    for definition, tab in summary["definition_cross_tabs"].items():
+        counts = Counter()
+        for r in primary:
+            a = r["outcomes"]["original"]["6x4"]
+            b = (
+                r["b_observed_receipt_release"]
+                if definition == "observed_receipt"
+                else r["outcomes"][definition]["6x4"]
+            )
+            counts["unknown" if a is None or b is None else f"{int(a)}:{int(b)}"] += 1
+        assert dict(counts) == tab
+    for name in GRIDS:
+        assert summary["grids"][name]["disagreement_with_primary"] == sum(
+            r["outcomes"]["original"][name] != r["outcomes"]["original"]["6x4"] for r in primary
+        )
+        assert summary["grids"][name]["missing"] == sum(
+            r["outcomes"]["original"][name] is None for r in primary
+        )
+    for threshold in (20, 40):
+        assert summary["continuous_thresholds"][str(threshold)] == sum(
+            r["nonreturn"]
+            and r["separation"]["original"] is not None
+            and r["separation"]["original"] >= threshold
+            for r in primary
+        )
+    for name, result in summary["continuous"].items():
+        values = sorted(r["separation"][name] for r in primary if r["separation"][name] is not None)
+        assert result["known"] == len(values) and result["missing"] == len(primary) - len(values)
+        for field, probability in (
+            ("min", 0),
+            ("q25", 0.25),
+            ("median", 0.5),
+            ("q75", 0.75),
+            ("max", 1),
+        ):
+            index = Fraction(len(values) - 1) * Fraction(probability)
+            left = index.numerator // index.denominator
+            value = values[left] + float(index - left) * (
+                values[min(left + 1, len(values) - 1)] - values[left]
+            )
+            assert math.isclose(result[field], value, abs_tol=1e-12)
     return dict(
         status="PASS",
         matches=len(audits),

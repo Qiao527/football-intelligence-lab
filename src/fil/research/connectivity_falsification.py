@@ -20,6 +20,7 @@ VERSION = "fil-connectivity-falsification-1"
 PARENT_SHA = "d5a0e833f3eafdf2c3cf45a1b85702d9c59515a1"
 PARENT_MANIFEST = "ec608f18aa8131d35ea493fef5ef0b8c08426886d7f33246eb463852f9991141"
 PROTOCOL = Path("docs/research/CONNECTIVITY_FALSIFICATION_PROTOCOL.md")
+PROTOCOL_SHA256 = "69d8fbcee14a6d60e0fc4bb1984375fdc648df189fdda9981b5ee8ff17ce65c2"
 GRIDS = {
     "6x4": (6, 4, 0),
     "3x2": (3, 2, 0),
@@ -637,6 +638,8 @@ def report(summary: dict) -> str:
 
 def run(parent: Path, output: Path, implementation: str) -> Path:
     """Verify exact parent and immutable sources; write a separate local bundle."""
+    if digest(PROTOCOL.read_bytes()) != PROTOCOL_SHA256:
+        raise ValueError("Frozen falsification protocol changed")
     if not re.fullmatch(r"[0-9a-f]{40}", implementation):
         raise ValueError("Full implementation SHA required")
     if digest((parent / "manifest.json").read_bytes()) != PARENT_MANIFEST:

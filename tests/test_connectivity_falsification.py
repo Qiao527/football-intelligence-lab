@@ -194,3 +194,45 @@ def test_distribution_does_not_zero_fill_missingness():
         known=2, missing=1, min=1, q25=1.5, median=2, q75=2.5, max=3
     )
     assert distribution([None])["median"] is None
+
+
+def test_last_observed_position_uses_source_order_and_keeps_future_annotation_out():
+    start = event(
+        0,
+        kind="Starting XI",
+        tactics={
+            "lineup": [{"player": {"id": 11}, "position": {"id": 5, "name": "TEST_ONLY_INITIAL"}}]
+        },
+    )
+    future = event(
+        12,
+        kind="Tactical Shift",
+        tactics={
+            "lineup": [{"player": {"id": 11}, "position": {"id": 20, "name": "TEST_ONLY_FUTURE"}}]
+        },
+    )
+    del start["player"]
+    del future["player"]
+    _, result = audit([start, *sample(), future])
+    (r,) = result["rows"]
+    assert r["position_annotation_id"] == 5
+    assert r["position_annotation"]["event_id"] == "TEST_ONLY_0"
+
+
+def test_changed_original_descriptor_stops_falsification_audit():
+    raw = sample()
+    parent = extract(raw, ROSTER, META, "a" * 64)
+    parent["chains"][0]["zone_transition"]["6x4"] = True
+    with pytest.raises(ValueError, match="Original metric changed"):
+        analyze_match(parent, raw)
+
+
+def test_changed_frozen_protocol_stops_before_source_or_output(tmp_path, monkeypatch):
+    import fil.research.connectivity_falsification as module
+
+    protocol = tmp_path / "protocol.md"
+    protocol.write_text("TEST_ONLY_CHANGED_PROTOCOL")
+    monkeypatch.setattr(module, "PROTOCOL", protocol)
+    with pytest.raises(ValueError, match="Frozen falsification protocol changed"):
+        module.run(tmp_path / "nonexistent", tmp_path / "output", "a" * 40)
+    assert not (tmp_path / "output").exists()
