@@ -445,6 +445,7 @@ def summarize(matches: list[dict], metadata: list[dict]) -> dict:
         selected_context_overlap=overlap,
         support_distribution=dict(Counter(str(len(rs)) for rs in all_by_player.values())),
         roster_position_missing=sum(r["roster_positions"] is None for r in rows),
+        roster_position_empty=sum(not r["roster_positions"] for r in rows),
         native_position_missing_active=sum(not r["native_position_evidence"] for r in active),
         zero_chain_active_player_matches=sum(not r["observed_chains"] for r in active),
         retrieval=retrieval,
@@ -526,6 +527,7 @@ def run(corpus: Path, output: Path, implementation: str) -> Path:
                 match_id=mid,
                 events=str(events.resolve()),
                 lineups=str(lineups.resolve()),
+                source_manifest_path=str(source_manifest.resolve()),
                 metadata=metas[mid],
                 source_manifest_sha256=digest(source_manifest.read_bytes()),
             )

@@ -209,3 +209,52 @@ def test_alternative_path_is_an_actually_observed_chain():
     result = run(raw)
     first = result["chains"][0]
     assert first["alternative_observed_chain_ids"] == ["TEST_ONLY_4/TEST_ONLY_5"]
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("name", ["invalid"]),
+        ("baselines", "not_a_list"),
+        ("research_status", []),
+        ("attribute_id", "invalid id"),
+        ("version", "unversioned"),
+    ],
+)
+def test_registry_rejects_field_types_and_unversioned_definitions(field, value):
+    registry = load()
+    registry["attributes"][0][field] = value
+    with pytest.raises(ValueError):
+        validate(registry)
+
+
+def test_connectivity_fails_before_processing_changed_source(tmp_path):
+    import hashlib
+    import json
+
+    from fil.research.connectivity import run as build
+
+    source = tmp_path / "raw.json"
+    source.write_text("TEST_ONLY_ORIGINAL")
+    protected_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+    corpus = tmp_path / "corpus"
+    corpus.mkdir()
+    (corpus / "manifest.json").write_text(
+        json.dumps(dict(files={}, protected_inputs={str(source): protected_hash}))
+    )
+    source.write_text("TEST_ONLY_CHANGED")
+    with pytest.raises(ValueError, match="Protected corpus input changed"):
+        build(corpus, tmp_path / "output", "a" * 40)
+    assert not (tmp_path / "output").exists()
+
+
+def test_native_own_goal_updates_only_later_passing_context():
+    raw = [event(1, "Own Goal Against", actor=20, team={"id": 2})] + [
+        event(2),
+        event(3, actor=11, recipient=12),
+    ]
+    meta = deepcopy(META)
+    meta["home_score"] = 1
+    result = extract(raw, ROSTER, meta, "a" * 64)
+    assert all(p["score_state"] == "leading" for p in result["passes"])
+    assert all(p["prior_goal_event_ids"] == ["TEST_ONLY_1"] for p in result["passes"])
