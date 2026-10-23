@@ -69,6 +69,10 @@ def verify(folder: Path):
     for name, expected in manifest["protected_inputs"].items():
         assert sha(name) == expected
     parent = Path(manifest["parent_bundle"])
+    assert sha(parent / "manifest.json") == (
+        "0f45169769931d49167b2e6ce38ebf9b4848caef40161d0a6543673148d98f71"
+    )
+    assert sha(Path("docs/research/COMPARISON_DESIGN_PROTOCOL.md")) == manifest["protocol_sha256"]
     pm = json.loads((parent / "manifest.json").read_bytes())
     attribute = Path(pm["parent_bundle"])
     proof = verify_attribute_parent(attribute)
@@ -112,6 +116,9 @@ def verify(folder: Path):
             assert r["event_id"] == e["id"] and r["player_id"] == actor
             assert r["team_id"] == e["team"]["id"]
             assert r["match_id"] == source["match_id"] and r["provider_index"] == e["index"]
+            assert r["period"] == e["period"] and r["timestamp"] == e["timestamp"]
+            assert r["chain_id"] == (chain[e["id"]]["chain_id"] if e["id"] in chain else None)
+            assert r["outcome_key_present"] == ("outcome" in e.get("pass", {}))
             assert r["opponent_id"] == next(t for t in teams if t != e["team"]["id"])
             assert r["native_start"] == e.get("location")
             point = e.get("location")

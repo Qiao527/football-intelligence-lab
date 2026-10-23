@@ -172,3 +172,14 @@ def test_all_three_by_three_binary_designs_agree_with_exact_elimination():
     for mask in range(1 << len(possible)):
         edges = [edge for k, edge in enumerate(possible) if mask & (1 << k)]
         assert topology(edges)["exact_rank"] == exact_rank(edges)
+
+
+def test_changed_protocol_blocks_source_processing(tmp_path, monkeypatch):
+    import fil.research.comparison_design as module
+
+    changed = tmp_path / "protocol.md"
+    changed.write_text("TEST_ONLY_CHANGED")
+    monkeypatch.setattr(module, "PROTOCOL", changed)
+    with pytest.raises(ValueError, match="Frozen comparison protocol changed"):
+        module.run(tmp_path / "missing", tmp_path / "output", "a" * 40)
+    assert not (tmp_path / "output").exists()
