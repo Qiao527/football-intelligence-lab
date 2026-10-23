@@ -33,6 +33,13 @@ def main():
     template = base / "assets/hypothesis_record_template.json"
     paths.append(template)
     hashes = {str(p.relative_to(source)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+    expected = {
+        "validate_hypothesis_schema.py": "63bc1b7752d20042c2845ecb2457448ec8e2d9bc8fe1337003b222f8f4620608",
+        "_common.py": "7a41a5f9b97092ee188d45959f38f92a4215d4f298dd04fd0f2817e9f607e74e",
+        "hypothesis_record_template.json": "73f080a6696c415f228b38100bb7b0f6bc89ad2c7997bf50d62b585b0bc8fe0c",
+    }
+    if {Path(p).name: h for p, h in hashes.items()} != expected:
+        raise ValueError("Reviewed upstream file identity changed; refuse execution")
     control = json.loads(template.read_text())
     cases = {
         n: copy.deepcopy(control)
