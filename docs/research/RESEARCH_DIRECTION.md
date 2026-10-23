@@ -69,10 +69,10 @@ No code/data library licence is treated as provider-data or model-training permi
   separates causal identification assumptions from estimation. Observed overlap is
   necessary for many comparisons but does not establish exchangeability or a
   meaningful football intervention. No causal method is fitted in this work.
-- [Kang et al., ScoutGPT / EventGPT (2025 preprint)](https://arxiv.org/abs/2512.17266)
+- [Hong et al., EventGPT (arXiv v3, revised 2026)](https://arxiv.org/abs/2512.17266v3)
   is a recent example of player-conditioned next-event representation learning.
-  Its search abstract was inspected; author/validation details require full review
-  before adoption. It is not evidence that learned player tokens identify abilities.
+  Its current primary abstract and author/version metadata were inspected; the
+  earlier search title was stale. Full validation details require review before adoption. It is not evidence that learned player tokens identify abilities.
 
 The original AKM/NBER page returned 403 and the plus-minus article page returned
 429; neither was repeatedly retried, bypassed or presented as a verified full-text

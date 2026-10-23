@@ -57,3 +57,4 @@ jobs:
           uv run --frozen --no-editable python -m fil.research.connectivity --help
           uv run --frozen --no-editable python -c 'from fil.research.attribute_registry import load; assert len(load()["attributes"]) == 3'
           uv run --frozen --no-editable python -m fil.research.connectivity_falsification --help
+          uv run --frozen --no-editable python -m fil.research.comparison_design --help
