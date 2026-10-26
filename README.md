@@ -1,283 +1,105 @@
-# Football Intelligence Lab (FIL)
+# FIL · Match Intelligence
 
-FIL provides a reproducible Python foundation, immutable source acquisition and
-canonical event normalization for one pinned historical StatsBomb match. It
-includes period-aware clocks, traceable score reconstruction and a locally runnable
-Streamlit Match Explorer with source xG analytics and a descriptive Tactical
-Dashboard with directed passing networks and progression v1, plus source-traceable
-Possession Flow and process analytics. Runtime dependencies are
-PyArrow (typed Parquet), Streamlit and Plotly (local UI). AI agents are not implemented. The historical v0.2 notebook reported in the product
-reference is absent here.
+**A working football analysis product that lets you inspect the evidence behind the report.**
 
-## Clean installation and checks
+Choose a match, compute its report, inspect original actions and challenge the interpretation.
+FIL turns event records into bounded observations and review questions, with a conventional
+statistics baseline alongside them. It never promotes an accurate calculation into a claim
+of player ability or tactical causality.
 
-Prerequisite: **uv 0.12.23** ([official installation options](https://docs.astral.sh/uv/getting-started/installation/)).
-The project enforces this version. `.python-version` pins **Python 3.11.14**;
-`pyproject.toml` restricts support to Python 3.11. In a checkout containing FIL-001:
+![FIL running on a self-authored fictional fixture](docs/images/match-intelligence-desktop.png)
+
+*Screenshot of the running application, using fictional teams/actions only.*
+
+## Run in three commands
+
+Requires [uv **0.12.23**](https://docs.astral.sh/uv/getting-started/installation/) and Python
+**3.11.14** (uv can install it). No API key, dataset download, database or GPU.
 
 ```bash
-uv --version
 uv python install
-uv lock --check
 uv sync --frozen
+uv run --frozen python -m fil.intelligence run
+```
+
+Open **http://127.0.0.1:8501**, choose one of three fictional matches and click
+**Run match analysis**. All reports are computed from the selected actions at runtime.
+Use `--port 8521` if the default port is occupied. The launcher binds loopback and
+turns off usage telemetry; this is a local application, not a hosted service.
+
+## What works
+
+- Searchable match selection, explicit analysis execution and source verification feedback.
+- A concise **Match Intelligence Report**, cumulative chance-weight chart and native Shot map.
+- Team/period filters shared by report statistics, evidence and comparison tables.
+- Review cards with original action IDs, whole native-membership context, comparison Shots,
+  alternative interpretations and explicit uncertainty.
+- Searchable event ledger, untouched JSON drilldown and complete comparison baseline.
+- Four distinct evidence standards: **match fact / repeated pattern / explanatory hypothesis /
+  general capability**. Unsupported scopes remain unvalidated; no-Shot selections abstain.
+- Responsive desktop/mobile layouts and a downloadable **fictional-only** report JSON.
+- An opt-in offline adapter for the existing authorized **64-match research corpus**.
+  Provider data is not included or acquired by the application.
+
+The difficult engineering is at the boundaries: immutable source identity, original-record
+preservation, own-goal and shootout reconciliation, missingness, honest claim scope, content-based
+cache invalidation and consistent state across an interactive report.
+
+## Scientific honesty
+
+This MVP is a **deterministic evidence-driven analysis application**, not an autonomous expert
+or a generative-AI agent. It fits no model and needs no external AI service. Review priorities
+use transparent Shot-weight accounting; they are **not football-importance or novelty scores**.
+The full ledger can reproduce the facts. Independent usefulness, superior-to-human discovery,
+stable player capabilities and causal explanations have **not** been demonstrated.
+
+Fictional shot weights are hand-authored, uncalibrated demonstration values, **not provider xG**.
+In authorized local research mode, weights come only from original StatsBomb xG. Raw coordinates
+are never silently flipped; physical direction, tracking and certified minutes are unavailable.
+All existing real matches are development-exposed.
+
+## Verify it
+
+```bash
+uv lock --check
 uv run --frozen ruff check .
 uv run --frozen pytest -q
-uv run --frozen python -I -c 'import fil; print(fil.__file__)'
+uv build
 ```
 
-For this cloud workspace, home is read-only. Before those commands, configure
-writable tool storage outside the checkout:
+Tests use self-authored TEST_ONLY fixtures and need no provider data or network.
+For Chromium checks and retained performance samples, see
+[actual MVP verification](docs/MATCH_INTELLIGENCE_VERIFICATION.md).
+No legacy startup speedup or independent football discovery is claimed.
 
-```bash
-export UV_CACHE_DIR=/workspace/.cache/uv
-export UV_PYTHON_INSTALL_DIR=/workspace/.local/share/uv/python
-export UV_PYTHON_BIN_DIR=/workspace/.local/bin
-```
+## Project map
 
-No activation, credentials, football data, GPU, database or service is needed for tests.
-`uv sync` installs the editable package and the default `dev` group (Ruff and
-pytest only). `uv.lock` fixes their transitive versions and artifact hashes.
-The isolated build backend is exactly pinned in `pyproject.toml`. Package version
-`0.1.0` identifies the foundation, not completion of a product roadmap version.
+| Layer | Implementation |
+|---|---|
+| Interactive product | [`src/fil/intelligence/app.py`](src/fil/intelligence/app.py) — Streamlit + Plotly |
+| Deterministic analysis | [`engine.py`](src/fil/intelligence/engine.py) — exact decimal accounting, scoped evidence |
+| Source boundary | [`sources.py`](src/fil/intelligence/sources.py) — pinned existing adapters, hash checks, no acquisition |
+| Reusable foundation | Ingestion, canonical Parquet, score, possession and research modules under `src/fil/` |
+| Verification | Offline regression suite, separate rational-arithmetic source checker, real Chromium scripts |
 
-## Local development
+[Architecture & integration strategy](docs/MATCH_INTELLIGENCE_ARCHITECTURE.md) ·
+[90-second demonstration & acceptance checklist](docs/MATCH_INTELLIGENCE_DEMO.md) ·
+[Local research setup & rights](docs/MATCH_INTELLIGENCE_LOCAL.md) ·
+[Resume-ready achievements](docs/MATCH_INTELLIGENCE_PORTFOLIO.md)
 
-Keep `uv.lock` committed. After an intentional reviewed dependency change, use
-`uv lock`, inspect the diff, then rerun all frozen checks. Also run
-`uv lock --check`: frozen sync alone does not reject every stale manifest.
-PyArrow is pinned for FIL-003 storage. Add further libraries only when a scoped task needs them.
+## Data rights and delivery status
 
-Test a separate, regular (non-editable) installation:
+FIL's code is [MIT licensed](LICENSE). Provider data is **not** relicensed by this repository.
+Only self-authored synthetic screenshots belong in a public portfolio. Real records, derived
+reports and screenshots stay local and ignored; no third-party sharing or public real-data
+service is authorized. See [source policy](docs/SOURCE_POLICY.md).
 
-```bash
-UV_PROJECT_ENVIRONMENT=.venv-wheel uv sync --frozen --no-editable
-UV_PROJECT_ENVIRONMENT=.venv-wheel uv run --frozen --no-editable ruff check .
-UV_PROJECT_ENVIRONMENT=.venv-wheel uv run --frozen --no-editable pytest -q
-```
+The MVP is developed on `feat/fil-match-intelligence-mvp` from verified PR #22. Historical draft
+PRs remain intact and unmerged; this branch does not silently integrate them into `main`.
+Public deployment and historical integration still require owner authorization.
 
-Use an unused environment path for a fresh installation. CI repeats these checks
-on Ubuntu 24.04 with no restored dependency cache, including manifest/lock
-agreement, lint and tests in editable and regular installations. Only Linux
-x86_64 / Python 3.11.14 is locally validated; other platforms are unverified.
-
-## Project guidance
-
-- [Repository instructions](AGENTS.md)
-- [Product reference](docs/Football_Intelligence_Lab_Master_Reference.md)
-- [Engineering handbook v3.0](docs/Football_Intelligence_Lab_Engineering_Handbook_v3.0.md)
-- [Gate definitions and legacy mapping](docs/GATES.md)
-- [Development workflow](docs/CODEX_WORKFLOW.md)
-- [Current status](docs/STATUS.md)
-- [Stacked development policy](docs/CODEX_WORKFLOW.md)
-- [Canonical schema and normalization CLI](docs/CANONICAL_EVENTS.md)
-- [Tactical definitions, evidence and local QA](docs/TACTICS.md)
-- [Possession definitions, context semantics and local QA](docs/POSSESSIONS.md)
-- [FIL-003 evidence and upstream dependency](docs/FIL-003_VERIFICATION.md)
-- [Period-aware clock contract](docs/MATCH_CLOCK.md)
-- [FIL-004 verification and stack status](docs/FIL-004_VERIFICATION.md)
-- [FIL-001 verification](docs/FIL-001_VERIFICATION.md)
-- [FIL-002 verification](docs/FIL-002_VERIFICATION.md)
-- [Source terms and scoped gate assessment](docs/SOURCE_POLICY.md)
-- [Local manifest specification](docs/SOURCE_MANIFEST.md)
-- [Historical bootstrap review](docs/BOOTSTRAP_REVIEW.md)
-
-The references describe intended functionality; their CLI, datasets, analytics
-libraries and UI examples are future specifications. The existing [MIT license](LICENSE)
-is unchanged. Future third-party data has separate license/attribution requirements.
-
-## FIL-002: acquire and verify match 8658
-
-Review [SOURCE_POLICY.md](docs/SOURCE_POLICY.md) before acquisition. The source
-asks users to register with StatsBomb; the owner must confirm terms compliance
-and noncommercial research use. Provider data is **not** covered by FIL's MIT
-license or approved for redistribution. Published analysis requires StatsBomb
-acknowledgement and its logo. Do not commit or distribute downloaded raw files.
-
-From a clean checkout, with the uv environment configured above:
-
-```bash
-uv run --frozen python -m fil.ingestion.statsbomb acquire \
-  --pipeline-revision "$(git rev-parse HEAD)"
-uv run --frozen python -m fil.ingestion.statsbomb verify \
-  data/raw/statsbomb/8658/4b73468fc5b0f1950f9f66fada70ad3a4f9327cb
-```
-
-`acquire` needs HTTPS access to `raw.githubusercontent.com`. It fetches only
-the reviewed revision's README, license, competitions, match metadata, events
-and lineups. No 360/tracking data is assumed. Files and `manifest.json` are
-stored beneath ignored `data/raw/statsbomb/8658/<revision>/`; `--root` can select
-another local ignored storage directory. No automatic fetch runs during tests,
-CI, package installation or build.
-
-`verify` is offline. Repeating acquisition verifies and reuses the cache without
-network or timestamp/file changes. Changed/missing/duplicate/invalid inputs or
-corrupt cached files fail with exit 1; CLI usage errors exit 2. A corrupt bundle
-is never silently repaired. Preserve it for diagnosis and use another ignored
-root if reacquisition is needed. A new upstream revision requires a separately
-reviewed source-pin change. Read [manifest behavior](docs/SOURCE_MANIFEST.md)
-for checks, atomic publication and limits.
-
-An integrity PASS from this CLI is not DATA-SOURCE or DEL-SOURCE approval:
-the rights assessment is tracked separately in SOURCE_POLICY.md. The owner has
-confirmed registration and noncommercial research use for the reviewed fixture,
-so those source gates pass within that scope. The immutable manifest/CLI retains
-its acquisition-time pending status; it is not rewritten by a later confirmation.
-
-
-## FIL-003: canonical normalization (offline)
-
-FIL-003 is stacked on validated `feat/fil-002-data-acquisition` (PR #3), not
-blocked on its merge. See the workflow and verification documents for its exact
-parent SHA and acceptance status. Review the source policy before using data.
-
-From the matching clean implementation checkout, acquire the raw bundle above
-if it is not already present, then:
-
-```bash
-raw_bundle=data/raw/statsbomb/8658/4b73468fc5b0f1950f9f66fada70ad3a4f9327cb
-uv run --frozen python -m fil.ingestion.normalize build \
-  --raw-bundle "$raw_bundle" --pipeline-revision "$(git rev-parse HEAD)"
-```
-
-Use the returned `dataset` directory for verification or lookup:
-
-```bash
-uv run --frozen python -m fil.ingestion.normalize verify \
-  --raw-bundle "$raw_bundle" --dataset "$dataset"
-uv run --frozen python -m fil.ingestion.normalize lookup \
-  --raw-bundle "$raw_bundle" --dataset "$dataset" \
-  --event-id 4a44199a-3111-4e28-b567-9c1393e68dff
-```
-
-Set `dataset` to the path printed by build (it includes source-manifest digest,
-adapter version and implementation SHA). Outputs are ignored under
-`data/interim/events/`: Parquet, a full null/count quality report and an artifact
-manifest. `--output-root` may select another ignored directory, never inside the
-raw bundle. Normalization verifies the FIL-002 source bundle first and never
-fetches or modifies it. Failures exit 1; usage errors exit 2.
-
-Every source event is retained, including unrecognized types. Rebuilds verify
-and reuse valid existing outputs without rewriting them. New roots generate
-semantically identical tables with the same pinned implementation and source;
-creation timestamps may differ. A corrupt artifact fails closed and is never
-silently replaced. See the schema document for transformations and limitations.
-
-Both raw and canonical records remain restricted to local noncommercial
-research; neither Git, package artifacts nor a PR should contain provider data.
-A copied provider `shot_xg` field is not a calculated xG metric. Clock, score,
-spatial-direction and metric gates are outside FIL-003.
-
-
-## FIL-004: period-aware clock (offline)
-
-FIL-004 is stacked on `feat/fil-003-event-normalization` (PR #4). It preserves
-all 53 canonical columns and adds exact millisecond clocks, display labels,
-period-end/offset estimates and a pointer to the verified canonical manifest.
-No provider field, raw source or canonical artifact is rewritten.
-
-Set `raw_bundle` and `dataset` to the verified FIL-002/FIL-003 input directories
-above. From the matching clean implementation checkout:
-
-```bash
-uv run --frozen python -m fil.time build \
-  --raw-bundle "$raw_bundle" --canonical-dataset "$dataset" \
-  --pipeline-revision "$(git rev-parse HEAD)"
-```
-
-Use the returned `clock_dataset` path with:
-
-```bash
-uv run --frozen python -m fil.time verify \
-  --raw-bundle "$raw_bundle" --canonical-dataset "$dataset" \
-  --clock-dataset "$clock_dataset"
-```
-
-Outputs stay ignored under `data/interim/clocks/`: `clock_events.parquet`,
-`quality.json` and `manifest.json`. Existing artifacts are verified/reused,
-never silently repaired. These commands are offline and reverify the complete
-source/canonical chain; normal tests and CI use TEST-ONLY fixtures.
-
-Use `fil.time.clock` for `PeriodRange`, exact timestamp parsing, period-relative
-half-open filtering, regular/extra/match-play/shootout scopes, bin partitions
-and chronological-range conversion. Default match-play excludes period 5;
-shootout events retain source fields but have null match-play chronology.
-Half End and the following Half Start can share a scalar boundary; period-aware
-selection and original event IDs distinguish them. Read MATCH_CLOCK.md for the
-terminal-endpoint rule, estimate propagation and strict malformed-input handling.
-This clock is an event-phase axis, not elapsed wall time or a video timecode.
-No score reconciliation or later analytics gate is claimed.
-
-
-## FIL-005: score reconstruction and goal attribution (offline)
-
-Stacked on validated FIL-004 PR #5. Read [the score contract and CLI](docs/SCORE_RECONSTRUCTION.md),
-[stack reconciliation plan](docs/STACK_RECONCILIATION.md) and
-[verification evidence](docs/FIL-005_VERIFICATION.md).
-Using the verified input paths above:
-
-```bash
-uv run --frozen python -m fil.metrics.score_cli build \
-  --raw-bundle "$raw_bundle" --canonical-dataset "$dataset" \
-  --clock-dataset "$clock_dataset" --pipeline-revision "$(git rev-parse HEAD)"
-uv run --frozen python -m fil.metrics.score_cli verify \
-  --raw-bundle "$raw_bundle" --canonical-dataset "$dataset" \
-  --clock-dataset "$clock_dataset" --score-dataset "$score_dataset"
-```
-
-Set `score_dataset` to build's returned path. Outputs stay ignored under
-`data/interim/scores/`. All input fields survive; every score decision links to
-original source IDs and verified manifests. Explicitly linked own-goal records
-count once, match-play penalties count normally, and shootout goals stay separate.
-Ambiguity or official final-score disagreement blocks output, never forces a
-match. Repeated runs verify/reuse unchanged artifacts. No data redistribution,
-new dependencies, later analytics implementation or merge is authorized.
-
-## Local v0.3 Match Explorer
-
-The Explorer uses the handbook's Streamlit/Plotly approach: read-only verified
-source xG, cumulative progression, 5/10/15-minute threat windows, source-native
-shot map, score-state progression, shared filters and exact original JSON
-source evidence. It is for local noncommercial research; no deployment or
-provider-data redistribution is included.
-
-After frozen installation, review SOURCE_POLICY.md and acquire the source with
-the existing FIL-002 command if needed. From a clean checkout:
-
-```bash
-uv run --frozen python -m fil.explorer.bootstrap \
-  --raw data/raw/statsbomb/8658/4b73468fc5b0f1950f9f66fada70ad3a4f9327cb \
-  --pipeline-revision "$(git rev-parse HEAD)"
-# Copy the printed config path into the command below:
-uv run --frozen python -m fil.explorer --config PATH_TO_LOCAL_CONFIG
-```
-
-Open the local Streamlit application in your browser (port 8501). The launcher
-binds loopback only and disables telemetry; there are no externally hosted data
-services or provider-data exports. No credentials/services are needed for unit
-tests. A fresh raw acquisition needs source HTTPS and the existing usage rights.
-
-Choose a period/window/team/player/type/outcome in the shared sidebar. Clicking
-a threat bar selects its exact period bin. Clicking a shot opens that source ID,
-original timestamp/JSON, source file link and manifest lineage. Reset restores
-full match. Official 4–2 score and full-match cumulative/score backgrounds stay
-visible under filtering. Threat is a transparent shot-xG sum, not tracking,
-control or a predicted momentum model. See [metric definitions](docs/METRICS.md).
-
-```bash
-# Optional real-browser checks against the running local app (local Chromium required)
-uv sync --frozen --group browser
-uv run --frozen --group browser python scripts/check_explorer_browser.py PATH_TO_LOCAL_CONFIG
-```
-
-The Playwright tool is isolated in the optional browser group; normal offline
-pytest includes Streamlit AppTest with clearly TEST-ONLY data and needs no browser.
-Screenshots/browser reports remain ignored under data/interim/review. Do not
-commit/publish provider-derived datasets or screenshots without rights review.
-See [mission evidence](docs/reports/MISSION.md),
-[integration report](docs/reports/INTEGRATION.md), and
-[GitHub one-time setup](docs/GITHUB_AUTOMATION.md). Hosted checks and product
-acceptance are reported separately from local verification.
-
-For the connected four-view local review, see [product demo and human acceptance](docs/PRODUCT_DEMO.md)
-and [stabilization measurements](docs/STABILIZATION_REPORT.md). Provider-derived screenshots and traces
-stay local; timing evidence and human acceptance are separate from CI.
+The earlier four-view Explorer remains available without behavioral changes:
+[original setup and commands](docs/EXPLORER_SETUP.md),
+[historical stabilization evidence](docs/STABILIZATION_REPORT.md),
+[Master Reference](docs/Football_Intelligence_Lab_Master_Reference.md),
+[Engineering Handbook](docs/Football_Intelligence_Lab_Engineering_Handbook_v3.0.md).
