@@ -1,0 +1,235 @@
+{
+  "status": "BLOCKED_BY_AUTOMATIC_APPROVAL",
+  "target": "Vercel production, qiao527s-projects / fil-match-intelligence",
+  "source_commit": "970c5d4",
+  "files": [
+    {
+      "path": "api/__init__.py",
+      "sha256": "226bc620b99049d496670082828033a749ab416fbed7e3d900610b7f2f448813",
+      "bytes": 39
+    },
+    {
+      "path": "api/analyze.py",
+      "sha256": "9f312205367d1d455105a29cc0fd46c108032ba368206dde03e24331b13943dd",
+      "bytes": 38
+    },
+    {
+      "path": "api/health.py",
+      "sha256": "9f312205367d1d455105a29cc0fd46c108032ba368206dde03e24331b13943dd",
+      "bytes": 38
+    },
+    {
+      "path": "api/index.py",
+      "sha256": "6f9979d23929cffbfbee9db4d12bc593419f2659377abefbd6b8a650f07302ad",
+      "bytes": 2026
+    },
+    {
+      "path": "api/matches.py",
+      "sha256": "9f312205367d1d455105a29cc0fd46c108032ba368206dde03e24331b13943dd",
+      "bytes": 38
+    },
+    {
+      "path": "public/app.js",
+      "sha256": "9113ff8b4723fe5c028dc0309f324d3cb15ba7411e61954e09e18f435aae3588",
+      "bytes": 7189
+    },
+    {
+      "path": "public/index.html",
+      "sha256": "0db14d89ff017361166794db1c4bb4bc4b666a0ca4037bff0cdf63ed1a9468d0",
+      "bytes": 4548
+    },
+    {
+      "path": "public/style.css",
+      "sha256": "ffd5e42c04f2900ce78fb8318676ceb967d1087414745eaa5b096f11e372f724",
+      "bytes": 4370
+    },
+    {
+      "path": "requirements.txt",
+      "sha256": "0bbd7856f6ec73eebf6f4e98df031a4ac802d738d12735cceaa113b00ab48c19",
+      "bytes": 16
+    },
+    {
+      "path": "vercel.json",
+      "sha256": "4043e761fe311c736096df5949bf2d9e4580fe465ed53eb20a99ccfce66f9992",
+      "bytes": 427
+    },
+    {
+      "path": "src/fil/__init__.py",
+      "sha256": "ff3b11df8b6391fd7533907eb46da09f4eb33e80340848292f8ff025415d0c6b",
+      "bytes": 88
+    },
+    {
+      "path": "src/fil/ingestion/__init__.py",
+      "sha256": "cdd7e9d67b06c3c54715c790970181ceea0918f6b650234302b83f1fb08d6bd0",
+      "bytes": 83
+    },
+    {
+      "path": "src/fil/ingestion/normalize.py",
+      "sha256": "2b5d77c88f660f5b2b036314d5d2827948e9c9c6c7a40d431d4d5151315cd54a",
+      "bytes": 11838
+    },
+    {
+      "path": "src/fil/ingestion/statsbomb.py",
+      "sha256": "aea6f63b8ce82b5d9eec1ee35b4999159d0659fd7e17f1ec984d17c6cf10411f",
+      "bytes": 13846
+    },
+    {
+      "path": "src/fil/ingestion/statsbomb_adapter.py",
+      "sha256": "72ad6369f8f11e92b77e811bae185114e266181316c8a7776264433b58b7d267",
+      "bytes": 8275
+    },
+    {
+      "path": "src/fil/ingestion/statsbomb_possessions.py",
+      "sha256": "11fc0afede0c5aabf14dec066214503123e48cd3dd2b46b0caa1159ee85acac3",
+      "bytes": 2328
+    },
+    {
+      "path": "src/fil/ingestion/statsbomb_score.py",
+      "sha256": "68ee6a41c9296136fec657744208e4858c53de1b1740fcd64d9dd31ee4391f48",
+      "bytes": 2856
+    },
+    {
+      "path": "src/fil/ingestion/statsbomb_source.json",
+      "sha256": "4335a83c2b26d9514a37046c402b868ee0cfb5cc6650377079d4c2dc0dcbd6f3",
+      "bytes": 1422
+    },
+    {
+      "path": "src/fil/ingestion/statsbomb_tactics.py",
+      "sha256": "e841634d229c927acf0b5978a6e5528132a788f097bbdb95d04c47a9417c822f",
+      "bytes": 6885
+    },
+    {
+      "path": "src/fil/intelligence/__init__.py",
+      "sha256": "5db4a6badb9a50092061f8290edceeddebd8a76e4fb65e6f5deb1388827ea8f5",
+      "bytes": 114
+    },
+    {
+      "path": "src/fil/intelligence/demo.py",
+      "sha256": "9ea0cba29e6c15e577f4ba3ef14bdbd77343b370768780bfb520f4f53a894625",
+      "bytes": 4385
+    },
+    {
+      "path": "src/fil/intelligence/engine.py",
+      "sha256": "334aad697ac9ac28cad32e2011b1a252f18428ffdb8b4c3cb343acd943ace299",
+      "bytes": 12441
+    },
+    {
+      "path": "src/fil/metrics/__init__.py",
+      "sha256": "aa1a8b68fba46f17361ff99314b96905e7157c2eb75aedf085355557eb14f630",
+      "bytes": 73
+    },
+    {
+      "path": "src/fil/metrics/score.py",
+      "sha256": "0ae9fd58fef5e928993902da019215e2a95d1c573a2ec32e8012047ac77ee8e7",
+      "bytes": 15755
+    },
+    {
+      "path": "src/fil/metrics/shots.py",
+      "sha256": "f11a10ccdc92520523baa3881d6f4c55117c4bc6c30385210af5c71d521f83f7",
+      "bytes": 7005
+    },
+    {
+      "path": "src/fil/metrics/tactics.py",
+      "sha256": "112b0be157c87c4b1cc7196a5c297cc93656cc2be4e5e31c0ca933258b921cb1",
+      "bytes": 10042
+    },
+    {
+      "path": "src/fil/possessions/__init__.py",
+      "sha256": "7d67404c6bdc5aa6108411f21d203b40132c1d291efe494a4406819c4d704536",
+      "bytes": 73
+    },
+    {
+      "path": "src/fil/possessions/extract.py",
+      "sha256": "334c529f6e76d73fbed1e970c7520a027abc3942198ffec35abb43a88a0698a5",
+      "bytes": 20509
+    },
+    {
+      "path": "src/fil/research/__init__.py",
+      "sha256": "bb79f29bb0ce5ee767699fe0a021f6977574ae285eb0f012f0daaa7af1fddd48",
+      "bytes": 90
+    },
+    {
+      "path": "src/fil/research/accepted_corpus.py",
+      "sha256": "33b0ec5bbc69dc768ba73d5e6b6267ba5d135c85c44e3e329891e27c79831b1b",
+      "bytes": 16959
+    },
+    {
+      "path": "src/fil/research/acquisition.py",
+      "sha256": "eceec2b3cdaa9c848a149aedf7aa95b1b0d11cbd9676ae40833565fe0e9bd26b",
+      "bytes": 7227
+    },
+    {
+      "path": "src/fil/research/attribute_registry.json",
+      "sha256": "20a2fe5721ed56d7a7e467f6b8456d0956bc2cfc51a65fced99ea951e6eac36f",
+      "bytes": 9148
+    },
+    {
+      "path": "src/fil/research/baseline_audit.py",
+      "sha256": "24ea03a943ad4b00bedea9fe34f5784d16de0eaa1f62f978c695360a40fe5fb9",
+      "bytes": 11232
+    },
+    {
+      "path": "src/fil/research/corpus_expansion.py",
+      "sha256": "05a23c1ae8921c7c372f5264e5b9bb3846e6abb1133aff4d6c2fb38cc076a1c2",
+      "bytes": 6986
+    },
+    {
+      "path": "src/fil/research/eligibility.py",
+      "sha256": "45a072a0f039d392b92b66249a6188734617dd3712c262ba9587751921f98918",
+      "bytes": 14810
+    },
+    {
+      "path": "src/fil/research/exposure.py",
+      "sha256": "2314ae0548520a39c5053fd4500d62774adf09b02a145dfb6072286d8ceece6e",
+      "bytes": 8991
+    },
+    {
+      "path": "src/fil/research/integrity_review.py",
+      "sha256": "2a832fd3d6115ab32e1becb0f5ad06497ba7cac0533604c091686d91cab6e170",
+      "bytes": 13545
+    },
+    {
+      "path": "src/fil/research/pilot.py",
+      "sha256": "6b9dbf6151c3d3b02f43d90429064c71cad269fbf73ffa40dad393bbba0d8ccd",
+      "bytes": 12578
+    },
+    {
+      "path": "src/fil/research/possession_target.py",
+      "sha256": "41a27d151b68b1a25e46d714845e297a4640bc5017d01a4bfe696184a414aae4",
+      "bytes": 8618
+    },
+    {
+      "path": "src/fil/research/process.py",
+      "sha256": "f0ca600b89805d9127cd72b5b2878e37824bc14e5022aee45fbfbffe472a9519",
+      "bytes": 8019
+    },
+    {
+      "path": "src/fil/schema.py",
+      "sha256": "7eb0bceb19b8387b6d8438af8ef16d4fd38acc8cf2ffc7db568efcfd35fb20e1",
+      "bytes": 4110
+    },
+    {
+      "path": "src/fil/time/__init__.py",
+      "sha256": "7c4b3e92c445c3175ba2892fedef05cfc28ad9a79b65c5e5df55456190e79e27",
+      "bytes": 94
+    },
+    {
+      "path": "src/fil/time/clock.py",
+      "sha256": "00aa94b609f5985ff7b0b29919ad215f191c63657cdef1e1fb294a20dc279396",
+      "bytes": 15043
+    },
+    {
+      "path": "src/fil/time/uncertainty.py",
+      "sha256": "c0bc2aaa9f96a67b6aec403865f1b8d6310d7d2ad929e87aea2e41788da4e671",
+      "bytes": 9709
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "7c38b3fde3c21fc9405ffa9952f15b8cb34df248fdb888daa9ed9cc594b18e03",
+      "bytes": 1064
+    }
+  ],
+  "contains_provider_records": false,
+  "contains_credentials": false,
+  "reason": "Private source-code dependency closure includes provider ingestion/research modules; exact external sharing scope requires owner review."
+}
