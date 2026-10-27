@@ -23,6 +23,15 @@ Owner decision: approve external sharing of this exact code bundle with Vercel, 
 smaller independently reviewed public computation package. No repository visibility change,
 historical merge, data-rights expansion or paid service purchase is included in that decision.
 
+## Run the full-stack web application locally
+
+```bash
+uv sync --frozen
+uv run --frozen python scripts/serve_public_web.py
+```
+
+Open http://127.0.0.1:8650. This serves the frontend and the live Python API.
+
 ## Reproduce packaging
 
 From the repository root:

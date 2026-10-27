@@ -11,6 +11,13 @@ of player ability or tactical causality.
 
 *Screenshot of the running application, using fictional teams/actions only.*
 
+## Standalone web frontend + Python API
+
+A public-safe, synthetic-only full-stack web version is implemented under `web/`.
+Run `uv run --frozen python scripts/serve_public_web.py`, then open http://127.0.0.1:8650.
+[Release scope, validation and current deployment blocker](docs/PUBLIC_WEB_RELEASE.md).
+No hosted URL is claimed while deployment approval is unresolved.
+
 ## Run in three commands
 
 Requires [uv **0.12.23**](https://docs.astral.sh/uv/getting-started/installation/) and Python
