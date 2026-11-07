@@ -61,10 +61,8 @@ def test_model_boundary_rejects_unsupported_content_and_dropped_constraints():
     request = "Find Linden Rovers players with at least 3 passes"
     query = interpret(request)
     assert search(request, lambda _: query)["interpretation_mode"] == "provider"
-    with pytest.raises(ValueError):
-        search(request, lambda _: {**query, "team": None})
-    with pytest.raises(ValueError):
-        search(request, lambda _: {**query, "explanation": "Invented event ID"})
+    assert search(request, lambda _: {**query, "team": None})["abstention"]
+    assert search(request, lambda _: {**query, "explanation": "Invented event ID"})["abstention"]
     with pytest.raises(ValueError):
         validate_query({**query, "team": []})
     with pytest.raises(ValueError):

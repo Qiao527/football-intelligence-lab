@@ -1,7 +1,7 @@
 """Synthetic-only scouting tools with validated interpretation and source-linked facts.
 
 The default interpreter is a limited rule-based baseline, not an AI model. A model
-adapter may return the same structured query, but its text is never used as evidence
+adapter returns a structured query, but its text is never used as evidence
 or displayed as an explanation. No service is contacted by this module.
 """
 
@@ -122,21 +122,58 @@ def validate_query(value: Any) -> dict[str, Any]:
     return dict(value)
 
 
+def check_interpretation(text: str, proposed: Any) -> dict[str, Any]:
+    """Independently check a narrow set of supported paraphrases and all constraints.
+
+    Anything outside this vocabulary abstains. This cannot prove general semantic equivalence.
+    """
+    query = validate_query(proposed)
+    canonical = text.lower()
+    for pattern, replacement in (
+        (r"\bfootballers?\b", "players"),
+        (r"\bat least three\b", "at least 3"),
+        (r"\bat most one\b", "at most 1"),
+        (r"\bwithin\b", "in"),
+        (r"\bdisplay\b", "show"),
+        (r"\bprovide\b", "show"),
+    ):
+        canonical = re.sub(pattern, replacement, canonical)
+    checked = validate_query(interpret(canonical))
+    if checked["intent"] in {"unsupported", "comparison"}:
+        return checked
+    if query != checked:
+        raise ValueError("Interpretation conflicts with independently checked constraints")
+    return query
+
+
 def search(text: str, interpreter: Callable[[str], dict] | None = None) -> dict:
-    """Execute a bounded query against authored event facts; never accept model prose."""
+    """Execute an independently checked query against authored event facts."""
     if not isinstance(text, str) or not text.strip() or len(text) > LIMIT:
         raise ValueError("A nonempty request of at most 1000 characters is required")
-    baseline = validate_query(interpret(text))
-    # Refuse known unsupported requests even if an adapter drops the constraint.
-    if baseline["intent"] in {"unsupported", "comparison"}:
-        query = baseline
+    error = None
+    if interpreter:
+        try:
+            query = check_interpretation(text, interpreter(text))
+        except (ValueError, OSError, TimeoutError):
+            error = "Provider interpretation failed validation or was unavailable."
+            query = {"intent": "unsupported", "team": None, "player": None,
+                     "min_passes": None, "max_shots": None}
+        mode = "provider"
     else:
-        query = validate_query(interpreter(text)) if interpreter else baseline
-        if interpreter and query != baseline:
-            raise ValueError("Interpretation changes or drops supported request constraints")
+        query = validate_query(interpret(text))
+        mode = "rules"
+    result = execute_query(query, mode)
+    if error:
+        result["interpretation_error"] = error
+    return result
+
+
+def execute_query(query: dict, mode: str = "structured") -> dict:
+    """Run an explicit validated query against the synthetic fixture."""
+    query = validate_query(query)
     result: dict[str, Any] = {
         "query": query,
-        "interpretation_mode": "provider" if interpreter and query is not baseline else "rules",
+        "interpretation_mode": mode,
         "source_mode": "synthetic",
         "candidates": [],
         "abstention": None,

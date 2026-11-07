@@ -1,0 +1,104 @@
+"""Opt-in OpenAI interpreter, restricted to fixed self-authored benchmark prompts.
+
+No events, credentials or unrestricted user input enter the prompt. No provider call is
+made until the caller explicitly invokes this adapter with a matching synthetic case.
+"""
+
+import hashlib
+import json
+import time
+from pathlib import Path
+from urllib.error import URLError
+from urllib.request import HTTPRedirectHandler, Request, build_opener
+
+from fil.intelligence.scout import INTENTS, KEYS, PLAYERS, TEAMS, validate_query
+
+ROOT = Path(__file__).resolve().parents[3]
+APPROVED = {
+    "cases.json": "4339eb6f9f407ec830270dbdd7a0167875c7df54400da0a120ff41de4379ab2c",
+    "heldout.json": "a5d1b1bde2b9dec29d900b36197637fdcd30efae5b7364533af01dca78191368",
+}
+SCHEMA = {
+    "type": "object", "additionalProperties": False, "required": sorted(KEYS),
+    "properties": {
+        "intent": {"type": "string", "enum": sorted(INTENTS)},
+        "team": {"type": ["string", "null"], "enum": [*sorted(TEAMS), None]},
+        "player": {"type": ["string", "null"], "enum": [*sorted(PLAYERS), None]},
+        "min_passes": {"type": ["integer", "null"]},
+        "max_shots": {"type": ["integer", "null"]},
+    },
+}
+
+
+def approved_prompts() -> set[str]:
+    """Verify exact, reviewed synthetic files before allowing any external request."""
+    allowed = set()
+    for name, expected in APPROVED.items():
+        data = (ROOT / "docs/benchmarks/scout-copilot" / name).read_bytes()
+        if hashlib.sha256(data).hexdigest() != expected:
+            raise ValueError("Synthetic benchmark changed; external access disabled")
+        allowed.update(case["prompt"] for case in json.loads(data))
+    return allowed
+
+
+class _NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+class OpenAIInterpreter:
+    """Responses API structured output interpreter; pass explicitly to ``search``."""
+
+    def __init__(self, api_key: str, model: str):
+        if not api_key or not model:
+            raise ValueError("A key and explicit model are required")
+        self._key = api_key
+        self.model = model
+        self.last = None
+
+    def __call__(self, prompt: str) -> dict:
+        self.last = None
+        if prompt not in approved_prompts():
+            raise ValueError("Only the fixed synthetic benchmark prompts may be sent")
+        body = {
+            "model": self.model, "store": False,
+            "instructions": (
+                "Convert this fictional scouting request to the given schema. "
+                "Only recorded transition, build-up passes, passes, shots and player actions "
+                "are supported. Use unsupported or comparison for unobservable or comparative "
+                "requests. Never omit requested constraints. Null means not requested. "
+                "Unremarkable/few shots means at most one shot. No rankings or abilities."
+            ),
+            "input": prompt,
+            "text": {"format": {"type": "json_schema", "name": "scouting_query",
+                                 "strict": True, "schema": SCHEMA}},
+        }
+        request = Request(
+            "https://api.openai.com/v1/responses", data=json.dumps(body).encode(),
+            headers={"Authorization": "Bearer " + self._key, "Content-Type": "application/json"},
+            method="POST",
+        )
+        start = time.perf_counter()
+        try:
+            with build_opener(_NoRedirect).open(request, timeout=30) as response:
+                payload = response.read(1_000_001)
+                if len(payload) > 1_000_000:
+                    raise ValueError("Provider response exceeds size limit")
+                raw = json.loads(payload)
+            elapsed = time.perf_counter() - start
+            if not isinstance(raw, dict) or raw.get("status") != "completed":
+                raise ValueError("Provider response incomplete")
+            content = [part["text"] for item in raw.get("output", [])
+                       if item.get("type") == "message" for part in item.get("content", [])
+                       if part.get("type") == "output_text"]
+            if len(content) != 1:
+                raise ValueError("Provider did not return one structured response")
+            usage = raw.get("usage", {})
+            self.last = {"latency_seconds": elapsed, "usage": usage, "model": raw.get("model")}
+            query = validate_query(json.loads(content[0]))
+            self.last["parsed_query"] = query
+            return query
+        except (
+            URLError, OSError, KeyError, TypeError, AttributeError, json.JSONDecodeError
+        ) as exc:
+            raise ValueError("Provider request failed or returned invalid data") from exc

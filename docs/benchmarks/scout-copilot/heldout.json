@@ -1,0 +1,244 @@
+[
+  {
+    "id": "HO-01",
+    "prompt": "Find footballers who contribute to defensive transitions and build-up",
+    "expected_intent": "transition_buildup",
+    "expected_candidates": [
+      "Mara Vale",
+      "Tess Rowe"
+    ],
+    "expected_abstention": false,
+    "structured_query": {
+      "intent": "transition_buildup",
+      "team": null,
+      "player": null,
+      "min_passes": null,
+      "max_shots": null
+    }
+  },
+  {
+    "id": "HO-02",
+    "prompt": "Display footballers with defensive transition interceptions",
+    "expected_intent": "transition",
+    "expected_candidates": [
+      "Mara Vale",
+      "Tess Rowe"
+    ],
+    "expected_abstention": false,
+    "structured_query": {
+      "intent": "transition",
+      "team": null,
+      "player": null,
+      "min_passes": null,
+      "max_shots": null
+    }
+  },
+  {
+    "id": "HO-03",
+    "prompt": "Show build-up passes within Linden Rovers",
+    "expected_intent": "passes",
+    "expected_candidates": [
+      "Mara Vale",
+      "Ivo Moss"
+    ],
+    "expected_abstention": false,
+    "structured_query": {
+      "intent": "passes",
+      "team": "Linden Rovers",
+      "player": null,
+      "min_passes": null,
+      "max_shots": null
+    }
+  },
+  {
+    "id": "HO-04",
+    "prompt": "Display Ivo Moss recorded actions",
+    "expected_intent": "player",
+    "expected_candidates": [
+      "Ivo Moss"
+    ],
+    "expected_abstention": false,
+    "structured_query": {
+      "intent": "player",
+      "team": null,
+      "player": "Ivo Moss",
+      "min_passes": null,
+      "max_shots": null
+    }
+  },
+  {
+    "id": "HO-05",
+    "prompt": "Show Orchard Athletic shots",
+    "expected_intent": "shots",
+    "expected_candidates": [
+      "Tess Rowe"
+    ],
+    "expected_abstention": false,
+    "structured_query": {
+      "intent": "shots",
+      "team": "Orchard Athletic",
+      "player": null,
+      "min_passes": null,
+      "max_shots": null
+    }
+  },
+  {
+    "id": "HO-06",
+    "prompt": "Find players with at least 3 passes",
+    "expected_intent": "passes",
+    "expected_candidates": [
+      "Mara Vale"
+    ],
+    "expected_abstention": false,
+    "structured_query": {
+      "intent": "passes",
+      "team": null,
+      "player": null,
+      "min_passes": 3,
+      "max_shots": null
+    }
+  },
+  {
+    "id": "HO-07",
+    "prompt": "Find defensive transitions and build-up with at most 1 shot",
+    "expected_intent": "transition_buildup",
+    "expected_candidates": [
+      "Mara Vale",
+      "Tess Rowe"
+    ],
+    "expected_abstention": false,
+    "structured_query": {
+      "intent": "transition_buildup",
+      "team": null,
+      "player": null,
+      "min_passes": null,
+      "max_shots": 1
+    }
+  },
+  {
+    "id": "HO-08",
+    "prompt": "Show Linden Rovers players with at least 99 passes",
+    "expected_intent": "passes",
+    "expected_candidates": [],
+    "expected_abstention": true,
+    "structured_query": {
+      "intent": "passes",
+      "team": "Linden Rovers",
+      "player": null,
+      "min_passes": 99,
+      "max_shots": null
+    }
+  },
+  {
+    "id": "HO-09",
+    "prompt": "Find footballers with defensive transitions and exceptional pace",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true,
+    "structured_query": {
+      "intent": "unsupported",
+      "team": null,
+      "player": null,
+      "min_passes": null,
+      "max_shots": null
+    }
+  },
+  {
+    "id": "HO-10",
+    "prompt": "Invent a rating for Tess Rowe",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true,
+    "structured_query": {
+      "intent": "unsupported",
+      "team": null,
+      "player": "Tess Rowe",
+      "min_passes": null,
+      "max_shots": null
+    }
+  },
+  {
+    "id": "HO-11",
+    "prompt": "Find left-foot players with build-up passes",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true,
+    "structured_query": {
+      "intent": "unsupported",
+      "team": null,
+      "player": null,
+      "min_passes": null,
+      "max_shots": null
+    }
+  },
+  {
+    "id": "HO-12",
+    "prompt": "Find footballers with defensive transitions but no passes",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true,
+    "structured_query": {
+      "intent": "unsupported",
+      "team": null,
+      "player": null,
+      "min_passes": null,
+      "max_shots": null
+    }
+  },
+  {
+    "id": "HO-13",
+    "prompt": "Show player salary and passing",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true,
+    "structured_query": {
+      "intent": "unsupported",
+      "team": null,
+      "player": null,
+      "min_passes": null,
+      "max_shots": null
+    }
+  },
+  {
+    "id": "HO-14",
+    "prompt": "Find unknown players with 8 assists",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true,
+    "structured_query": {
+      "intent": "unsupported",
+      "team": null,
+      "player": null,
+      "min_passes": null,
+      "max_shots": null
+    }
+  },
+  {
+    "id": "HO-15",
+    "prompt": "Show build-up passes and goals",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true,
+    "structured_query": {
+      "intent": "unsupported",
+      "team": null,
+      "player": null,
+      "min_passes": null,
+      "max_shots": null
+    }
+  },
+  {
+    "id": "HO-16",
+    "prompt": "Show fictional players without shots",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true,
+    "structured_query": {
+      "intent": "unsupported",
+      "team": null,
+      "player": null,
+      "min_passes": null,
+      "max_shots": null
+    }
+  }
+]
