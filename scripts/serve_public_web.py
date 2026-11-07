@@ -17,6 +17,8 @@ class Local(SimpleHTTPRequestHandler):
         return super().do_GET()
 
     def do_POST(self):
+        if self.path == "/api/scout":
+            return API.do_POST(self)
         self.send_error(405)
 
 

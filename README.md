@@ -37,6 +37,18 @@ Open **http://127.0.0.1:8501**, choose one of three fictional matches and click
 Use `--port 8521` if the default port is occupied. The launcher binds loopback and
 turns off usage telemetry; this is a local application, not a hosted service.
 
+## Synthetic Scout Copilot
+
+The standalone web app includes a rule-based scouting preview using a separate fictional
+fixture. It links candidates to supporting and contrary actions and abstains on unsupported
+requests. It does not call a model; see [product decisions](PRODUCT_DECISIONS.md), the
+[benchmark](docs/benchmarks/scout-copilot/README.md), and [local analytics](docs/PRODUCT_ANALYTICS.md).
+With the standalone web server running, check both desktop and mobile with:
+
+```sh
+uv run --frozen --group browser python scripts/check_scout_copilot_browser.py --browser /path/to/chromium
+```
+
 ## What works
 
 - Searchable match selection, explicit analysis execution and source verification feedback.
