@@ -15,6 +15,9 @@ of player ability or tactical causality.
 
 A public-safe, synthetic-only full-stack web version is implemented under `web/`.
 Run `uv run --frozen python scripts/serve_public_web.py`, then open http://127.0.0.1:8650.
+Discover fictional player-match records, open a player, and inspect original actions.
+The existing match report remains available through **Match intelligence**. Player counts
+describe one fictional match and are not ratings or cross-match identities.
 [Release scope, validation and current deployment blocker](docs/PUBLIC_WEB_RELEASE.md).
 No hosted URL is claimed while deployment approval is unresolved.
 
@@ -75,7 +78,10 @@ uv build
 ```
 
 Tests use self-authored TEST_ONLY fixtures and need no provider data or network.
-For Chromium checks and retained performance samples, see
+For the synthetic scouting and match-report browser check, start the standalone web server
+and run `uv run --frozen --group browser python scripts/check_scouting_browser.py --browser /path/to/chromium`.
+
+For other Chromium checks and retained performance samples, see
 [actual MVP verification](docs/MATCH_INTELLIGENCE_VERIFICATION.md).
 No legacy startup speedup or independent football discovery is claimed.
 
