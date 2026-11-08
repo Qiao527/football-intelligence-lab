@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[3]
 APPROVED = {
     "cases.json": "4339eb6f9f407ec830270dbdd7a0167875c7df54400da0a120ff41de4379ab2c",
     "heldout.json": "a5d1b1bde2b9dec29d900b36197637fdcd30efae5b7364533af01dca78191368",
+    "chinese_example.json": "a91d6a57c4212a644bcdf70130f2e9e0fbc77ebc3da882635023e384eabfb336",
 }
 SCHEMA = {
     "type": "object", "additionalProperties": False, "required": sorted(KEYS),
@@ -26,6 +27,22 @@ SCHEMA = {
         "player": {"type": ["string", "null"], "enum": [*sorted(PLAYERS), None]},
         "min_passes": {"type": ["integer", "null"]},
         "max_shots": {"type": ["integer", "null"]},
+    },
+}
+
+
+CHINESE_EXAMPLE = "帮我找几个进球不多，但在防守转换和进攻组织方面表现活跃的中场。"
+CHINESE_REQUIREMENTS = {
+    "position": "midfield", "goals": "low", "defensive_transition": True, "build_up": True,
+}
+CHINESE_SCHEMA = {
+    "type": "object", "additionalProperties": False,
+    "required": sorted(CHINESE_REQUIREMENTS),
+    "properties": {
+        "position": {"type": ["string", "null"], "enum": ["midfield", None]},
+        "goals": {"type": ["string", "null"], "enum": ["low", None]},
+        "defensive_transition": {"type": "boolean"},
+        "build_up": {"type": "boolean"},
     },
 }
 
@@ -60,18 +77,24 @@ class OpenAIInterpreter:
         self.last = None
         if prompt not in approved_prompts():
             raise ValueError("Only the fixed synthetic benchmark prompts may be sent")
-        body = {
-            "model": self.model, "store": False,
-            "instructions": (
+        chinese = prompt == CHINESE_EXAMPLE
+        instructions = (
+            "Extract the requested constraints from the fictional scouting request. "
+            "Do not infer a numeric threshold for low goals or substitute shots for goals."
+        ) if chinese else (
                 "Convert this fictional scouting request to the given schema. "
                 "Only recorded transition, build-up passes, passes, shots and player actions "
                 "are supported. Use unsupported or comparison for unobservable or comparative "
                 "requests. Never omit requested constraints. Null means not requested. "
-                "Unremarkable/few shots means at most one shot. No rankings or abilities."
-            ),
+                "Unremarkable/few shots means at most one shot. No rankings or abilities. "
+                "Positions and goal-count filters are unavailable: use unsupported for those "
+                "requests, including non-English requests; do not replace goals with shots."
+            )
+        body = {
+            "model": self.model, "store": False, "instructions": instructions,
             "input": prompt,
             "text": {"format": {"type": "json_schema", "name": "scouting_query",
-                                 "strict": True, "schema": SCHEMA}},
+                                 "strict": True, "schema": CHINESE_SCHEMA if chinese else SCHEMA}},
         }
         request = Request(
             "https://api.openai.com/v1/responses", data=json.dumps(body).encode(),
@@ -95,7 +118,18 @@ class OpenAIInterpreter:
                 raise ValueError("Provider did not return one structured response")
             usage = raw.get("usage", {})
             self.last = {"latency_seconds": elapsed, "usage": usage, "model": raw.get("model")}
-            query = validate_query(json.loads(content[0]))
+            value = json.loads(content[0])
+            if chinese:
+                self.last["extracted_requirements"] = value
+                if (not isinstance(value, dict) or set(value) != set(CHINESE_REQUIREMENTS)
+                        or type(value.get("defensive_transition")) is not bool
+                        or type(value.get("build_up")) is not bool
+                        or value != CHINESE_REQUIREMENTS):
+                    raise ValueError("Chinese request constraints could not be verified")
+                query = {"intent": "unsupported", "team": None, "player": None,
+                         "min_passes": None, "max_shots": None}
+            else:
+                query = validate_query(value)
             self.last["parsed_query"] = query
             return query
         except (

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "ZH-01",
+    "prompt": "帮我找几个进球不多，但在防守转换和进攻组织方面表现活跃的中场。",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true,
+    "structured_query": {
+      "intent": "unsupported",
+      "team": null,
+      "player": null,
+      "min_passes": null,
+      "max_shots": null
+    },
+    "expected_requirements": {
+      "position": "midfield",
+      "goals": "low",
+      "defensive_transition": true,
+      "build_up": true
+    }
+  }
+]

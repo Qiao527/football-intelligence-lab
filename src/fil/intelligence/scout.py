@@ -43,6 +43,9 @@ def interpret(text: str) -> dict[str, Any]:
         "min_passes": None,
         "max_shots": None,
     }
+    # The English-only guard cannot safely verify constraints in another script.
+    if not t.isascii():
+        return query
     # Requests for unobservable or comparative capability cannot be rescued by a subset.
     if re.search(r"\b(rating|rate|rank|best|better|compare|comparison|versus|vs\.?|ability|"
                  r"potential|speed|pace|pressures?|pressure|salary|age|height|nationality|"

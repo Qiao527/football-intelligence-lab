@@ -106,3 +106,46 @@ def test_bad_provider_output_and_transport_fail_closed(monkeypatch):
 def test_redirects_are_not_followed():
     handler = openai_scout._NoRedirect()
     assert handler.redirect_request(None, None, 302, "Found", {}, "https://other.invalid") is None
+
+
+def test_approved_chinese_example_abstains_without_positions_or_goal_filter():
+    text = "帮我找几个进球不多，但在防守转换和进攻组织方面表现活跃的中场。"
+    assert text in openai_scout.approved_prompts()
+    proposed = {"intent": "transition_buildup", "team": None, "player": None,
+                "min_passes": None, "max_shots": 1}
+    result = search(text, lambda _: proposed)
+    assert result["abstention"] and not result["candidates"]
+
+
+def test_chinese_example_extracts_constraints_then_abstains(monkeypatch):
+    sent = []
+    requirements = dict(openai_scout.CHINESE_REQUIREMENTS)
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            pass
+
+        def read(self, limit):
+            return json.dumps({"status": "completed", "model": "mock-model",
+                               "output": [{"type": "message", "content": [
+                                   {"type": "output_text", "text": json.dumps(requirements)}]}],
+                               "usage": {"input_tokens": 10, "output_tokens": 10}}).encode()
+
+    class FakeOpener:
+        def open(self, request, timeout):
+            sent.append(json.loads(request.data))
+            return FakeResponse()
+
+    monkeypatch.setattr(openai_scout, "build_opener", lambda *_: FakeOpener())
+    provider = OpenAIInterpreter("fake-key", "mock-model")
+    result = search(openai_scout.CHINESE_EXAMPLE, provider)
+    assert provider.last["extracted_requirements"] == requirements
+    assert result["abstention"] and not result["candidates"]
+    assert sent[0]["input"] == openai_scout.CHINESE_EXAMPLE
+    assert sent[0]["text"]["format"]["schema"] == openai_scout.CHINESE_SCHEMA
+    requirements["position"] = None
+    result = search(openai_scout.CHINESE_EXAMPLE, provider)
+    assert result["abstention"] and result["interpretation_error"]

@@ -61,3 +61,46 @@ def test_provider_error_fails_task_and_safe_abstention():
     assert live["metrics"]["false_abstentions"] == 1
     assert live["metrics"]["constraint_preservation"] == {"passed": 0, "total": 1}
     assert live["outcomes"][0]["result"]["interpretation_error"]
+
+
+def test_live_cli_requires_spending_limit_before_any_inference(tmp_path):
+    import os
+    import subprocess
+    import sys
+
+    env = {**os.environ, "OPENAI_API_KEY": "test-only-key"}
+    base = [sys.executable, str(ROOT / "scripts/evaluate_scout_21.py"),
+            "--output", str(tmp_path / "out.json"), "--live-model", "test-model"]
+    for flags in ([], ["--spend-limit-usd", "1"], ["--provider-limit-confirmed"],
+                  ["--spend-limit-usd", "0", "--provider-limit-confirmed"]):
+        result = subprocess.run(base + flags, env=env, capture_output=True, text=True, check=False)
+        assert result.returncode == 2
+        assert "Configure a positive spending limit" in result.stderr
+        assert not (tmp_path / "out.json").exists()
+    env.pop("OPENAI_API_KEY")
+    result = subprocess.run(base + ["--spend-limit-usd", "1", "--provider-limit-confirmed"],
+                            env=env, capture_output=True, text=True, check=False)
+    assert result.returncode == 2
+    assert "OPENAI_API_KEY unavailable" in result.stderr
+    assert not (tmp_path / "out.json").exists()
+
+
+def test_contribution_offline_and_deepseek_cli_missing_key(tmp_path):
+    import os
+    import subprocess
+    import sys
+
+    report = eval21["run_contribution_suite"]()
+    assert len(report["methods"]["rules"]["result"]["candidates"]) == 2
+    assert report["methods"]["live"]["status"] == "NOT RUN"
+    env = dict(os.environ)
+    env.pop("DEEPSEEK_API_KEY", None)
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/evaluate_scout_21.py"),
+         "--output", str(tmp_path / "out.json"), "--provider", "deepseek", "--suite",
+         "contribution", "--live-model", "deepseek-flash", "--spend-limit-usd", "0.6",
+         "--provider-limit-confirmed"], env=env, capture_output=True, text=True, check=False,
+    )
+    assert result.returncode == 2
+    assert "DEEPSEEK_API_KEY unavailable" in result.stderr
+    assert not (tmp_path / "out.json").exists()

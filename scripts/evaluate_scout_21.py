@@ -8,6 +8,8 @@ import statistics
 import time
 from pathlib import Path
 
+from fil.intelligence.contribution import contribution_report
+from fil.intelligence.deepseek_scout import DeepSeekInterpreter, select_contributions
 from fil.intelligence.openai_scout import OpenAIInterpreter
 from fil.intelligence.scout import execute_query, search
 from fil.intelligence.scout_fixture import scout_fixture
@@ -65,6 +67,12 @@ def run_suite(cases, structured, provider=None):
             grades = grade(case, result, events)
             if result.get("interpretation_error"):
                 grades["task_complete"] = False
+            if method == "live" and "expected_requirements" in case:
+                grades["requirements_correct"] = bool(
+                    provider.last and provider.last.get("extracted_requirements")
+                    == case["expected_requirements"]
+                )
+                grades["task_complete"] &= grades["requirements_correct"]
             rows[method].append({"case": case, "reference_query": structured[case["id"]],
                                  "result": result,
                                  "grades": grades,
@@ -78,6 +86,31 @@ def run_suite(cases, structured, provider=None):
                                          "usage": None, "token_cost_usd": None,
                                          "actual_billed_cost_usd": None}
                         for method, results in rows.items()}}
+
+
+def run_contribution_suite(provider=None):
+    """Run one exploratory synthetic match, with no unsupported human-value claim."""
+    report = contribution_report()
+    live = {"status": "NOT RUN", "reason": "No live model requested", "usage": None,
+            "token_cost_usd": None, "actual_billed_cost_usd": None}
+    if provider:
+        try:
+            result = select_contributions(provider)
+            verified = result["status"] == "selected"
+            error = None
+        except ValueError:
+            result = {"status": "abstained", "candidates": []}
+            verified = False
+            error = "Provider selection failed validation or was unavailable."
+        live = {"status": "RUN", "verified_selection": verified,
+                "outcomes": [{"result": result, "error": error, "provider": provider.last}]}
+    return {
+        "fixture_sha256": report["source"]["raw_sha256"], "case_count": 1,
+        "note": "Exploratory synthetic case; no independent ranking or user-value ground truth.",
+        "methods": {"rules": {"status": "RUN", "result": report,
+                               "usage": {"input_tokens": 0, "output_tokens": 0},
+                               "token_cost_usd": 0}, "live": live},
+    }
 
 
 def summarize_usage(records, rates):
@@ -107,9 +140,16 @@ def summarize_usage(records, rates):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--live-model", help="Explicit OpenAI model; uses OPENAI_API_KEY")
-    parser.add_argument("--suite", choices=("both", "development", "challenge"),
-                        help="Defaults to challenge for live; both for offline")
+    parser.add_argument("--provider", choices=("openai", "deepseek"), default="openai")
+    parser.add_argument("--live-model", help="Explicit model; requires provider API key")
+    parser.add_argument("--spend-limit-usd", type=float,
+                        help="Explicitly configured limit in USD for the live evaluation")
+    parser.add_argument("--provider-limit-confirmed", action="store_true",
+                        help="Confirm the provider-side spending limit is configured")
+    parser.add_argument(
+        "--suite", choices=("both", "development", "challenge", "chinese", "contribution"),
+        help="Defaults to challenge for live; both for offline",
+    )
     parser.add_argument("--input-usd-per-million", type=float)
     parser.add_argument("--cached-input-usd-per-million", type=float)
     parser.add_argument("--output-usd-per-million", type=float)
@@ -120,13 +160,19 @@ def main():
         parser.error("Rates must be finite nonnegative USD per million tokens")
     provider = None
     if args.live_model:
-        key = os.environ.get("OPENAI_API_KEY")
+        if (args.spend_limit_usd is None or not 0 < args.spend_limit_usd < float("inf")
+                or not args.provider_limit_confirmed):
+            parser.error("Configure a positive spending limit and confirm the provider-side limit")
+        key_name = "DEEPSEEK_API_KEY" if args.provider == "deepseek" else "OPENAI_API_KEY"
+        key = os.environ.get(key_name)
         if not key:
-            parser.error("OPENAI_API_KEY unavailable; live evaluation NOT RUN")
-        provider = OpenAIInterpreter(key, args.live_model)
+            parser.error(f"{key_name} unavailable; live evaluation NOT RUN")
+        provider = (DeepSeekInterpreter(key, args.live_model) if args.provider == "deepseek"
+                    else OpenAIInterpreter(key, args.live_model))
     dev = json.loads((BENCH / "cases.json").read_text())
     held = json.loads((BENCH / "heldout.json").read_text())
     annotated = json.loads((BENCH / "dev_structured.json").read_text())
+    chinese = json.loads((BENCH / "chinese_example.json").read_text())
     selection = args.suite or ("challenge" if provider else "both")
     reports = {}
     if selection in {"both", "development"}:
@@ -135,9 +181,18 @@ def main():
         reports["challenge"] = run_suite(
             held, {c["id"]: c["structured_query"] for c in held}, provider
         )
+    if selection == "contribution":
+        if provider and args.provider != "deepseek":
+            parser.error("The synthetic contribution experiment requires DeepSeek")
+        reports["contribution"] = run_contribution_suite(provider)
+    if selection == "chinese":
+        reports["chinese"] = run_suite(
+            chinese, {c["id"]: c["structured_query"] for c in chinese}, provider
+        )
     for report in reports.values():
         live = report["methods"]["live"]
         if live["status"] == "RUN":
+            live["declared_spending_limit_usd"] = args.spend_limit_usd
             records = [row["provider"] for row in live["outcomes"]]
             live["usage"], live["token_cost_usd"] = summarize_usage(records, rates)
             live["actual_billed_cost_usd"] = None

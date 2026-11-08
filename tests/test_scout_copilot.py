@@ -42,6 +42,9 @@ def test_filters_and_explicit_abstention():
     for request in (
         "Compare Mara Vale and Tess Rowe",
         "Find fast defensive transition players",
+        "帮我找几个进球不多，但在防守转换和进攻组织方面表现活跃的中场。",
+        "Find players with passes，但必须是中场",
+        "Find Mara Vale passes，但进球必须少",
         "Find players with goals and assists",
         "Find left-foot players with passes",
         "Find players with no shots",
