@@ -8,7 +8,8 @@ from urllib.parse import parse_qs, urlparse
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from fil.intelligence.demo import MATCHES, load_demo  # noqa: E402
-from fil.intelligence.engine import analyze  # noqa: E402
+from fil.intelligence.public_score import synthetic_score  # noqa: E402
+from fil.intelligence.report_core import analyze  # noqa: E402
 from fil.intelligence.scout import search  # noqa: E402
 from fil.intelligence.scout_fixture import scout_fixture  # noqa: E402
 
@@ -34,7 +35,9 @@ def response(path):
         period = int(q["period"][0]) if q.get("period") else None
         team = int(q["team"][0]) if q.get("team") else None
         raw, meta, identity = load_demo(mid)
-        report = analyze(raw, meta, identity, period=period, team=team)
+        report = analyze(
+            raw, meta, identity, period=period, team=team, score_reconciler=synthetic_score
+        )
     except ValueError:
         return 400, {"error": "Invalid selection"}
     return 200, {"report": report, "events": raw, "match": meta}
