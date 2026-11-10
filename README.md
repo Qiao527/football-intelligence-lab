@@ -18,8 +18,9 @@ Run `uv run --frozen python scripts/serve_public_web.py`, then open http://127.0
 Discover fictional player-match records, open a player, and inspect original actions.
 The existing match report remains available through **Match intelligence**. Player counts
 describe one fictional match and are not ratings or cross-match identities.
-[Release scope, validation and current deployment blocker](docs/PUBLIC_WEB_RELEASE.md).
-No hosted URL is claimed while deployment approval is unresolved.
+[Release scope, validation and deployment evidence](docs/PUBLIC_WEB_RELEASE.md).
+Verified synthetic deployment: **https://fil-public-alpha.vercel.app** (fictional records
+only; no provider data). Identity, acceptance evidence and limitations are recorded there.
 
 ## Run in three commands
 

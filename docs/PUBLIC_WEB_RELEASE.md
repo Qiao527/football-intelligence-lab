@@ -5,19 +5,20 @@ match choices, real-time computation, shared filters, original JSON evidence, co
 complete conventional baseline and explicit scientific limits. Existing Streamlit/local research
 mode is unchanged. Public endpoints refuse real match IDs, arbitrary parameters and uploads.
 
-Validation: 687 tests pass; local Chromium verifies API→report→evidence→baseline, match-change
+Validation: 691 tests pass; local Chromium verifies API→report→evidence→baseline, match-change
 invalidation, no-Shot abstention and 390px layout with no JavaScript errors. The exact allowlisted
 bundle runs in isolation without the checkout. It contains no provider records or credentials.
 The new public workload has not yet received the 20-run performance evaluation used by the older
 Streamlit product; do not transfer those timing claims to this web frontend.
 
-## Current release blocker
+## Earlier release blocker
 
 Vercel production deployment was rejected by automatic approval. The reviewed dependency closure
 includes private provider ingestion and research source modules as transitive dependencies of the
 existing scoring engine. The reviewer did not accept broad external code sharing as authorized by
-the synthetic-demo request. No deployment was performed, no URL is claimed, and no workaround was
-attempted. Exact target, 45 paths, sizes and hashes: `PUBLIC_WEB_RELEASE_MANIFEST.json`.
+the synthetic-demo request. That broader bundle was not deployed and no workaround was attempted.
+Exact target, 45 paths, sizes and hashes: `PUBLIC_WEB_RELEASE_MANIFEST.json`. A later, separately
+authorized deployment of the smaller 26-file package is recorded below.
 
 Owner decision: approve external sharing of this exact code bundle with Vercel, or require a
 smaller independently reviewed public computation package. No repository visibility change,
@@ -38,7 +39,7 @@ platform provides it.
 
 Verified locally: every entrypoint imports as a standalone module, the packaged bundle serves
 `/api/health`, `POST /api/scout.py` with the interface's default request, `/api/scout-fixture` and
-`/`, and 687 tests pass. **Not verified: any Vercel build or runtime.** No project link, credential
+`/`, and the full suite passes. **Not verified: any Vercel build or runtime.** No project link, credential
 or deployment authorization was available, so no hosted URL is claimed for this repository.
 
 The production domain `fil-match-intelligence.vercel.app` serves a different repository
@@ -73,10 +74,46 @@ Owner steps after review and merge:
      --browser /path/to/chromium
    ```
 
+The pinned builders (`@vercel/python@28.0.0`, `@vercel/static-build@24.0.0`) require
+`@vercel/build-utils@15.0.0`. Vercel CLI 65.14.0 installs 15.2.1 and the remote build fails with
+npm `ERESOLVE`; Vercel CLI 65.1.0 is the compatible client for this configuration. Build locally
+with it and deploy with `--prebuilt`, or deploy remotely with it. Do not bypass peer resolution
+with `--force`.
+
 The acceptance script fails when the domain serves a platform 404, returns no candidate evidence,
 abstains, omits the discovery control, or reports a commit that differs from the reviewed one.
-Remote CI and the hosting runtime are separate evidence from local checks and have not been
-verified here.
+
+## Verified synthetic deployment
+
+The owner authorized a deployment of the 26-file synthetic package. It is live at
+https://fil-public-alpha.vercel.app (Vercel project `fil-public-alpha`). It serves fictional players
+only: no provider records, credentials, uploads or model calls.
+
+Deployed artifact: the bundle produced by `scripts/verify_public_alpha.py` from tree
+`266af6e15ca4af400851a503d63876f5e10c4804`, which is the tree of `Qiao527/afanc` commit `aaaa2c7`
+(merges of #25 and #26). The committed manifest recorded 26 files and the bundle matched it
+byte-for-byte before deployment. The deployment was created with
+`npx vercel@65.1.0 deploy --prebuilt --prod`.
+
+Acceptance was executed against the public URL, not locally:
+
+- `GET /` returns 200 and serves the discovery page.
+- `GET /api/health` returns 200 `{"status":"ok","mode":"synthetic-only","commit":null}`.
+- `POST /api/scout` with the interface's default request returns 200, `source_mode` `synthetic`,
+  with candidates Mara Vale and Tess Rowe.
+- `GET /api/scout-fixture` returns 200 with `provenance.mode` `synthetic`.
+- `scripts/check_scout_copilot_browser.py` PASS at 1440x900 and 390x844, including player profile,
+  pitch markers, supporting and contradictory evidence, abstention and the local journey.
+- `scripts/check_deployment.py --url https://fil-public-alpha.vercel.app` PASS.
+
+Identity limitation: a CLI deployment carries no Git metadata, so `/api/health` reports
+`commit: null` and `--expect-commit` cannot be used. Identity rests on the tree hash and manifest
+comparison above, not on a platform-reported commit. Linking the project to `release/public-alpha`
+through the Git integration would restore platform-reported identity; that is not configured.
+
+Still unverified: custom domain, hosted performance, the separate `fil-match-intelligence.vercel.app`
+application, and any non-synthetic data service. No data rights, repository visibility or paid
+service were changed.
 
 ## Run the full-stack web application locally
 
