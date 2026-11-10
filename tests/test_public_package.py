@@ -21,7 +21,7 @@ def test_allowlist_and_public_score_match_local_fixture_results():
     assert not any(
         p.startswith(("data/", "src/fil/research/", "src/fil/ingestion/")) for p in paths
     )
-    assert {p for p in paths if p.endswith(".json")} == {"vercel.json"}
+    assert {p for p in paths if p.endswith(".json")} == {"package.json", "vercel.json"}
     assert len(packager["manifest"](files)["files"]) == len(paths)
     for match in MATCHES:
         raw, metadata, _ = load_demo(match)

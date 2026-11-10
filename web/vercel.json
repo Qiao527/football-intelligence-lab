@@ -1,5 +1,57 @@
 {
   "version": 2,
+  "framework": null,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build@24.0.0",
+      "config": {
+        "distDir": "public"
+      }
+    },
+    {
+      "src": "api/health.py",
+      "use": "@vercel/python@28.0.0"
+    },
+    {
+      "src": "api/matches.py",
+      "use": "@vercel/python@28.0.0"
+    },
+    {
+      "src": "api/analyze.py",
+      "use": "@vercel/python@28.0.0"
+    },
+    {
+      "src": "api/scout.py",
+      "use": "@vercel/python@28.0.0"
+    },
+    {
+      "src": "api/scout-fixture.py",
+      "use": "@vercel/python@28.0.0"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/health",
+      "destination": "/api/health.py"
+    },
+    {
+      "source": "/api/matches",
+      "destination": "/api/matches.py"
+    },
+    {
+      "source": "/api/analyze",
+      "destination": "/api/analyze.py"
+    },
+    {
+      "source": "/api/scout",
+      "destination": "/api/scout.py"
+    },
+    {
+      "source": "/api/scout-fixture",
+      "destination": "/api/scout-fixture.py"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

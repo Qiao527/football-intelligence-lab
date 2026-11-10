@@ -149,3 +149,15 @@ def test_chinese_example_extracts_constraints_then_abstains(monkeypatch):
     requirements["position"] = None
     result = search(openai_scout.CHINESE_EXAMPLE, provider)
     assert result["abstention"] and result["interpretation_error"]
+
+
+def test_benchmark_root_resolves_from_an_installed_layout(tmp_path):
+    installed = tmp_path / "site-packages" / "fil" / "intelligence" / "openai_scout.py"
+    installed.parent.mkdir(parents=True)
+    installed.write_text("")
+    checkout = tmp_path / "checkout"
+    (checkout / "docs/benchmarks/scout-copilot").mkdir(parents=True)
+    (checkout / "docs/benchmarks/scout-copilot/cases.json").write_text("[]")
+    assert openai_scout._repository_root(installed, checkout) == checkout.resolve()
+    fallback = openai_scout._repository_root(installed, tmp_path / "empty")
+    assert fallback == installed.resolve().parents[3]
