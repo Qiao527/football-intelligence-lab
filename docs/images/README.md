@@ -27,3 +27,15 @@ actions only; no provider records, credentials or model output are shown.
 
 Reproduce with a Playwright session against the deployed URL, or locally with
 `scripts/serve_public_web.py` plus `scripts/check_scout_copilot_browser.py`.
+
+## Demo and social preview
+
+- `demo.gif` (960px, 11 fps, 23 s) and `demo.mp4` (1280x720, H.264): recorded with Playwright
+  against the deployed synthetic app on 2026-11-10. The cursor overlay is injected for
+  legibility. Flow: Find candidates -> contradictory action -> original JSON -> Match
+  Intelligence report.
+- `social-preview.png` (1280x640): GitHub social preview card. Upload it in repository
+  Settings -> General -> Social preview; the API cannot set it.
+
+Re-record with a Playwright context using `record_video_dir` and `record_video_size`
+(1280x720), then encode `demo.mp4` with H.264 and `demo.gif` with a 128-colour palette.

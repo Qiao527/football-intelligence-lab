@@ -37,6 +37,13 @@ supporting and contradictory actions; every event ID opens the original record.
 **Find candidates**, then open **demo-scout-action-010** under *Contradictory actions*. You are
 looking at a product that shows its counter-evidence instead of hiding it.
 
+## 23-second walkthrough
+
+![Scout Copilot demo: find candidates, open contradictory evidence, inspect original JSON, then run a match report](docs/images/demo.gif)
+
+Find candidates -> contradictory action -> original JSON -> Match Intelligence.
+[MP4 version](docs/images/demo.mp4) · [Live demo](https://fil-public-alpha.vercel.app)
+
 ## What is in it
 
 | Surface | What it does |
