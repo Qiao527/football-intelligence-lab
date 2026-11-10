@@ -46,7 +46,7 @@ def test_installed_metadata_matches_project() -> None:
 def test_runtime_dependencies_match_scoped_project_contract() -> None:
     """Only reviewed storage and Match Explorer runtime dependencies are installed."""
     project = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]
-    assert project["dependencies"] == ["plotly==6.3.1", "pyarrow==21.0.0", "streamlit==1.67.0"]
+    assert project["dependencies"] == ["plotly==6.3.1", "pyarrow==23.0.1", "streamlit==1.67.0"]
     assert set(metadata("football-intelligence-lab").get_all("Requires-Dist", [])) == set(
         project["dependencies"]
     )
