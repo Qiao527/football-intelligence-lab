@@ -92,6 +92,8 @@ uv build
 Tests use self-authored TEST_ONLY fixtures and need no provider data or network.
 For the synthetic scouting and match-report browser check, start the standalone web server
 and run `uv run --frozen --group browser python scripts/check_scouting_browser.py --browser /path/to/chromium`.
+The deployable synthetic bundle can be verified without deploying:
+`uv run --frozen python scripts/verify_public_alpha.py`.
 
 For other Chromium checks and retained performance samples, see
 [actual MVP verification](docs/MATCH_INTELLIGENCE_VERIFICATION.md).
