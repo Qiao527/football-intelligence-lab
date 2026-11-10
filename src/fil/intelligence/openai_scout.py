@@ -13,7 +13,20 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 from fil.intelligence.scout import INTENTS, KEYS, PLAYERS, TEAMS, validate_query
 
-ROOT = Path(__file__).resolve().parents[3]
+
+def _repository_root(
+    module_file: Path | None = None, cwd: Path | None = None
+) -> Path:
+    """Locate the checkout that owns the reviewed benchmark files."""
+    module = Path(module_file if module_file is not None else __file__).resolve()
+    working = Path(cwd if cwd is not None else Path.cwd()).resolve()
+    for candidate in (*module.parents, working):
+        if (candidate / "docs" / "benchmarks" / "scout-copilot" / "cases.json").is_file():
+            return candidate
+    return module.parents[3]
+
+
+ROOT = _repository_root()
 APPROVED = {
     "cases.json": "4339eb6f9f407ec830270dbdd7a0167875c7df54400da0a120ff41de4379ab2c",
     "heldout.json": "a5d1b1bde2b9dec29d900b36197637fdcd30efae5b7364533af01dca78191368",
