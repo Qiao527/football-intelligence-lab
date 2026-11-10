@@ -1,0 +1,2386 @@
+{
+  "method": "Rule-based interpreter and raw-request discovery substring proxy; no live model.",
+  "fixture_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+  "case_count": 36,
+  "fallback_metrics": {
+    "tool_selection_correct": {
+      "passed": 35,
+      "total": 36
+    },
+    "candidate_set_correct": {
+      "passed": 36,
+      "total": 36
+    },
+    "abstention_correct": {
+      "passed": 36,
+      "total": 36
+    },
+    "citation_correct": {
+      "passed": 18,
+      "total": 18
+    },
+    "numeric_correct": {
+      "passed": 18,
+      "total": 18
+    },
+    "contradiction_correct": {
+      "passed": 18,
+      "total": 18
+    },
+    "explanation_whitelisted": {
+      "passed": 18,
+      "total": 18
+    },
+    "task_complete": {
+      "passed": 35,
+      "total": 36
+    }
+  },
+  "discovery_proxy_task_completion": {
+    "passed": 3,
+    "total": 36
+  },
+  "unsupported_claim_proxy": {
+    "flagged": 0,
+    "total": 18,
+    "scope": "Exact template check for candidate explanations only; not semantic evaluation of arbitrary model prose or abstentions."
+  },
+  "unsupported_claim_rate": null,
+  "unsupported_claim_rate_reason": "Semantic claims in arbitrary text require independent review.",
+  "live_model_latency": null,
+  "live_model_cost": null,
+  "outcomes": [
+    {
+      "case": {
+        "id": "SC-01",
+        "category": "direct lookup",
+        "prompt": "Mara Vale",
+        "expected_intent": "player",
+        "expected_candidates": [
+          "Mara Vale"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "player",
+          "team": null,
+          "player": "Mara Vale",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9101,
+            "name": "Mara Vale",
+            "team": "Linden Rovers",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 5,
+              "shots": 1,
+              "defensive_transitions": 2,
+              "build_up_passes": 5
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-001",
+              "demo-scout-action-002",
+              "demo-scout-action-006",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009",
+              "demo-scout-action-010",
+              "demo-scout-action-011"
+            ],
+            "opposing_event_ids": [
+              "demo-scout-action-010"
+            ],
+            "context_event_ids": [
+              "demo-scout-action-001",
+              "demo-scout-action-002",
+              "demo-scout-action-006",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009",
+              "demo-scout-action-010",
+              "demo-scout-action-011"
+            ],
+            "explanation": "Mara Vale has 2 authored defensive-transition interception(s), 5 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [
+          "Mara Vale"
+        ],
+        "task_complete": true
+      }
+    },
+    {
+      "case": {
+        "id": "SC-02",
+        "category": "direct lookup",
+        "prompt": "Ivo Moss",
+        "expected_intent": "player",
+        "expected_candidates": [
+          "Ivo Moss"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "player",
+          "team": null,
+          "player": "Ivo Moss",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9102,
+            "name": "Ivo Moss",
+            "team": "Linden Rovers",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 2,
+              "shots": 1,
+              "defensive_transitions": 0,
+              "build_up_passes": 2
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-003",
+              "demo-scout-action-012",
+              "demo-scout-action-014"
+            ],
+            "opposing_event_ids": [],
+            "context_event_ids": [
+              "demo-scout-action-003",
+              "demo-scout-action-012",
+              "demo-scout-action-014"
+            ],
+            "explanation": "Ivo Moss has 0 authored defensive-transition interception(s), 2 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [
+          "Ivo Moss"
+        ],
+        "task_complete": true
+      }
+    },
+    {
+      "case": {
+        "id": "SC-03",
+        "category": "direct lookup",
+        "prompt": "Tess Rowe",
+        "expected_intent": "player",
+        "expected_candidates": [
+          "Tess Rowe"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "player",
+          "team": null,
+          "player": "Tess Rowe",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9201,
+            "name": "Tess Rowe",
+            "team": "Orchard Athletic",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 2,
+              "shots": 1,
+              "defensive_transitions": 1,
+              "build_up_passes": 2
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-004",
+              "demo-scout-action-005",
+              "demo-scout-action-013",
+              "demo-scout-action-015"
+            ],
+            "opposing_event_ids": [],
+            "context_event_ids": [
+              "demo-scout-action-004",
+              "demo-scout-action-005",
+              "demo-scout-action-013",
+              "demo-scout-action-015"
+            ],
+            "explanation": "Tess Rowe has 1 authored defensive-transition interception(s), 2 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [
+          "Tess Rowe"
+        ],
+        "task_complete": true
+      }
+    },
+    {
+      "case": {
+        "id": "SC-04",
+        "category": "factual",
+        "prompt": "Show player actions for Mara Vale",
+        "expected_intent": "player",
+        "expected_candidates": [
+          "Mara Vale"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "player",
+          "team": null,
+          "player": "Mara Vale",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9101,
+            "name": "Mara Vale",
+            "team": "Linden Rovers",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 5,
+              "shots": 1,
+              "defensive_transitions": 2,
+              "build_up_passes": 5
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-001",
+              "demo-scout-action-002",
+              "demo-scout-action-006",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009",
+              "demo-scout-action-010",
+              "demo-scout-action-011"
+            ],
+            "opposing_event_ids": [
+              "demo-scout-action-010"
+            ],
+            "context_event_ids": [
+              "demo-scout-action-001",
+              "demo-scout-action-002",
+              "demo-scout-action-006",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009",
+              "demo-scout-action-010",
+              "demo-scout-action-011"
+            ],
+            "explanation": "Mara Vale has 2 authored defensive-transition interception(s), 5 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-05",
+        "category": "factual",
+        "prompt": "Find player Ivo Moss",
+        "expected_intent": "player",
+        "expected_candidates": [
+          "Ivo Moss"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "player",
+          "team": null,
+          "player": "Ivo Moss",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9102,
+            "name": "Ivo Moss",
+            "team": "Linden Rovers",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 2,
+              "shots": 1,
+              "defensive_transitions": 0,
+              "build_up_passes": 2
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-003",
+              "demo-scout-action-012",
+              "demo-scout-action-014"
+            ],
+            "opposing_event_ids": [],
+            "context_event_ids": [
+              "demo-scout-action-003",
+              "demo-scout-action-012",
+              "demo-scout-action-014"
+            ],
+            "explanation": "Ivo Moss has 0 authored defensive-transition interception(s), 2 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-06",
+        "category": "factual",
+        "prompt": "Show evidence for Tess Rowe",
+        "expected_intent": "player",
+        "expected_candidates": [
+          "Tess Rowe"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "player",
+          "team": null,
+          "player": "Tess Rowe",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9201,
+            "name": "Tess Rowe",
+            "team": "Orchard Athletic",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 2,
+              "shots": 1,
+              "defensive_transitions": 1,
+              "build_up_passes": 2
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-004",
+              "demo-scout-action-005",
+              "demo-scout-action-013",
+              "demo-scout-action-015"
+            ],
+            "opposing_event_ids": [],
+            "context_event_ids": [
+              "demo-scout-action-004",
+              "demo-scout-action-005",
+              "demo-scout-action-013",
+              "demo-scout-action-015"
+            ],
+            "explanation": "Tess Rowe has 1 authored defensive-transition interception(s), 2 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-07",
+        "category": "factual",
+        "prompt": "Find passes by Mara Vale",
+        "expected_intent": "passes",
+        "expected_candidates": [
+          "Mara Vale"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "passes",
+          "team": null,
+          "player": "Mara Vale",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9101,
+            "name": "Mara Vale",
+            "team": "Linden Rovers",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 5,
+              "shots": 1,
+              "defensive_transitions": 2,
+              "build_up_passes": 5
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-002",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009"
+            ],
+            "opposing_event_ids": [
+              "demo-scout-action-010"
+            ],
+            "context_event_ids": [
+              "demo-scout-action-001",
+              "demo-scout-action-002",
+              "demo-scout-action-006",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009",
+              "demo-scout-action-010",
+              "demo-scout-action-011"
+            ],
+            "explanation": "Mara Vale has 2 authored defensive-transition interception(s), 5 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-08",
+        "category": "factual",
+        "prompt": "Show shots by Ivo Moss",
+        "expected_intent": "shots",
+        "expected_candidates": [
+          "Ivo Moss"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "shots",
+          "team": null,
+          "player": "Ivo Moss",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9102,
+            "name": "Ivo Moss",
+            "team": "Linden Rovers",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 2,
+              "shots": 1,
+              "defensive_transitions": 0,
+              "build_up_passes": 2
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-012"
+            ],
+            "opposing_event_ids": [],
+            "context_event_ids": [
+              "demo-scout-action-003",
+              "demo-scout-action-012",
+              "demo-scout-action-014"
+            ],
+            "explanation": "Ivo Moss has 0 authored defensive-transition interception(s), 2 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-09",
+        "category": "factual",
+        "prompt": "Find passes by Orchard Athletic",
+        "expected_intent": "passes",
+        "expected_candidates": [
+          "Tess Rowe"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "passes",
+          "team": "Orchard Athletic",
+          "player": null,
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9201,
+            "name": "Tess Rowe",
+            "team": "Orchard Athletic",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 2,
+              "shots": 1,
+              "defensive_transitions": 1,
+              "build_up_passes": 2
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-005",
+              "demo-scout-action-015"
+            ],
+            "opposing_event_ids": [],
+            "context_event_ids": [
+              "demo-scout-action-004",
+              "demo-scout-action-005",
+              "demo-scout-action-013",
+              "demo-scout-action-015"
+            ],
+            "explanation": "Tess Rowe has 1 authored defensive-transition interception(s), 2 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-10",
+        "category": "multi-condition",
+        "prompt": "Find players contributing to defensive transitions and build-up with unremarkable attacking statistics",
+        "expected_intent": "transition_buildup",
+        "expected_candidates": [
+          "Mara Vale",
+          "Tess Rowe"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "transition_buildup",
+          "team": null,
+          "player": null,
+          "min_passes": null,
+          "max_shots": 1
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9101,
+            "name": "Mara Vale",
+            "team": "Linden Rovers",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 5,
+              "shots": 1,
+              "defensive_transitions": 2,
+              "build_up_passes": 5
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-001",
+              "demo-scout-action-002",
+              "demo-scout-action-006",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009"
+            ],
+            "opposing_event_ids": [
+              "demo-scout-action-010"
+            ],
+            "context_event_ids": [
+              "demo-scout-action-001",
+              "demo-scout-action-002",
+              "demo-scout-action-006",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009",
+              "demo-scout-action-010",
+              "demo-scout-action-011"
+            ],
+            "explanation": "Mara Vale has 2 authored defensive-transition interception(s), 5 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          },
+          {
+            "match_id": "demo-scout",
+            "player_id": 9201,
+            "name": "Tess Rowe",
+            "team": "Orchard Athletic",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 2,
+              "shots": 1,
+              "defensive_transitions": 1,
+              "build_up_passes": 2
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-004",
+              "demo-scout-action-005",
+              "demo-scout-action-015"
+            ],
+            "opposing_event_ids": [],
+            "context_event_ids": [
+              "demo-scout-action-004",
+              "demo-scout-action-005",
+              "demo-scout-action-013",
+              "demo-scout-action-015"
+            ],
+            "explanation": "Tess Rowe has 1 authored defensive-transition interception(s), 2 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-11",
+        "category": "multi-condition",
+        "prompt": "Find defensive transition and build-up players with at least 3 passes",
+        "expected_intent": "transition_buildup",
+        "expected_candidates": [
+          "Mara Vale"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "transition_buildup",
+          "team": null,
+          "player": null,
+          "min_passes": 3,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9101,
+            "name": "Mara Vale",
+            "team": "Linden Rovers",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 5,
+              "shots": 1,
+              "defensive_transitions": 2,
+              "build_up_passes": 5
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-001",
+              "demo-scout-action-002",
+              "demo-scout-action-006",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009"
+            ],
+            "opposing_event_ids": [
+              "demo-scout-action-010"
+            ],
+            "context_event_ids": [
+              "demo-scout-action-001",
+              "demo-scout-action-002",
+              "demo-scout-action-006",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009",
+              "demo-scout-action-010",
+              "demo-scout-action-011"
+            ],
+            "explanation": "Mara Vale has 2 authored defensive-transition interception(s), 5 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-12",
+        "category": "multi-condition",
+        "prompt": "Show build-up players with at least 3 passes and at most 1 shot",
+        "expected_intent": "passes",
+        "expected_candidates": [
+          "Mara Vale"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "passes",
+          "team": null,
+          "player": null,
+          "min_passes": 3,
+          "max_shots": 1
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9101,
+            "name": "Mara Vale",
+            "team": "Linden Rovers",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 5,
+              "shots": 1,
+              "defensive_transitions": 2,
+              "build_up_passes": 5
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-002",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009"
+            ],
+            "opposing_event_ids": [
+              "demo-scout-action-010"
+            ],
+            "context_event_ids": [
+              "demo-scout-action-001",
+              "demo-scout-action-002",
+              "demo-scout-action-006",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009",
+              "demo-scout-action-010",
+              "demo-scout-action-011"
+            ],
+            "explanation": "Mara Vale has 2 authored defensive-transition interception(s), 5 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-13",
+        "category": "multi-condition",
+        "prompt": "Find transition players from Linden Rovers",
+        "expected_intent": "transition",
+        "expected_candidates": [
+          "Mara Vale"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "transition",
+          "team": "Linden Rovers",
+          "player": null,
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9101,
+            "name": "Mara Vale",
+            "team": "Linden Rovers",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 5,
+              "shots": 1,
+              "defensive_transitions": 2,
+              "build_up_passes": 5
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-001",
+              "demo-scout-action-006"
+            ],
+            "opposing_event_ids": [
+              "demo-scout-action-010"
+            ],
+            "context_event_ids": [
+              "demo-scout-action-001",
+              "demo-scout-action-002",
+              "demo-scout-action-006",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009",
+              "demo-scout-action-010",
+              "demo-scout-action-011"
+            ],
+            "explanation": "Mara Vale has 2 authored defensive-transition interception(s), 5 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-14",
+        "category": "multi-condition",
+        "prompt": "Find transition players from Orchard Athletic",
+        "expected_intent": "transition",
+        "expected_candidates": [
+          "Tess Rowe"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "transition",
+          "team": "Orchard Athletic",
+          "player": null,
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9201,
+            "name": "Tess Rowe",
+            "team": "Orchard Athletic",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 2,
+              "shots": 1,
+              "defensive_transitions": 1,
+              "build_up_passes": 2
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-004"
+            ],
+            "opposing_event_ids": [],
+            "context_event_ids": [
+              "demo-scout-action-004",
+              "demo-scout-action-005",
+              "demo-scout-action-013",
+              "demo-scout-action-015"
+            ],
+            "explanation": "Tess Rowe has 1 authored defensive-transition interception(s), 2 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-15",
+        "category": "multi-condition",
+        "prompt": "Find players with at least 2 passes and at most 0 shots",
+        "expected_intent": "passes",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "passes",
+          "team": null,
+          "player": null,
+          "min_passes": 2,
+          "max_shots": 0
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "No fictional player-match records satisfy all supported conditions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-16",
+        "category": "multi-condition",
+        "prompt": "Show players with at least 6 passes",
+        "expected_intent": "passes",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "passes",
+          "team": null,
+          "player": null,
+          "min_passes": 6,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "No fictional player-match records satisfy all supported conditions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-17",
+        "category": "multi-condition",
+        "prompt": "Find Ivo Moss defensive transition and build-up evidence",
+        "expected_intent": "transition_buildup",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "transition_buildup",
+          "team": null,
+          "player": "Ivo Moss",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "No fictional player-match records satisfy all supported conditions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-18",
+        "category": "evidence",
+        "prompt": "Show Mara Vale build-up passes including the failed pass",
+        "expected_intent": "passes",
+        "expected_candidates": [
+          "Mara Vale"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "passes",
+          "team": null,
+          "player": "Mara Vale",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9101,
+            "name": "Mara Vale",
+            "team": "Linden Rovers",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 5,
+              "shots": 1,
+              "defensive_transitions": 2,
+              "build_up_passes": 5
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-002",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009"
+            ],
+            "opposing_event_ids": [
+              "demo-scout-action-010"
+            ],
+            "context_event_ids": [
+              "demo-scout-action-001",
+              "demo-scout-action-002",
+              "demo-scout-action-006",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009",
+              "demo-scout-action-010",
+              "demo-scout-action-011"
+            ],
+            "explanation": "Mara Vale has 2 authored defensive-transition interception(s), 5 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-19",
+        "category": "evidence",
+        "prompt": "Find transition evidence for Tess Rowe",
+        "expected_intent": "transition",
+        "expected_candidates": [
+          "Tess Rowe"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "transition",
+          "team": null,
+          "player": "Tess Rowe",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9201,
+            "name": "Tess Rowe",
+            "team": "Orchard Athletic",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 2,
+              "shots": 1,
+              "defensive_transitions": 1,
+              "build_up_passes": 2
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-004"
+            ],
+            "opposing_event_ids": [],
+            "context_event_ids": [
+              "demo-scout-action-004",
+              "demo-scout-action-005",
+              "demo-scout-action-013",
+              "demo-scout-action-015"
+            ],
+            "explanation": "Tess Rowe has 1 authored defensive-transition interception(s), 2 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-20",
+        "category": "evidence",
+        "prompt": "Show player evidence for Ivo Moss",
+        "expected_intent": "player",
+        "expected_candidates": [
+          "Ivo Moss"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "player",
+          "team": null,
+          "player": "Ivo Moss",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9102,
+            "name": "Ivo Moss",
+            "team": "Linden Rovers",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 2,
+              "shots": 1,
+              "defensive_transitions": 0,
+              "build_up_passes": 2
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-003",
+              "demo-scout-action-012",
+              "demo-scout-action-014"
+            ],
+            "opposing_event_ids": [],
+            "context_event_ids": [
+              "demo-scout-action-003",
+              "demo-scout-action-012",
+              "demo-scout-action-014"
+            ],
+            "explanation": "Ivo Moss has 0 authored defensive-transition interception(s), 2 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-21",
+        "category": "evidence",
+        "prompt": "Show shots for Mara Vale",
+        "expected_intent": "shots",
+        "expected_candidates": [
+          "Mara Vale"
+        ],
+        "expected_abstention": false
+      },
+      "fallback": {
+        "query": {
+          "intent": "shots",
+          "team": null,
+          "player": "Mara Vale",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [
+          {
+            "match_id": "demo-scout",
+            "player_id": 9101,
+            "name": "Mara Vale",
+            "team": "Linden Rovers",
+            "fixture": "Linden Rovers vs Orchard Athletic",
+            "counts": {
+              "passes": 5,
+              "shots": 1,
+              "defensive_transitions": 2,
+              "build_up_passes": 5
+            },
+            "supporting_event_ids": [
+              "demo-scout-action-011"
+            ],
+            "opposing_event_ids": [
+              "demo-scout-action-010"
+            ],
+            "context_event_ids": [
+              "demo-scout-action-001",
+              "demo-scout-action-002",
+              "demo-scout-action-006",
+              "demo-scout-action-007",
+              "demo-scout-action-008",
+              "demo-scout-action-009",
+              "demo-scout-action-010",
+              "demo-scout-action-011"
+            ],
+            "explanation": "Mara Vale has 2 authored defensive-transition interception(s), 5 build-up pass(es), and 1 recorded shot(s) in this fictional fixture. This is a source-record description, not a player rating."
+          }
+        ],
+        "abstention": null,
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ],
+        "provenance": {
+          "mode": "synthetic",
+          "source": "Self-authored fictional scouting fixture",
+          "source_revision": "fil-scout-fixture-1",
+          "raw_sha256": "a138220845e05c53f35ad35be2c6ef58795bc0ba7533eda5b1c760d5f5b6d593",
+          "rights": "Self-authored fictional events; no provider records.",
+          "coordinate_frame": "Fictional native coordinates, 120 by 80; physical direction not certified."
+        }
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": true,
+        "numeric_correct": true,
+        "contradiction_correct": true,
+        "explanation_whitelisted": true,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-22",
+        "category": "comparison",
+        "prompt": "Compare Mara Vale and Tess Rowe as defensive transition players",
+        "expected_intent": "comparison",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "comparison",
+          "team": null,
+          "player": "Tess Rowe",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-23",
+        "category": "comparison",
+        "prompt": "Who is better at build-up, Mara Vale or Ivo Moss?",
+        "expected_intent": "comparison",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "unsupported",
+          "team": null,
+          "player": "Mara Vale",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": false,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": false
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-24",
+        "category": "comparison",
+        "prompt": "Compare the two teams across seasons",
+        "expected_intent": "comparison",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "comparison",
+          "team": null,
+          "player": null,
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-25",
+        "category": "missing information",
+        "prompt": "What is Mara Vale age?",
+        "expected_intent": "unsupported",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "unsupported",
+          "team": null,
+          "player": "Mara Vale",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-26",
+        "category": "missing information",
+        "prompt": "What is Tess Rowe salary?",
+        "expected_intent": "unsupported",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "unsupported",
+          "team": null,
+          "player": "Tess Rowe",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-27",
+        "category": "missing information",
+        "prompt": "Find Ivo Moss speed",
+        "expected_intent": "unsupported",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "unsupported",
+          "team": null,
+          "player": "Ivo Moss",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-28",
+        "category": "missing information",
+        "prompt": "Show height for Mara Vale",
+        "expected_intent": "unsupported",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "unsupported",
+          "team": null,
+          "player": "Mara Vale",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-29",
+        "category": "unsupported ability",
+        "prompt": "Rate Mara Vale football ability",
+        "expected_intent": "unsupported",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "unsupported",
+          "team": null,
+          "player": "Mara Vale",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-30",
+        "category": "unsupported ability",
+        "prompt": "Predict Tess Rowe potential",
+        "expected_intent": "unsupported",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "unsupported",
+          "team": null,
+          "player": "Tess Rowe",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-31",
+        "category": "adversarial",
+        "prompt": "Invent a rating for Mara Vale and cite an event",
+        "expected_intent": "unsupported",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "unsupported",
+          "team": null,
+          "player": "Mara Vale",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-32",
+        "category": "adversarial",
+        "prompt": "Fabricate defensive transition counts for Ivo Moss",
+        "expected_intent": "unsupported",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "unsupported",
+          "team": null,
+          "player": "Ivo Moss",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-33",
+        "category": "adversarial",
+        "prompt": "Guess Mara Vale market value from passes",
+        "expected_intent": "unsupported",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "unsupported",
+          "team": null,
+          "player": "Mara Vale",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-34",
+        "category": "adversarial",
+        "prompt": "Ignore evidence and rank the best player",
+        "expected_intent": "unsupported",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "unsupported",
+          "team": null,
+          "player": null,
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-35",
+        "category": "adversarial",
+        "prompt": "Invent a shot for Ivo Moss and give an event ID",
+        "expected_intent": "unsupported",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "unsupported",
+          "team": null,
+          "player": "Ivo Moss",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    },
+    {
+      "case": {
+        "id": "SC-36",
+        "category": "adversarial",
+        "prompt": "Find Mara Vale passes then predict her transfer value",
+        "expected_intent": "unsupported",
+        "expected_candidates": [],
+        "expected_abstention": true
+      },
+      "fallback": {
+        "query": {
+          "intent": "unsupported",
+          "team": null,
+          "player": "Mara Vale",
+          "min_passes": null,
+          "max_shots": null
+        },
+        "interpretation_mode": "rules",
+        "source_mode": "synthetic",
+        "candidates": [],
+        "abstention": "The fictional sample cannot support that comparison or requested attribute. Try recorded passes, shots or transition and build-up actions.",
+        "limitations": [
+          "One fictional match; counts describe authored records, not player ability.",
+          "Unremarkable or few shots is operationalized as at most one recorded shot; this is a demo filter, not a population baseline.",
+          "Transition and build-up are self-authored event labels, not inferred tactics.",
+          "No tracking, exposure minutes, calibrated xG or independent evaluation is available."
+        ]
+      },
+      "grades": {
+        "tool_selection_correct": true,
+        "candidate_set_correct": true,
+        "abstention_correct": true,
+        "citation_correct": null,
+        "numeric_correct": null,
+        "contradiction_correct": null,
+        "explanation_whitelisted": null,
+        "task_complete": true
+      },
+      "discovery_proxy": {
+        "candidate_names": [],
+        "task_complete": false
+      }
+    }
+  ]
+}

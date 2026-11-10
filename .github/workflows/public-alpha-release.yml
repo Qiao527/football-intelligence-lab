@@ -1,0 +1,68 @@
+name: Publish public alpha bundle
+
+# Dispatch-only. Publishes the verified synthetic bundle to a generated branch that a
+# hosting project can track. It never deploys, never touches main and accepts no input
+# other than the exact reviewed commit on main.
+on:
+  workflow_dispatch:
+    inputs:
+      approved_head:
+        description: Exact reviewed 40-character commit on main
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: public-alpha-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'Qiao527/football-intelligence-lab' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Require the approved commit
+        env:
+          APPROVED_HEAD: ${{ inputs.approved_head }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$APPROVED_HEAD" =~ ^[0-9a-f]{40}$ ]]
+          test "$(git rev-parse HEAD)" = "$APPROVED_HEAD"
+      - uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v6.0.1
+        with:
+          version: "0.12.23"
+          enable-cache: false
+      - name: Verify lint, tests and the packaged artifact
+        run: |
+          uv python install
+          uv lock --check
+          uv sync --frozen
+          uv run --frozen ruff check .
+          uv run --frozen pytest -q
+          uv run --frozen python scripts/verify_public_alpha.py --directory "$RUNNER_TEMP/public-alpha"
+      - name: Push the generated release branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          APPROVED_HEAD: ${{ inputs.approved_head }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$APPROVED_HEAD" =~ ^[0-9a-f]{40}$ ]]
+          cd "$RUNNER_TEMP/public-alpha"
+          git init -q
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -q -b release/public-alpha
+          git add -A
+          test "$(git ls-files | wc -l | tr -d ' ')" = "26"
+          git commit -q -m "Publish public alpha bundle from ${APPROVED_HEAD}"
+          git push --force "https://x-access-token:${GH_TOKEN}@github.com/${GH_REPO}.git" release/public-alpha

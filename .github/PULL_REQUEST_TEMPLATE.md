@@ -5,12 +5,15 @@
 - Phase / acceptance gate:
 - Goal and non-goals:
 - Files and metric definitions changed:
+- Parent branch / exact SHA / dependency PR (for stacked work):
+- Upstream validation and assumptions; reconciliation since last parent fetch:
 
 ## Evidence of correctness
 - Raw fixture and SHA-256:
 - Provider/license/attribution status:
 - Commands executed (including exit codes):
 - Unit + integration + regression result:
+- Hosted CI: observed result/link or explicitly attributed owner report:
 - Independent event ID / xG / time reconciliation:
 - Screen recording/screenshots (for UI changes):
 

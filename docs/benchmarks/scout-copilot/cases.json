@@ -1,0 +1,327 @@
+[
+  {
+    "id": "SC-01",
+    "category": "direct lookup",
+    "prompt": "Mara Vale",
+    "expected_intent": "player",
+    "expected_candidates": [
+      "Mara Vale"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-02",
+    "category": "direct lookup",
+    "prompt": "Ivo Moss",
+    "expected_intent": "player",
+    "expected_candidates": [
+      "Ivo Moss"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-03",
+    "category": "direct lookup",
+    "prompt": "Tess Rowe",
+    "expected_intent": "player",
+    "expected_candidates": [
+      "Tess Rowe"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-04",
+    "category": "factual",
+    "prompt": "Show player actions for Mara Vale",
+    "expected_intent": "player",
+    "expected_candidates": [
+      "Mara Vale"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-05",
+    "category": "factual",
+    "prompt": "Find player Ivo Moss",
+    "expected_intent": "player",
+    "expected_candidates": [
+      "Ivo Moss"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-06",
+    "category": "factual",
+    "prompt": "Show evidence for Tess Rowe",
+    "expected_intent": "player",
+    "expected_candidates": [
+      "Tess Rowe"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-07",
+    "category": "factual",
+    "prompt": "Find passes by Mara Vale",
+    "expected_intent": "passes",
+    "expected_candidates": [
+      "Mara Vale"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-08",
+    "category": "factual",
+    "prompt": "Show shots by Ivo Moss",
+    "expected_intent": "shots",
+    "expected_candidates": [
+      "Ivo Moss"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-09",
+    "category": "factual",
+    "prompt": "Find passes by Orchard Athletic",
+    "expected_intent": "passes",
+    "expected_candidates": [
+      "Tess Rowe"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-10",
+    "category": "multi-condition",
+    "prompt": "Find players contributing to defensive transitions and build-up with unremarkable attacking statistics",
+    "expected_intent": "transition_buildup",
+    "expected_candidates": [
+      "Mara Vale",
+      "Tess Rowe"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-11",
+    "category": "multi-condition",
+    "prompt": "Find defensive transition and build-up players with at least 3 passes",
+    "expected_intent": "transition_buildup",
+    "expected_candidates": [
+      "Mara Vale"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-12",
+    "category": "multi-condition",
+    "prompt": "Show build-up players with at least 3 passes and at most 1 shot",
+    "expected_intent": "passes",
+    "expected_candidates": [
+      "Mara Vale"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-13",
+    "category": "multi-condition",
+    "prompt": "Find transition players from Linden Rovers",
+    "expected_intent": "transition",
+    "expected_candidates": [
+      "Mara Vale"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-14",
+    "category": "multi-condition",
+    "prompt": "Find transition players from Orchard Athletic",
+    "expected_intent": "transition",
+    "expected_candidates": [
+      "Tess Rowe"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-15",
+    "category": "multi-condition",
+    "prompt": "Find players with at least 2 passes and at most 0 shots",
+    "expected_intent": "passes",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-16",
+    "category": "multi-condition",
+    "prompt": "Show players with at least 6 passes",
+    "expected_intent": "passes",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-17",
+    "category": "multi-condition",
+    "prompt": "Find Ivo Moss defensive transition and build-up evidence",
+    "expected_intent": "transition_buildup",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-18",
+    "category": "evidence",
+    "prompt": "Show Mara Vale build-up passes including the failed pass",
+    "expected_intent": "passes",
+    "expected_candidates": [
+      "Mara Vale"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-19",
+    "category": "evidence",
+    "prompt": "Find transition evidence for Tess Rowe",
+    "expected_intent": "transition",
+    "expected_candidates": [
+      "Tess Rowe"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-20",
+    "category": "evidence",
+    "prompt": "Show player evidence for Ivo Moss",
+    "expected_intent": "player",
+    "expected_candidates": [
+      "Ivo Moss"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-21",
+    "category": "evidence",
+    "prompt": "Show shots for Mara Vale",
+    "expected_intent": "shots",
+    "expected_candidates": [
+      "Mara Vale"
+    ],
+    "expected_abstention": false
+  },
+  {
+    "id": "SC-22",
+    "category": "comparison",
+    "prompt": "Compare Mara Vale and Tess Rowe as defensive transition players",
+    "expected_intent": "comparison",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-23",
+    "category": "comparison",
+    "prompt": "Who is better at build-up, Mara Vale or Ivo Moss?",
+    "expected_intent": "comparison",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-24",
+    "category": "comparison",
+    "prompt": "Compare the two teams across seasons",
+    "expected_intent": "comparison",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-25",
+    "category": "missing information",
+    "prompt": "What is Mara Vale age?",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-26",
+    "category": "missing information",
+    "prompt": "What is Tess Rowe salary?",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-27",
+    "category": "missing information",
+    "prompt": "Find Ivo Moss speed",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-28",
+    "category": "missing information",
+    "prompt": "Show height for Mara Vale",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-29",
+    "category": "unsupported ability",
+    "prompt": "Rate Mara Vale football ability",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-30",
+    "category": "unsupported ability",
+    "prompt": "Predict Tess Rowe potential",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-31",
+    "category": "adversarial",
+    "prompt": "Invent a rating for Mara Vale and cite an event",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-32",
+    "category": "adversarial",
+    "prompt": "Fabricate defensive transition counts for Ivo Moss",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-33",
+    "category": "adversarial",
+    "prompt": "Guess Mara Vale market value from passes",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-34",
+    "category": "adversarial",
+    "prompt": "Ignore evidence and rank the best player",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-35",
+    "category": "adversarial",
+    "prompt": "Invent a shot for Ivo Moss and give an event ID",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true
+  },
+  {
+    "id": "SC-36",
+    "category": "adversarial",
+    "prompt": "Find Mara Vale passes then predict her transfer value",
+    "expected_intent": "unsupported",
+    "expected_candidates": [],
+    "expected_abstention": true
+  }
+]

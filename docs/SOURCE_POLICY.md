@@ -74,3 +74,38 @@ and current scoped gate decision. The CLI only reports its immutable acquisition
 record and technical verification; it does not decide later rights status.
 The relevant manifest SHA-256 is
 `f9d1b52d9d736972df029a64480d8e2853a3cbf88f251bb2478c6e0f4da6952c`.
+
+## Conditional World Cup corpus authorization — 22 October 2026
+
+The owner explicitly approved PR #14's exact 126 additional event/lineup files at
+revision `4b73468fc5b0f1950f9f66fada70ad3a4f9327cb`. The immutable enumeration is
+`docs/research/statsbomb_corpus_proposal.json`, SHA-256
+`bd9357a8bf3c87c808477308770f1e798b7f7b1d98f4468c7fc6c56e9ac17787`.
+This later authorization supersedes that proposal's historical pending status;
+the proposal and original 8658 manifest are not rewritten.
+
+Acquire pilot 8649/8650/8651/8652/8655/8656 first. Expansion to the other 57
+requires complete independently checked source/identity/lineup/score/missingness/
+possession/spatial gates without unresolved material issues. Rights or integrity
+ambiguity stops the affected acquisition/analysis. No additional provider,
+competition, revision or file is approved.
+
+Use is limited to local noncommercial football research, reconciliation,
+possession/process analysis and transparent empirical baseline fitting/evaluation
+consistent with the reviewed provider agreement. Owner approval does not override
+provider terms. Keep raw and derived artifacts ignored, immutable and local.
+No redistribution, publication, commercial use, external AI upload, deployment,
+model-weight publication or xT/VAEP training. Existing registration attestation
+and attribution/branding conditions remain unchanged. World Cup matches are not
+proof of general football validity; 8658 is development-exposed, never untouched
+validation/test. Wyscout remains separately unapproved.
+
+## Later acceptance of metric-specific eligibility
+
+The owner subsequently accepted `fil-metric-eligibility-proposal-1`, anchored to
+PR #17 commit `a6f64008a352689620971de4887cd48a431d43c9`. Expansion is now
+conditional on **new independent metric-specific pilot gates**, not on altering
+the historical BLOCKED result. The existing 57 matches/114 files and pinned
+revision are the entire scope. See [accepted execution record](research/ACCEPTED_CORPUS_EXECUTION.md).
+No physical-time certification, new provider, archive, training right, release,
+merge or deployment follows from this acceptance.

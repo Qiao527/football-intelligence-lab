@@ -1,0 +1,569 @@
+{
+  "version": "fil-capability-audit-1",
+  "observed_date": "2026-10-23",
+  "scope": "Selected source inspection; not a complete dependency or security audit",
+  "repositories": [
+    {
+      "repo": "K-Dense-AI/scientific-agent-skills",
+      "sha": "593377bb048752abb0152deab9fbb1083a6087df",
+      "tree": "d4d202beb151c1f1c6c15738be0692d65e0447af",
+      "license": "MIT",
+      "pushed_at": "2026-10-19T09:33:57Z",
+      "archived": false,
+      "open_issues": 64,
+      "default_branch": "main"
+    },
+    {
+      "repo": "obra/superpowers",
+      "sha": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "tree": "5e3a3c9af45c3474506fb62a3ce664bd03a2cdc4",
+      "license": "MIT",
+      "pushed_at": "2026-10-23T03:48:57Z",
+      "archived": false,
+      "open_issues": 353,
+      "default_branch": "main"
+    },
+    {
+      "repo": "addyosmani/agent-skills",
+      "sha": "aeac41d4d005999432bb7312f7ff06383a91d59d",
+      "tree": "8483a004722df18e33800e00da9880f328db5e7c",
+      "license": "MIT",
+      "pushed_at": "2026-10-13T20:24:07Z",
+      "archived": false,
+      "open_issues": 148,
+      "default_branch": "main"
+    },
+    {
+      "repo": "garrytan/gstack",
+      "sha": "b04cc35832183a89ed71eed628de15a6f315a1a8",
+      "tree": "19042b0a7932a08dbcd732678797e9f82c533d13",
+      "license": "MIT",
+      "pushed_at": "2026-10-23T16:07:18Z",
+      "archived": false,
+      "open_issues": 82,
+      "default_branch": "main"
+    },
+    {
+      "repo": "vectorize-io/hindsight",
+      "sha": "2004c4fe46b0cc47ffa10cf482237e7173b6db9e",
+      "tree": "79d3912dee03fce72995aadb73c9bba626b31d71",
+      "license": "MIT",
+      "pushed_at": "2026-10-23T16:10:55Z",
+      "archived": false,
+      "open_issues": 137,
+      "default_branch": "main"
+    },
+    {
+      "repo": "thedotmack/claude-mem",
+      "sha": "dcb28a768c6be4b8e451843210558275caa8ec44",
+      "tree": "77db5f3ef3e29f8baf80b0f911038b75959f314e",
+      "license": "Apache-2.0",
+      "pushed_at": "2026-10-23T05:17:53Z",
+      "archived": false,
+      "open_issues": 132,
+      "default_branch": "main"
+    },
+    {
+      "repo": "666ghj/MiroFish",
+      "sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "tree": "dcc88f9b1da4145a06769a7f979d50d77e1dba25",
+      "license": "AGPL-3.0",
+      "pushed_at": "2026-10-16T03:32:19Z",
+      "archived": false,
+      "open_issues": 202,
+      "default_branch": "main"
+    },
+    {
+      "repo": "ML-KULeuven/socceraction",
+      "sha": "93a1242d46c104889205753accaabadb00c45c6d"
+    },
+    {
+      "repo": "andrewRowlinson/mplsoccer",
+      "sha": "150be3f5d891526506a4c35b03256f173a70a14a"
+    },
+    {
+      "repo": "hudl/statsbombpy",
+      "sha": "dc4a2461b7406df451e1bbb549e56d8d963cb5d7"
+    }
+  ],
+  "files": [
+    {
+      "repo": "K-Dense-AI/scientific-agent-skills",
+      "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+      "path": "README.md",
+      "reviewed_utf8_text": true,
+      "sha256": "2d4a9f2268c6ed70fc0d0d769921963da6b82966bd71c4b0225e35b0779b2447"
+    },
+    {
+      "repo": "K-Dense-AI/scientific-agent-skills",
+      "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+      "path": "LICENSE.md",
+      "reviewed_utf8_text": true,
+      "sha256": "09b02a3c9df3053c55531d503357a9c7cde275970e6c3ceaa1ddf5f0e90b40c1"
+    },
+    {
+      "repo": "K-Dense-AI/scientific-agent-skills",
+      "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+      "path": "SECURITY.md",
+      "reviewed_utf8_text": true,
+      "sha256": "bfde4efa894087783cb21d7ddf306aa70ce3025cb565a600e58e88e62ee3aec7"
+    },
+    {
+      "repo": "K-Dense-AI/scientific-agent-skills",
+      "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+      "path": "skills/scientific-critical-thinking/SKILL.md",
+      "reviewed_utf8_text": true,
+      "sha256": "563af70571b7dcd6a96bf2e303bedfdcba623b4e9f082d58f04aacbc961fdae4"
+    },
+    {
+      "repo": "K-Dense-AI/scientific-agent-skills",
+      "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+      "path": "skills/statistical-analysis/SKILL.md",
+      "reviewed_utf8_text": true,
+      "sha256": "e112848726b3713267cac65e4e2c15491a0a26ee1ed628db01195f7e43f97997"
+    },
+    {
+      "repo": "K-Dense-AI/scientific-agent-skills",
+      "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+      "path": "skills/hypothesis-generation/SKILL.md",
+      "reviewed_utf8_text": true,
+      "sha256": "5bccec0437d96d61821ec2095e7e32b61e8634cd8c02f11f42da953121e92719"
+    },
+    {
+      "repo": "K-Dense-AI/scientific-agent-skills",
+      "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+      "path": "skills/hypothesis-generation/scripts/validate_hypothesis_schema.py",
+      "reviewed_utf8_text": true,
+      "sha256": "63bc1b7752d20042c2845ecb2457448ec8e2d9bc8fe1337003b222f8f4620608"
+    },
+    {
+      "repo": "K-Dense-AI/scientific-agent-skills",
+      "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+      "path": "skills/hypothesis-generation/scripts/_common.py",
+      "reviewed_utf8_text": true,
+      "sha256": "7a41a5f9b97092ee188d45959f38f92a4215d4f298dd04fd0f2817e9f607e74e"
+    },
+    {
+      "repo": "K-Dense-AI/scientific-agent-skills",
+      "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+      "path": "skills/hypothesis-generation/assets/hypothesis_record_template.json",
+      "reviewed_utf8_text": true,
+      "sha256": "73f080a6696c415f228b38100bb7b0f6bc89ad2c7997bf50d62b585b0bc8fe0c"
+    },
+    {
+      "repo": "obra/superpowers",
+      "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "path": "README.md",
+      "reviewed_utf8_text": true,
+      "sha256": "79f29f50c735862d2e304ea547b4c9aa67d9db6909ff6fb7b5ea922d7bcbc3e7"
+    },
+    {
+      "repo": "obra/superpowers",
+      "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "path": "LICENSE",
+      "reviewed_utf8_text": true,
+      "sha256": "a37e0e9697144819e1d965176ac4ae5bc3fa02d11e7812036bbcadf6dafe2400"
+    },
+    {
+      "repo": "obra/superpowers",
+      "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "path": "hooks/hooks.json",
+      "reviewed_utf8_text": true,
+      "sha256": "47fd72cc8bedf31c72702b35b4ed7bab670294d658c4ce518330337525a3798b"
+    },
+    {
+      "repo": "obra/superpowers",
+      "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "path": "hooks/session-start",
+      "reviewed_utf8_text": true,
+      "sha256": "5c15e62a90ed13ad8e4b3561148c54c26c6ee28b41ec3a55a241f68b400d886d"
+    },
+    {
+      "repo": "obra/superpowers",
+      "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "path": "skills/verification-before-completion/SKILL.md",
+      "reviewed_utf8_text": true,
+      "sha256": "2befe7fc55bcadaa3d97dd9e8efeb633d2561c0ebe74c5a8b17c4d9e7e4520b3"
+    },
+    {
+      "repo": "obra/superpowers",
+      "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "path": "skills/systematic-debugging/SKILL.md",
+      "reviewed_utf8_text": true,
+      "sha256": "51c6435d98c83c42c96ba7c35725a0b2c376cd487fb1a4e6bd0ddbe7e33ef202"
+    },
+    {
+      "repo": "addyosmani/agent-skills",
+      "commit": "aeac41d4d005999432bb7312f7ff06383a91d59d",
+      "path": "README.md",
+      "reviewed_utf8_text": true,
+      "sha256": "b74ab722eeee706ff1c5c3ee55f5f2328368ec28c6368900bc80b857b5bc6b72"
+    },
+    {
+      "repo": "addyosmani/agent-skills",
+      "commit": "aeac41d4d005999432bb7312f7ff06383a91d59d",
+      "path": "LICENSE",
+      "reviewed_utf8_text": true,
+      "sha256": "6f202f8bd568cd730dbb2b0d1f8e243bc74c2fa1f64dbce9b2c7ea08bd5c9fd7"
+    },
+    {
+      "repo": "addyosmani/agent-skills",
+      "commit": "aeac41d4d005999432bb7312f7ff06383a91d59d",
+      "path": "hooks/session-start.sh",
+      "reviewed_utf8_text": true,
+      "sha256": "eae078f6903521b54bf0af382ff2a0c395eb9bc1e314bea7047fe03051cfc617"
+    },
+    {
+      "repo": "addyosmani/agent-skills",
+      "commit": "aeac41d4d005999432bb7312f7ff06383a91d59d",
+      "path": "evals/README.md",
+      "reviewed_utf8_text": true,
+      "sha256": "60624a9ec6f798dc72575b42d1213e7db30b43f9064f76d8b61a173abfc3c15c"
+    },
+    {
+      "repo": "garrytan/gstack",
+      "commit": "b04cc35832183a89ed71eed628de15a6f315a1a8",
+      "path": "README.md",
+      "reviewed_utf8_text": true,
+      "sha256": "5ba5586b7b3c034dbdc24b3cda3c21476f2767c82855e7722b61756ca9893c1c"
+    },
+    {
+      "repo": "garrytan/gstack",
+      "commit": "b04cc35832183a89ed71eed628de15a6f315a1a8",
+      "path": "LICENSE",
+      "reviewed_utf8_text": true,
+      "sha256": "e56fbb5b3d95756f3fa1cfefa24732ec79f18ece1ad08a4e79e00df57e8b198c"
+    },
+    {
+      "repo": "garrytan/gstack",
+      "commit": "b04cc35832183a89ed71eed628de15a6f315a1a8",
+      "path": "SECURITY.md",
+      "reviewed_utf8_text": true,
+      "sha256": "baa2eefc431d0f943c06803e9ac2ab4ffbfe7b20626b6f7462aee5b81e1ce416"
+    },
+    {
+      "repo": "garrytan/gstack",
+      "commit": "b04cc35832183a89ed71eed628de15a6f315a1a8",
+      "path": "package.json",
+      "reviewed_utf8_text": true,
+      "sha256": "005148bf7d23f8ba2c65c6b99bbcb879507f13371c032c9a9fe5eab39cd2126c"
+    },
+    {
+      "repo": "garrytan/gstack",
+      "commit": "b04cc35832183a89ed71eed628de15a6f315a1a8",
+      "path": "setup",
+      "reviewed_utf8_text": true,
+      "sha256": "1b70c2a67012eae11757cf196841c306961f81e2bc52b460aeaa4a8ebc461dfa"
+    },
+    {
+      "repo": "vectorize-io/hindsight",
+      "commit": "2004c4fe46b0cc47ffa10cf482237e7173b6db9e",
+      "path": "README.md",
+      "reviewed_utf8_text": true,
+      "sha256": "a3e2745dedec4f9e0d4452857ef054699e60414740f5d8f12d41bd42711d476a"
+    },
+    {
+      "repo": "vectorize-io/hindsight",
+      "commit": "2004c4fe46b0cc47ffa10cf482237e7173b6db9e",
+      "path": "LICENSE",
+      "reviewed_utf8_text": true,
+      "sha256": "01fde0bedf83bdc185065d7af524a61690efe576a67f922eaff3a1280c17b63a"
+    },
+    {
+      "repo": "vectorize-io/hindsight",
+      "commit": "2004c4fe46b0cc47ffa10cf482237e7173b6db9e",
+      "path": "hindsight-api-slim/hindsight_api/config.py",
+      "reviewed_utf8_text": true,
+      "sha256": "8d95a00ccf1ce505277b018837fe67972cb9c60d1e02cb8125105f1e477231e0"
+    },
+    {
+      "repo": "vectorize-io/hindsight",
+      "commit": "2004c4fe46b0cc47ffa10cf482237e7173b6db9e",
+      "path": "hindsight-api-slim/hindsight_api/engine/llm_transport.py",
+      "reviewed_utf8_text": true,
+      "sha256": "661f0ab93cbe56a57063078ed002e4655e40355e46c3a4514ba0474f019de6cc"
+    },
+    {
+      "repo": "vectorize-io/hindsight",
+      "commit": "2004c4fe46b0cc47ffa10cf482237e7173b6db9e",
+      "path": "docker/docker-compose/local-llm/docker-compose.yaml",
+      "reviewed_utf8_text": true,
+      "sha256": "c8eac1258786fc2963f5ad7c8d2e186ea5b82717b15d5c4a5105b388fe631788"
+    },
+    {
+      "repo": "thedotmack/claude-mem",
+      "commit": "dcb28a768c6be4b8e451843210558275caa8ec44",
+      "path": "README.md",
+      "reviewed_utf8_text": true,
+      "sha256": "c4790b786d9869849eac37ddfc5cf2971070bcaed5e844c90eefbe7614176719"
+    },
+    {
+      "repo": "thedotmack/claude-mem",
+      "commit": "dcb28a768c6be4b8e451843210558275caa8ec44",
+      "path": "LICENSE",
+      "reviewed_utf8_text": true,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "repo": "thedotmack/claude-mem",
+      "commit": "dcb28a768c6be4b8e451843210558275caa8ec44",
+      "path": "SECURITY.md",
+      "reviewed_utf8_text": true,
+      "sha256": "0725ff0894466aea0ffd185215bb843f001d4ed69af3436558212d80898727bb"
+    },
+    {
+      "repo": "thedotmack/claude-mem",
+      "commit": "dcb28a768c6be4b8e451843210558275caa8ec44",
+      "path": "plugin/hooks/hooks.json",
+      "reviewed_utf8_text": true,
+      "sha256": "fdf769b17b30d8d98c494293803b1a5d5d13c1d945a5b91388461fdba3aefeec"
+    },
+    {
+      "repo": "thedotmack/claude-mem",
+      "commit": "dcb28a768c6be4b8e451843210558275caa8ec44",
+      "path": "plugin/hooks/codex-hooks.json",
+      "reviewed_utf8_text": true,
+      "sha256": "97a72231c11b9975fa6014e10041732306c7873f5eab46471ebb4d1c79f2d1de"
+    },
+    {
+      "repo": "thedotmack/claude-mem",
+      "commit": "dcb28a768c6be4b8e451843210558275caa8ec44",
+      "path": "package.json",
+      "reviewed_utf8_text": true,
+      "sha256": "115a28742f6c8ebf78612e21e5df3a46142504bef9de56756ee8cdae9165b319"
+    },
+    {
+      "repo": "666ghj/MiroFish",
+      "commit": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "path": "README.md",
+      "reviewed_utf8_text": true,
+      "sha256": "5109feef87d494dd77c0eb225486d4278fe3eb61b303574600bcf8c3c339d034"
+    },
+    {
+      "repo": "666ghj/MiroFish",
+      "commit": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "path": "LICENSE",
+      "reviewed_utf8_text": true,
+      "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef"
+    },
+    {
+      "repo": "666ghj/MiroFish",
+      "commit": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "path": "backend/app/config.py",
+      "reviewed_utf8_text": true,
+      "sha256": "a85580b4551724b3c2fff419565c9aa11f6dba1992f5981ed34037a264c2a2f3"
+    },
+    {
+      "repo": "666ghj/MiroFish",
+      "commit": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "path": "backend/app/utils/llm_client.py",
+      "reviewed_utf8_text": true,
+      "sha256": "c10c12e3d8a5bf16c3bc9b03eb64c438313108b9a9b743c4450785f1477a35e3"
+    },
+    {
+      "repo": "666ghj/MiroFish",
+      "commit": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "path": "backend/app/services/zep_graph_memory_updater.py",
+      "reviewed_utf8_text": true,
+      "sha256": "a9fe25ee7bd2d97d2b6ad5b21dae82955fb13acab595393b8f5cad280614dafe"
+    },
+    {
+      "repo": "666ghj/MiroFish",
+      "commit": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "path": "package.json",
+      "reviewed_utf8_text": true,
+      "sha256": "f2b8cc90bc21b0b4990d5192b5e7c09161982760dede52cb743862d908526715"
+    },
+    {
+      "repo": "thedotmack/claude-mem",
+      "commit": "dcb28a768c6be4b8e451843210558275caa8ec44",
+      "path": "src/shared/SettingsDefaultsManager.ts",
+      "reviewed_utf8_text": true,
+      "sha256": "3e8ff5ca6ff712cfca29cedbe37749d94bdfdc514573e673a332046cd9b05cee"
+    },
+    {
+      "repo": "garrytan/gstack",
+      "commit": "b04cc35832183a89ed71eed628de15a6f315a1a8",
+      "path": "bin/gstack-telemetry-sync",
+      "reviewed_utf8_text": true,
+      "sha256": "9c5a2bb935bde5c9bcb32ab173ed04115b4a0fc8f3f9571e35e9da7175c11ca6"
+    },
+    {
+      "repo": "garrytan/gstack",
+      "commit": "b04cc35832183a89ed71eed628de15a6f315a1a8",
+      "path": "bin/gstack-telemetry-log",
+      "reviewed_utf8_text": true,
+      "sha256": "eb6e10516af994d7c6ff9f730c75e2862cc1f3e4ba60484e7b2a5dc8a12c7b34"
+    },
+    {
+      "repo": "obra/superpowers",
+      "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "path": "skills/using-superpowers/SKILL.md",
+      "reviewed_utf8_text": true,
+      "sha256": "82c5c8866ad7f5dd4440ce66bd7806ba48a2f13771beae5cf112e53f08fe36ba"
+    },
+    {
+      "repo": "addyosmani/agent-skills",
+      "commit": "aeac41d4d005999432bb7312f7ff06383a91d59d",
+      "path": "skills/using-agent-skills/SKILL.md",
+      "reviewed_utf8_text": true,
+      "sha256": "30787ef2c77bf1a4729fffed0f6523ba6fcbe81bdc436b36371b78c21394d3c3"
+    },
+    {
+      "repo": "ML-KULeuven/socceraction",
+      "commit": "93a1242d46c104889205753accaabadb00c45c6d",
+      "path": "README.md",
+      "reviewed_utf8_text": true,
+      "sha256": "5dd5562cb6333df436f8e05965593caf7afb4540fa164c37a81831c730703b67"
+    },
+    {
+      "repo": "ML-KULeuven/socceraction",
+      "commit": "93a1242d46c104889205753accaabadb00c45c6d",
+      "path": "socceraction/spadl/statsbomb.py",
+      "reviewed_utf8_text": true,
+      "sha256": "9c1b41f629ba7f79f5d2fd2505822662ab033b53e64a83cb045ad67d45b88cc8"
+    },
+    {
+      "repo": "andrewRowlinson/mplsoccer",
+      "commit": "150be3f5d891526506a4c35b03256f173a70a14a",
+      "path": "README.md",
+      "reviewed_utf8_text": true,
+      "sha256": "d2a15ed185ef78a26587b52c28748397e27f0239ff1cbe31b352bb29203a03f0"
+    },
+    {
+      "repo": "andrewRowlinson/mplsoccer",
+      "commit": "150be3f5d891526506a4c35b03256f173a70a14a",
+      "path": "LICENSE",
+      "reviewed_utf8_text": true,
+      "sha256": "2f40715f2f4e9af2dbe593130303bdc44d86d069b4163a5eb8b53d5cf2c97478"
+    },
+    {
+      "repo": "andrewRowlinson/mplsoccer",
+      "commit": "150be3f5d891526506a4c35b03256f173a70a14a",
+      "path": "mplsoccer/soccer/dimensions.py",
+      "reviewed_utf8_text": true,
+      "sha256": "598dead8e16248e88c96aabbc3905dbcb38ae546dca05fb0e89f7bffbb9d5693"
+    },
+    {
+      "repo": "hudl/statsbombpy",
+      "commit": "dc4a2461b7406df451e1bbb549e56d8d963cb5d7",
+      "path": "README.md",
+      "reviewed_utf8_text": true,
+      "sha256": "fa84883a804138ff252fcbc341120c5274c89e698331e8ba8076075242a93366"
+    },
+    {
+      "repo": "hudl/statsbombpy",
+      "commit": "dc4a2461b7406df451e1bbb549e56d8d963cb5d7",
+      "path": "statsbombpy/public.py",
+      "reviewed_utf8_text": true,
+      "sha256": "a6d949f202ebe99cdf5b2df1f018bc62bc5b95f55bea0ad77104cbc55031c6e5"
+    },
+    {
+      "repo": "hudl/statsbombpy",
+      "commit": "dc4a2461b7406df451e1bbb549e56d8d963cb5d7",
+      "path": "statsbombpy/config.py",
+      "reviewed_utf8_text": true,
+      "sha256": "44aedd71e0cf3562be2d12fa2ca3d25e86692a76b53a165604c939002f75f0e0"
+    },
+    {
+      "repo": "ML-KULeuven/socceraction",
+      "commit": "93a1242d46c104889205753accaabadb00c45c6d",
+      "path": "LICENSE.rst",
+      "reviewed_utf8_text": true,
+      "sha256": "9d797bf10fa078933563dba791f9d04dcf66b1827744e7242eee71b80d717532"
+    }
+  ],
+  "maintenance_snapshots": [
+    {
+      "repo": "K-Dense-AI/scientific-agent-skills",
+      "workflow_runs": [
+        {
+          "name": "Skill Tests",
+          "head_sha": "c40b130bd6c3394c292c5e03b0d19ffd92b4f430",
+          "status": "completed",
+          "conclusion": "action_required",
+          "created_at": "2026-10-23T11:12:31Z",
+          "html_url": "https://github.com/K-Dense-AI/scientific-agent-skills/actions/runs/39944466593"
+        }
+      ]
+    },
+    {
+      "repo": "obra/superpowers",
+      "workflow_runs": [
+        {
+          "name": "Running Copilot Code Review",
+          "head_sha": "5bf4e78011075bcfc0dc295f0724994cd123ee71",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-09-22T07:01:24Z",
+          "html_url": "https://github.com/obra/superpowers/actions/runs/35697535367"
+        }
+      ]
+    },
+    {
+      "repo": "addyosmani/agent-skills",
+      "workflow_runs": [
+        {
+          "name": "Test Plugin Installation",
+          "head_sha": "f5eb3e3bbc15c24515e49a75fe545d6e146654b8",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-23T01:06:09Z",
+          "html_url": "https://github.com/addyosmani/agent-skills/actions/runs/39882062376"
+        }
+      ]
+    },
+    {
+      "repo": "garrytan/gstack",
+      "workflow_runs": [
+        {
+          "name": "Windows Free Tests",
+          "head_sha": "4a18fd3daa4488b4bacbc398e8aac2b435d67f3b",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-23T16:07:23Z",
+          "html_url": "https://github.com/garrytan/gstack/actions/runs/39984115200"
+        }
+      ]
+    },
+    {
+      "repo": "vectorize-io/hindsight",
+      "workflow_runs": [
+        {
+          "name": "CI",
+          "head_sha": "34405068ee78dc78dd5fb7fce326be82f76e4311",
+          "status": "in_progress",
+          "conclusion": null,
+          "created_at": "2026-10-23T16:21:28Z",
+          "html_url": "https://github.com/vectorize-io/hindsight/actions/runs/39986083996"
+        }
+      ]
+    },
+    {
+      "repo": "thedotmack/claude-mem",
+      "workflow_runs": [
+        {
+          "name": "Claude Code",
+          "head_sha": "dcb28a768c6be4b8e451843210558275caa8ec44",
+          "status": "completed",
+          "conclusion": "skipped",
+          "created_at": "2026-10-23T14:15:42Z",
+          "html_url": "https://github.com/thedotmack/claude-mem/actions/runs/39968111489"
+        }
+      ]
+    },
+    {
+      "repo": "666ghj/MiroFish",
+      "workflow_runs": [
+        {
+          "name": "Update Star History",
+          "head_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-16T03:32:11Z",
+          "html_url": "https://github.com/666ghj/MiroFish/actions/runs/38846001993"
+        }
+      ]
+    }
+  ]
+}

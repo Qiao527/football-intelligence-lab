@@ -1,0 +1,254 @@
+{
+  "SC-01": {
+    "intent": "player",
+    "team": null,
+    "player": "Mara Vale",
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-02": {
+    "intent": "player",
+    "team": null,
+    "player": "Ivo Moss",
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-03": {
+    "intent": "player",
+    "team": null,
+    "player": "Tess Rowe",
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-04": {
+    "intent": "player",
+    "team": null,
+    "player": "Mara Vale",
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-05": {
+    "intent": "player",
+    "team": null,
+    "player": "Ivo Moss",
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-06": {
+    "intent": "player",
+    "team": null,
+    "player": "Tess Rowe",
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-07": {
+    "intent": "passes",
+    "team": null,
+    "player": "Mara Vale",
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-08": {
+    "intent": "shots",
+    "team": null,
+    "player": "Ivo Moss",
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-09": {
+    "intent": "passes",
+    "team": "Orchard Athletic",
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-10": {
+    "intent": "transition_buildup",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": 1
+  },
+  "SC-11": {
+    "intent": "transition_buildup",
+    "team": null,
+    "player": null,
+    "min_passes": 3,
+    "max_shots": null
+  },
+  "SC-12": {
+    "intent": "passes",
+    "team": null,
+    "player": null,
+    "min_passes": 3,
+    "max_shots": 1
+  },
+  "SC-13": {
+    "intent": "transition",
+    "team": "Linden Rovers",
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-14": {
+    "intent": "transition",
+    "team": "Orchard Athletic",
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-15": {
+    "intent": "passes",
+    "team": null,
+    "player": null,
+    "min_passes": 2,
+    "max_shots": 0
+  },
+  "SC-16": {
+    "intent": "passes",
+    "team": null,
+    "player": null,
+    "min_passes": 6,
+    "max_shots": null
+  },
+  "SC-17": {
+    "intent": "transition_buildup",
+    "team": null,
+    "player": "Ivo Moss",
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-18": {
+    "intent": "passes",
+    "team": null,
+    "player": "Mara Vale",
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-19": {
+    "intent": "transition",
+    "team": null,
+    "player": "Tess Rowe",
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-20": {
+    "intent": "player",
+    "team": null,
+    "player": "Ivo Moss",
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-21": {
+    "intent": "shots",
+    "team": null,
+    "player": "Mara Vale",
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-22": {
+    "intent": "comparison",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-23": {
+    "intent": "comparison",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-24": {
+    "intent": "comparison",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-25": {
+    "intent": "unsupported",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-26": {
+    "intent": "unsupported",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-27": {
+    "intent": "unsupported",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-28": {
+    "intent": "unsupported",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-29": {
+    "intent": "unsupported",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-30": {
+    "intent": "unsupported",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-31": {
+    "intent": "unsupported",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-32": {
+    "intent": "unsupported",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-33": {
+    "intent": "unsupported",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-34": {
+    "intent": "unsupported",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-35": {
+    "intent": "unsupported",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  },
+  "SC-36": {
+    "intent": "unsupported",
+    "team": null,
+    "player": null,
+    "min_passes": null,
+    "max_shots": null
+  }
+}

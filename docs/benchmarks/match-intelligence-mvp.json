@@ -1,0 +1,442 @@
+{
+  "synthetic": {
+    "status": "PASS",
+    "mode": "synthetic",
+    "method": "Retain every sample of the local MVP browser benchmark; no speedup claim.\n\nEach repetition launches a fresh Python server and Chromium process. This measures\nprocess-cold startup with a warm OS/package cache, not machine-cold installation.\nOpening includes server and browser startup, navigation, analysis and rendering.\nInteraction uses a verified expected metric plus idle state and two animation\nframes. The legacy four-view timings are a different workload and not a comparator.\n",
+    "repetitions": 10,
+    "samples": [
+      {
+        "repetition": 1,
+        "server_ready_seconds": 0.41178854600002524,
+        "landing_including_server_browser_seconds": 3.2272548070031917,
+        "analysis_click_to_render_seconds": 2.328316177998204,
+        "opening_including_server_browser_seconds": 5.555574714002432,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.5999649729928933
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.5015449479978997
+          }
+        ]
+      },
+      {
+        "repetition": 2,
+        "server_ready_seconds": 0.4035121120105032,
+        "landing_including_server_browser_seconds": 3.036217310000211,
+        "analysis_click_to_render_seconds": 2.2721005720086396,
+        "opening_including_server_browser_seconds": 5.30832036701031,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.5499778259982122
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.4664694579987554
+          }
+        ]
+      },
+      {
+        "repetition": 3,
+        "server_ready_seconds": 0.4009100080002099,
+        "landing_including_server_browser_seconds": 3.0642600530118216,
+        "analysis_click_to_render_seconds": 2.231208614000934,
+        "opening_including_server_browser_seconds": 5.295470630007912,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.46648214099695906
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.4168509149894817
+          }
+        ]
+      },
+      {
+        "repetition": 4,
+        "server_ready_seconds": 0.40240563900442794,
+        "landing_including_server_browser_seconds": 3.0638751380029134,
+        "analysis_click_to_render_seconds": 2.7316574580036104,
+        "opening_including_server_browser_seconds": 5.795534931006841,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.5999036849971162
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.5000474069966003
+          }
+        ]
+      },
+      {
+        "repetition": 5,
+        "server_ready_seconds": 0.43319212600181345,
+        "landing_including_server_browser_seconds": 3.1900903829955496,
+        "analysis_click_to_render_seconds": 2.252484516997356,
+        "opening_including_server_browser_seconds": 5.442577280002297,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.516686977003701
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.4498147930135019
+          }
+        ]
+      },
+      {
+        "repetition": 6,
+        "server_ready_seconds": 0.3710229279968189,
+        "landing_including_server_browser_seconds": 2.9982951229903847,
+        "analysis_click_to_render_seconds": 2.273468708997825,
+        "opening_including_server_browser_seconds": 5.2717663279909175,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.5500960139906965
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.4830410180002218
+          }
+        ]
+      },
+      {
+        "repetition": 7,
+        "server_ready_seconds": 0.4013422339921817,
+        "landing_including_server_browser_seconds": 3.0963274899986573,
+        "analysis_click_to_render_seconds": 2.2643045430013444,
+        "opening_including_server_browser_seconds": 5.360633863994735,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.5000852990051499
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.4831769729935331
+          }
+        ]
+      },
+      {
+        "repetition": 8,
+        "server_ready_seconds": 0.40181347700126935,
+        "landing_including_server_browser_seconds": 3.080983905994799,
+        "analysis_click_to_render_seconds": 2.2477930989989545,
+        "opening_including_server_browser_seconds": 5.328779538001982,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.4833103949931683
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.45014549999905284
+          }
+        ]
+      },
+      {
+        "repetition": 9,
+        "server_ready_seconds": 0.40039751400763635,
+        "landing_including_server_browser_seconds": 3.024897819996113,
+        "analysis_click_to_render_seconds": 2.2405381220014533,
+        "opening_including_server_browser_seconds": 5.26543871499598,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.516673965001246
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.433326662008767
+          }
+        ]
+      },
+      {
+        "repetition": 10,
+        "server_ready_seconds": 0.4006420240039006,
+        "landing_including_server_browser_seconds": 3.074495945009403,
+        "analysis_click_to_render_seconds": 2.3135223599965684,
+        "opening_including_server_browser_seconds": 5.388020304002566,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.5499506339983782
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.4501314619992627
+          }
+        ]
+      }
+    ],
+    "opening": {
+      "n": 10,
+      "median": 5.344706700998358,
+      "mean": 5.401211667101597,
+      "sd": 0.1643496391594553,
+      "min": 5.26543871499598,
+      "max": 5.795534931006841,
+      "p90_nearest_rank": 5.555574714002432
+    },
+    "analysis_click": {
+      "n": 10,
+      "median": 2.268202557504992,
+      "mean": 2.315539417200489,
+      "sd": 0.14940838546742988,
+      "min": 2.231208614000934,
+      "max": 2.7316574580036104,
+      "p90_nearest_rank": 2.328316177998204
+    },
+    "interaction": {
+      "n": 20,
+      "median": 0.4916789009948843,
+      "mean": 0.49838405224872984,
+      "sd": 0.051262871829175605,
+      "min": 0.4168509149894817,
+      "max": 0.5999649729928933,
+      "p90_nearest_rank": 0.5500960139906965
+    },
+    "external_requests": [],
+    "legacy_speedup_measured": false,
+    "code_sha256": {
+      "src/fil/intelligence/__main__.py": "e49da1a8a772292cec89f70963e0d43542d4d72a288d573b876c8e582d49f8c6",
+      "src/fil/intelligence/demo.py": "9ea0cba29e6c15e577f4ba3ef14bdbd77343b370768780bfb520f4f53a894625",
+      "src/fil/intelligence/engine.py": "334aad697ac9ac28cad32e2011b1a252f18428ffdb8b4c3cb343acd943ace299",
+      "src/fil/intelligence/app.py": "714e29bdddda256a735670162a3184f4a9c719060fdb10cc87ad2bb1fa28696a",
+      "src/fil/intelligence/sources.py": "ff83812349c2cc66a45362dd682cdf5b6a4342399929325edaa8cfcb47c76c10",
+      "src/fil/intelligence/__init__.py": "5db4a6badb9a50092061f8290edceeddebd8a76e4fb65e6f5deb1388827ea8f5",
+      "scripts/benchmark_intelligence.py": "fcd0fb98c0ade6eaad01b806358a92ef7b89f7d5229f979202729edd64f03371"
+    },
+    "python": "3.11.14 (main, Feb 12 2026, 00:42:50) [Clang 21.1.4 ]",
+    "browser": "System Chromium at /usr/bin/chromium",
+    "comparison_with_pre_fix_is_valid": false
+  },
+  "local_reference": {
+    "status": "PASS",
+    "mode": "local",
+    "method": "Retain every sample of the local MVP browser benchmark; no speedup claim.\n\nEach repetition launches a fresh Python server and Chromium process. This measures\nprocess-cold startup with a warm OS/package cache, not machine-cold installation.\nOpening includes server and browser startup, navigation, analysis and rendering.\nInteraction uses a verified expected metric plus idle state and two animation\nframes. The legacy four-view timings are a different workload and not a comparator.\n",
+    "repetitions": 10,
+    "samples": [
+      {
+        "repetition": 1,
+        "server_ready_seconds": 0.375092443995527,
+        "landing_including_server_browser_seconds": 2.978064811002696,
+        "analysis_click_to_render_seconds": 2.4288759990013205,
+        "opening_including_server_browser_seconds": 5.8730758290039375,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.5166809310030658
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.4664927239937242
+          }
+        ]
+      },
+      {
+        "repetition": 2,
+        "server_ready_seconds": 0.3986644699907629,
+        "landing_including_server_browser_seconds": 3.04494264999812,
+        "analysis_click_to_render_seconds": 2.457588168006623,
+        "opening_including_server_browser_seconds": 5.919600510998862,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.5501477090001572
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.5333584579930175
+          }
+        ]
+      },
+      {
+        "repetition": 3,
+        "server_ready_seconds": 0.39855738398910034,
+        "landing_including_server_browser_seconds": 2.722879055989324,
+        "analysis_click_to_render_seconds": 2.3651725059899036,
+        "opening_including_server_browser_seconds": 5.487411536989384,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.4999113419908099
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.46667312701174524
+          }
+        ]
+      },
+      {
+        "repetition": 4,
+        "server_ready_seconds": 0.4016821550030727,
+        "landing_including_server_browser_seconds": 3.0166754860110814,
+        "analysis_click_to_render_seconds": 2.490364247991238,
+        "opening_including_server_browser_seconds": 5.961459142999956,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.4665597919956781
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.533565316000022
+          }
+        ]
+      },
+      {
+        "repetition": 5,
+        "server_ready_seconds": 0.431506991997594,
+        "landing_including_server_browser_seconds": 3.123786203999771,
+        "analysis_click_to_render_seconds": 2.551577215999714,
+        "opening_including_server_browser_seconds": 6.044481567005278,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.5331592069996987
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.516681103996234
+          }
+        ]
+      },
+      {
+        "repetition": 6,
+        "server_ready_seconds": 0.3704693600011524,
+        "landing_including_server_browser_seconds": 3.0305973169888603,
+        "analysis_click_to_render_seconds": 2.692453026000294,
+        "opening_including_server_browser_seconds": 6.122409730989602,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.6331794939906104
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.45009733899496496
+          }
+        ]
+      },
+      {
+        "repetition": 7,
+        "server_ready_seconds": 0.3693033300078241,
+        "landing_including_server_browser_seconds": 3.144111949004582,
+        "analysis_click_to_render_seconds": 2.491803495999193,
+        "opening_including_server_browser_seconds": 6.177861666001263,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.5667375750053907
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.5498292420088546
+          }
+        ]
+      },
+      {
+        "repetition": 8,
+        "server_ready_seconds": 0.43191903200931847,
+        "landing_including_server_browser_seconds": 4.188617791005527,
+        "analysis_click_to_render_seconds": 3.016233521004324,
+        "opening_including_server_browser_seconds": 7.582270245009568,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.7664266740030143
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.5837478239991469
+          }
+        ]
+      },
+      {
+        "repetition": 9,
+        "server_ready_seconds": 0.5569705750094727,
+        "landing_including_server_browser_seconds": 4.057643528998597,
+        "analysis_click_to_render_seconds": 2.890064565988723,
+        "opening_including_server_browser_seconds": 7.387939513995661,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 1.0793203359935433
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.516688574993168
+          }
+        ]
+      },
+      {
+        "repetition": 10,
+        "server_ready_seconds": 0.400773104003747,
+        "landing_including_server_browser_seconds": 2.999840406992007,
+        "analysis_click_to_render_seconds": 2.6567960000102175,
+        "opening_including_server_browser_seconds": 6.158248930005357,
+        "interactions": [
+          {
+            "filter": "Period 2",
+            "seconds": 0.6339759980037343
+          },
+          {
+            "filter": "Full match",
+            "seconds": 0.5002677979937289
+          }
+        ]
+      }
+    ],
+    "opening": {
+      "n": 10,
+      "median": 6.08344564899744,
+      "mean": 6.271475867299887,
+      "sd": 0.6711027540714225,
+      "min": 5.487411536989384,
+      "max": 7.582270245009568,
+      "p90_nearest_rank": 7.387939513995661
+    },
+    "analysis_click": {
+      "n": 10,
+      "median": 2.5216903559994535,
+      "mean": 2.604092874599155,
+      "sd": 0.2107587828717519,
+      "min": 2.3651725059899036,
+      "max": 3.016233521004324,
+      "p90_nearest_rank": 2.890064565988723
+    },
+    "interaction": {
+      "n": 20,
+      "median": 0.5332588324963581,
+      "mean": 0.5681750282485154,
+      "sd": 0.1406388095956699,
+      "min": 0.45009733899496496,
+      "max": 1.0793203359935433,
+      "p90_nearest_rank": 0.6339759980037343
+    },
+    "external_requests": [],
+    "legacy_speedup_measured": false,
+    "code_sha256": {
+      "src/fil/intelligence/__main__.py": "e49da1a8a772292cec89f70963e0d43542d4d72a288d573b876c8e582d49f8c6",
+      "src/fil/intelligence/demo.py": "9ea0cba29e6c15e577f4ba3ef14bdbd77343b370768780bfb520f4f53a894625",
+      "src/fil/intelligence/engine.py": "334aad697ac9ac28cad32e2011b1a252f18428ffdb8b4c3cb343acd943ace299",
+      "src/fil/intelligence/app.py": "714e29bdddda256a735670162a3184f4a9c719060fdb10cc87ad2bb1fa28696a",
+      "src/fil/intelligence/sources.py": "ff83812349c2cc66a45362dd682cdf5b6a4342399929325edaa8cfcb47c76c10",
+      "src/fil/intelligence/__init__.py": "5db4a6badb9a50092061f8290edceeddebd8a76e4fb65e6f5deb1388827ea8f5",
+      "scripts/benchmark_intelligence.py": "fcd0fb98c0ade6eaad01b806358a92ef7b89f7d5229f979202729edd64f03371"
+    },
+    "python": "3.11.14 (main, Feb 12 2026, 00:42:50) [Clang 21.1.4 ]",
+    "browser": "System Chromium at /usr/bin/chromium",
+    "comparison_with_pre_fix_is_valid": false
+  },
+  "scope": "Performance-only evidence. No provider events, player identities or fitted weights.",
+  "comparison": "Two sequential workload series, not paired parent/candidate improvement evidence."
+}

@@ -1,3 +1,5 @@
+> Historical starter-pack instructions. For the working product, use [README.md](README.md).
+
 # Football Intelligence Lab — Codex Starter Pack
 
 This package is **configuration and task guidance**, not a runnable analytics program. It does not connect to GitHub or run Codex by itself.
