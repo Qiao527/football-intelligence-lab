@@ -60,6 +60,8 @@ The public app is one synthetic fixture set. Real match IDs are rejected with HT
 ## Try it
 
 Live, no setup: **https://fil-public-alpha.vercel.app** (fictional data only).
+The earlier `fil-match-intelligence.vercel.app` domain is a separate archived demo from
+another repository and is not this project.
 
 Local web app (pinned tooling; requires [uv 0.12.23](https://docs.astral.sh/uv/getting-started/installation/)):
 

@@ -44,7 +44,7 @@ or deployment authorization was available, so no hosted URL is claimed for this 
 
 The production domain `fil-match-intelligence.vercel.app` serves a different repository
 (`Qiao527/fil-match-intelligence`). It has no Scout Copilot, and `POST /api/scout` returns platform
-`404 NOT_FOUND`; it is not this application. The hashes in `PUBLIC_WEB_RELEASE_MANIFEST.json`
+`404 NOT_FOUND`; it is not this application and is archived; do not use it as evidence for this release. The hashes in `PUBLIC_WEB_RELEASE_MANIFEST.json`
 describe the earlier rejected 45-file attempt, not the current 26-file package recorded in
 `PUBLIC_ALPHA_MANIFEST.json`.
 
