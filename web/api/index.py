@@ -1,6 +1,7 @@
 """Public synthetic-only HTTP API. No filesystem input, uploads or source acquisition."""
 
 import json
+import os
 import sys
 from http.server import BaseHTTPRequestHandler
 from pathlib import Path
@@ -14,16 +15,26 @@ from fil.intelligence.scout import search  # noqa: E402
 from fil.intelligence.scout_fixture import scout_fixture  # noqa: E402
 
 
+def route(path: str) -> str:
+    """Return the API route, accepting the file-suffixed path a rewrite exposes."""
+    return urlparse(path).path.removesuffix(".py")
+
+
 def response(path):
     parsed = urlparse(path)
-    if parsed.path == "/api/health":
-        return 200, {"status": "ok", "mode": "synthetic-only"}
-    if parsed.path == "/api/matches":
+    endpoint = route(path)
+    if endpoint == "/api/health":
+        return 200, {
+            "status": "ok",
+            "mode": "synthetic-only",
+            "commit": os.environ.get("VERCEL_GIT_COMMIT_SHA") or None,
+        }
+    if endpoint == "/api/matches":
         return 200, [{"id": k, "home": v[0], "away": v[1]} for k, v in MATCHES.items()]
-    if parsed.path == "/api/scout-fixture" and not parsed.query:
+    if endpoint == "/api/scout-fixture" and not parsed.query:
         events, metadata, identity = scout_fixture()
         return 200, {"events": events, "match": metadata, "provenance": identity}
-    if parsed.path != "/api/analyze":
+    if endpoint != "/api/analyze":
         return 404, {"error": "Endpoint not found"}
     q = parse_qs(parsed.query, keep_blank_values=True)
     if set(q) - {"match", "period", "team"} or any(len(v) != 1 for v in q.values()):
@@ -56,7 +67,7 @@ class handler(BaseHTTPRequestHandler):
         self.wfile.write(payload)
 
     def do_POST(self):
-        if self.path != "/api/scout":
+        if route(self.path) != "/api/scout":
             self.send_error(405)
             return
         try:

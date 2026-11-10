@@ -10,6 +10,7 @@ from pathlib import Path
 PUBLIC_FILES = {
     "LICENSE": "LICENSE",
     "requirements.txt": "web/requirements.txt",
+    "package.json": "web/package.json",
     "vercel.json": "web/vercel.json",
     "api/__init__.py": "web/api/__init__.py",
     "api/analyze.py": "web/api/analyze.py",

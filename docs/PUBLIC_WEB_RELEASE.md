@@ -5,7 +5,7 @@ match choices, real-time computation, shared filters, original JSON evidence, co
 complete conventional baseline and explicit scientific limits. Existing Streamlit/local research
 mode is unchanged. Public endpoints refuse real match IDs, arbitrary parameters and uploads.
 
-Validation: 590 tests pass; local Chromium verifies API→report→evidence→baseline, match-change
+Validation: 687 tests pass; local Chromium verifies API→report→evidence→baseline, match-change
 invalidation, no-Shot abstention and 390px layout with no JavaScript errors. The exact allowlisted
 bundle runs in isolation without the checkout. It contains no provider records or credentials.
 The new public workload has not yet received the 20-run performance evaluation used by the older
@@ -22,6 +22,30 @@ attempted. Exact target, 45 paths, sizes and hashes: `PUBLIC_WEB_RELEASE_MANIFES
 Owner decision: approve external sharing of this exact code bundle with Vercel, or require a
 smaller independently reviewed public computation package. No repository visibility change,
 historical merge, data-rights expansion or paid service purchase is included in that decision.
+
+## Serverless routing
+
+The five `web/api/*.py` entrypoints previously re-exported the shared handler as an import alias
+with a relative import. Run as a standalone function module that raises `ImportError: attempted
+relative import with no known parent package`, and the file exposes no top-level `handler` class
+for the Vercel Python builder to discover. Static HTML therefore loads while `/api/scout` never
+becomes a working function. Each entrypoint now defines a `handler` subclass, and `web/vercel.json`
+declares a pinned `@vercel/python@28.0.0` build plus a `/api/<route>` → `/api/<route>.py` rewrite
+for all five routes, with `@vercel/static-build` serving `public/` after the JavaScript syntax check
+in `package.json`. `api/index.py` accepts the `.py`-suffixed rewrite path without widening query
+validation, and `GET /api/health` reports the deployed commit from `VERCEL_GIT_COMMIT_SHA` when the
+platform provides it.
+
+Verified locally: every entrypoint imports as a standalone module, the packaged bundle serves
+`/api/health`, `POST /api/scout.py` with the interface's default request, `/api/scout-fixture` and
+`/`, and 687 tests pass. **Not verified: any Vercel build or runtime.** No project link, credential
+or deployment authorization was available, so no hosted URL is claimed for this repository.
+
+The production domain `fil-match-intelligence.vercel.app` serves a different repository
+(`Qiao527/fil-match-intelligence`). It has no Scout Copilot, and `POST /api/scout` returns platform
+`404 NOT_FOUND`; it is not this application. The hashes in `PUBLIC_WEB_RELEASE_MANIFEST.json`
+describe the earlier rejected 45-file attempt, not the current 26-file package recorded in
+`PUBLIC_ALPHA_MANIFEST.json`.
 
 ## Run the full-stack web application locally
 

@@ -13,33 +13,38 @@
     },
     {
       "path": "api/analyze.py",
-      "bytes": 38,
-      "sha256": "9f312205367d1d455105a29cc0fd46c108032ba368206dde03e24331b13943dd"
+      "bytes": 524,
+      "sha256": "2059bf33936d587893380e2f116f1c1097d410213ef6666bc2630d16d414b0ba"
     },
     {
       "path": "api/health.py",
-      "bytes": 38,
-      "sha256": "9f312205367d1d455105a29cc0fd46c108032ba368206dde03e24331b13943dd"
+      "bytes": 524,
+      "sha256": "2059bf33936d587893380e2f116f1c1097d410213ef6666bc2630d16d414b0ba"
     },
     {
       "path": "api/index.py",
-      "bytes": 3687,
-      "sha256": "b266e8cbe5eb4e5e8333e939b32e0b7b14a23b7b9ca725d2745833ad47638c3e"
+      "bytes": 3991,
+      "sha256": "3f9c1d942c4afd4c69d7afe2a53da8c97cdc50d7e076a55835a9291943de565e"
     },
     {
       "path": "api/matches.py",
-      "bytes": 38,
-      "sha256": "9f312205367d1d455105a29cc0fd46c108032ba368206dde03e24331b13943dd"
+      "bytes": 524,
+      "sha256": "2059bf33936d587893380e2f116f1c1097d410213ef6666bc2630d16d414b0ba"
     },
     {
       "path": "api/scout-fixture.py",
-      "bytes": 38,
-      "sha256": "9f312205367d1d455105a29cc0fd46c108032ba368206dde03e24331b13943dd"
+      "bytes": 524,
+      "sha256": "2059bf33936d587893380e2f116f1c1097d410213ef6666bc2630d16d414b0ba"
     },
     {
       "path": "api/scout.py",
-      "bytes": 38,
-      "sha256": "9f312205367d1d455105a29cc0fd46c108032ba368206dde03e24331b13943dd"
+      "bytes": 524,
+      "sha256": "2059bf33936d587893380e2f116f1c1097d410213ef6666bc2630d16d414b0ba"
+    },
+    {
+      "path": "package.json",
+      "bytes": 239,
+      "sha256": "589c35a5e46e3823fe85a76639e9ab32c58cd7057253221a7e3dda9694ec3d44"
     },
     {
       "path": "public/analytics.js",
@@ -123,8 +128,8 @@
     },
     {
       "path": "vercel.json",
-      "bytes": 427,
-      "sha256": "4043e761fe311c736096df5949bf2d9e4580fe465ed53eb20a99ccfce66f9992"
+      "bytes": 1460,
+      "sha256": "baa4978cf367ca269a9269067823989cd30d293a560752b15bc0b1749e0c30d2"
     }
   ]
 }

@@ -1,0 +1,8 @@
+{
+  "name": "fil-synthetic-web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node --check public/analytics.js && node --check public/app.js && node --check public/copilot.js && node --check public/scout.js"
+  }
+}
