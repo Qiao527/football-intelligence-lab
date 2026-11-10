@@ -8,8 +8,8 @@ license = "MIT"
 license-files = ["LICENSE"]
 dependencies = [
     "plotly==6.3.1",
-    "pyarrow==21.0.0",
-    "streamlit==1.50.0",
+    "pyarrow==23.0.1",
+    "streamlit==1.67.0",
 ]
 
 [build-system]
@@ -20,7 +20,7 @@ build-backend = "uv_build"
 browser = [
     "playwright==1.55.0",
 ]
-dev = ["pytest==8.4.2", "ruff==0.14.0"]
+dev = ["pytest==9.0.3", "ruff==0.14.0"]
 
 [tool.uv]
 required-version = "==0.12.23"
