@@ -67,21 +67,34 @@ verbatim. The fraction of included players whose recorded positions differ betwe
 windows is reported, and a sensitivity restricted to unchanged positions is required.
 No role is inferred from event averages.
 
+## Amendment 2026-11-11 — C2 cannot be a weighted model
+
+The original C2 added shot location, body part and play pattern to C1. Turning those
+into one ranking score requires either a fitted location model or arbitrary weights,
+and a fitted location model would generate xG, which the integrity rules forbid. C2 is
+therefore redefined as a filter-based arm: open-play, non-penalty xG per appearance.
+The primary endpoint becomes **C1 versus C0** (source xG against goals), which is the
+direct question; C2 versus C0 is secondary, and xG per shot is reported as a separate
+descriptive endpoint rather than folded into a score.
+
 ## Increment stage (runs only if both gates pass)
 
-- Arms: C0 goals/shots/appearances; C1 plus source xG and non-penalty xG; C2 plus
-  native shot locations, body part and play pattern. The shared limitations panel
-  appears in every arm.
+- Arms: C0 goals per appearance; C1 source xG per appearance; C2 open-play
+  non-penalty xG per appearance. The shared limitations panel appears in every arm.
+  xG per shot is reported descriptively and is never blended into a score.
 - Ranking input: per-appearance rates shrunk toward the positional-group mean with a
   fixed appearances-equivalent prior of 10; sensitivities at 0, 5 and 20.
 - Primary endpoint: difference in Spearman correlation with window-B xG per
-  appearance between C2 and C0, on the development leagues.
-- Secondary: top-*k* precision, Brier score for "at least one shot in window B", and
-  calibration in fixed bins.
+  appearance between C1 and C0, on the development leagues. C2 versus C0 is
+  secondary, as amended above.
+- Secondary: top-*k* overlap with the criterion ordering, C2 versus C0, and
+  per-league results. No Brier score is computed: a ranking does not supply a
+  probability, and inventing one from ranks would be a model.
 - Uncertainty: player-cluster bootstrap; cluster components by team; leave-one-league-
   out sensitivity on the development leagues.
 - Pre-declared labels for a zero-spanning interval stay as in v1: `uninformative`,
-  `no detectable increment`, `inconclusive`.
+  `no detectable increment`, `inconclusive`. Execution and result:
+  [LEAGUE_INCREMENT_RESULT.md](LEAGUE_INCREMENT_RESULT.md).
 
 ## Confirmatory run
 

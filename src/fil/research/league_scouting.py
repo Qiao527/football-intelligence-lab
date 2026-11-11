@@ -17,8 +17,8 @@ VERSION = "fil-league-scouting-1"
 MIN_APPEARANCES = 5
 METRICS = ("shots", "goals", "xg", "npxg")
 ROW_KEYS = ("source", "match_id", "team_id", "player_id", "match_date", "window",
-            "fixture_index", "position_label", "position_names", "shots", "goals",
-            "xg", "npxg")
+            "fixture_index", "position_label", "position_names", "league", "shots",
+            "goals", "xg", "npxg", "op_npxg")
 
 
 @dataclass(frozen=True)
@@ -75,6 +75,7 @@ def build_rows(
     events: list[dict[str, Any]],
     lineups: list[dict[str, Any]],
     windows: dict[tuple, dict[str, Any]],
+    league: str = "unknown",
 ) -> list[dict[str, Any]]:
     """Observed actor appearances with source shots and verbatim position metadata."""
     labels: dict[tuple, tuple[str | None, tuple[str, ...]]] = {}
@@ -106,12 +107,14 @@ def build_rows(
                 "match_date": slot["match_date"],
                 "window": slot["window"],
                 "fixture_index": slot["fixture_index"],
+                "league": league,
                 "position_label": labels.get(key, (None, ()))[0],
                 "position_names": labels.get(key, (None, ()))[1],
                 "shots": 0,
                 "goals": 0,
                 "xg": 0.0,
                 "npxg": 0.0,
+                "op_npxg": 0.0,
             }
         if event["event_type"] == "Shot":
             xg = event["shot_xg"]
@@ -122,6 +125,8 @@ def build_rows(
             row["xg"] += float(xg)
             if event["shot_type"] != "Penalty":
                 row["npxg"] += float(xg)
+                if event["shot_type"] == "Open Play":
+                    row["op_npxg"] += float(xg)
     return sorted(grouped.values(), key=lambda r: (r["team_id"], r["player_id"],
                                                    r["match_date"], r["match_id"]))
 

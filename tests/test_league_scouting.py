@@ -117,8 +117,10 @@ def rows_for(n_players=6, spread=0.05):
                 "fixture_index": windows[(mid, 10)]["fixture_index"],
                 "position_label": '["Center Forward"]',
                 "position_names": ("Center Forward",),
+                "league": "Test",
                 "shots": 1, "goals": 0,
                 "xg": base + (i % 2) * spread, "npxg": base,
+                "op_npxg": base,
             })
     return out
 
