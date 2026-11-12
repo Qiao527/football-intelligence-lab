@@ -64,6 +64,6 @@ La Liga +0.019 (327), Serie A +0.081 (315).
 
 ## Next
 
-Freeze the code commit and run the same analysis once on Ligue 1. A replication there
-is the only thing that would move this from exploratory to confirmatory. Any change to
-the prior, the arms or the criterion after that run is a new protocol.
+The frozen analysis was run once on Ligue 1 and replicated:
+[LEAGUE_CONFIRMATION_RESULT.md](LEAGUE_CONFIRMATION_RESULT.md). Ligue 1 is now exposed
+and cannot be used as a holdout again.

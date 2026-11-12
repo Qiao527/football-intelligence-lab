@@ -94,7 +94,8 @@ descriptive endpoint rather than folded into a score.
   out sensitivity on the development leagues.
 - Pre-declared labels for a zero-spanning interval stay as in v1: `uninformative`,
   `no detectable increment`, `inconclusive`. Execution and result:
-  [LEAGUE_INCREMENT_RESULT.md](LEAGUE_INCREMENT_RESULT.md).
+  [LEAGUE_INCREMENT_RESULT.md](LEAGUE_INCREMENT_RESULT.md); held-out replication:
+  [LEAGUE_CONFIRMATION_RESULT.md](LEAGUE_CONFIRMATION_RESULT.md).
 
 ## Confirmatory run
 
@@ -105,6 +106,13 @@ failure to replicate, not repaired by returning to the development leagues.
 
 Exposure log: every stage records which league, match ids, columns and summaries were
 inspected, in order.
+
+Unsealing: the held-out league is fetched into a separate root
+(`data/raw/statsbomb-league-holdout`) by
+`scripts/fetch_league_corpus.py --holdout`, which records the authorization text
+and the implementation commit in its manifest. Then
+`scripts/run_holdout_confirmation.py` runs exactly one analysis with the imported
+constants and no tunable arguments.
 
 ## Not claimed
 

@@ -24,6 +24,10 @@ AUTHORIZATION = (
     "Owner authorization in FIL conversation, 2026-11-11: fetch the 2015/16 league "
     "development set only. Ligue 1 is never acquired here."
 )
+UNSEALING = (
+    "Owner authorization in FIL conversation, 2026-11-11: confirmatory unsealing of "
+    "the held-out league after the analysis code was frozen. One run only."
+)
 RIGHTS = "local noncommercial research only; no redistribution or external upload"
 VERSION = "fil-league-fetch-1"
 
@@ -73,7 +77,9 @@ def verify_bundle(folder: Path, expected: dict[str, dict]) -> None:
             raise ValueError(f"Payload mismatch: {path}")
 
 
-def build_bundle(match_id: int, entries: dict[str, dict], root: Path) -> Path:
+def build_bundle(
+    match_id: int, entries: dict[str, dict], root: Path, authorization: str = AUTHORIZATION
+) -> Path:
     folder = root / REVISION / str(match_id)
     if folder.exists():
         verify_bundle(folder, entries)
@@ -99,7 +105,7 @@ def build_bundle(match_id: int, entries: dict[str, dict], root: Path) -> Path:
         "match_id": match_id,
         "upstream_revision": REVISION,
         "fetched_at_utc": datetime.now(UTC).isoformat(),
-        "owner_authorization": AUTHORIZATION,
+        "owner_authorization": authorization,
         "rights": RIGHTS,
         "files": files,
     }
@@ -111,22 +117,30 @@ def build_bundle(match_id: int, entries: dict[str, dict], root: Path) -> Path:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--root", type=Path, default=Path("data/raw/statsbomb-league"))
+    parser.add_argument("--root", type=Path)
     parser.add_argument("--workers", type=int, default=6)
+    parser.add_argument("--holdout", action="store_true",
+                        help="Unseal the held-out league once, after the code freeze")
+    parser.add_argument("--implementation", default="")
     parser.add_argument("--limit", type=int, default=0)
     args = parser.parse_args()
 
+    plan = (HELD_OUT,) if args.holdout else DEVELOPMENT
+    root = args.root or Path(
+        "data/raw/statsbomb-league-holdout" if args.holdout else "data/raw/statsbomb-league"
+    )
+    authorization = UNSEALING if args.holdout else AUTHORIZATION
     index = tree_index()
-    (args.root / REVISION / "meta").mkdir(parents=True, exist_ok=True)
+    (root / REVISION / "meta").mkdir(parents=True, exist_ok=True)
     per_league = {}
     matches: dict[int, dict[str, dict]] = {}
-    for competition, season, name in DEVELOPMENT:
+    for competition, season, name in plan:
         path = f"data/matches/{competition}/{season}.json"
         body = fetch(RAW + path)
         entry = index[path]
         if len(body) != entry["size"] or blob_sha1(body) != entry["sha"]:
             raise ValueError(f"Match index hash mismatch: {path}")
-        (args.root / REVISION / "meta" / f"{competition}-{season}.json").write_bytes(body)
+        (root / REVISION / "meta" / f"{competition}-{season}.json").write_bytes(body)
         ids = [m["match_id"] for m in json.loads(body)]
         per_league[name] = {"matches": len(ids), "competition": competition,
                             "season": season, "index_sha256": digest(body)}
@@ -140,7 +154,9 @@ def main() -> int:
     if args.limit:
         selected = selected[: args.limit]
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
-        list(pool.map(lambda mid: build_bundle(mid, matches[mid], args.root), selected))
+        list(pool.map(
+            lambda mid: build_bundle(mid, matches[mid], root, authorization), selected
+        ))
 
     summary = {
         "version": VERSION,
@@ -148,7 +164,9 @@ def main() -> int:
         "tree_entries": len(index),
         "owner_authorization": AUTHORIZATION,
         "rights": RIGHTS,
-        "held_out_not_acquired": {
+        "unsealing": args.holdout,
+        "implementation_sha": args.implementation,
+        "held_out_not_acquired": None if args.holdout else {
             "league": HELD_OUT[2], "competition": HELD_OUT[0], "season": HELD_OUT[1]
         },
         "leagues": per_league,
@@ -157,12 +175,12 @@ def main() -> int:
             item["size_bytes"]
             for mid in selected
             for item in json.loads(
-                (args.root / REVISION / str(mid) / "manifest.json").read_bytes()
+                (root / REVISION / str(mid) / "manifest.json").read_bytes()
             )["files"].values()
         ),
         "verification": "size + git tree blob SHA-1 + sha256 manifest per file",
     }
-    (args.root / REVISION / "fetch.json").write_text(
+    (root / REVISION / "fetch.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n"
     )
     print(json.dumps({k: summary[k] for k in ("matches", "bytes", "leagues")}, indent=1))
