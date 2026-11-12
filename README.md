@@ -79,7 +79,8 @@ held-out league was fetched only after the code freeze, and the confirmation scr
 exposes no tunable argument. No player label, shortlist or ability score is produced.
 [Full summary](docs/research/SCOUTING_RESEARCH_SUMMARY.md) ·
 [Protocol](docs/research/LEAGUE_SCOUTING_PROTOCOL.md) ·
-[Replication](docs/research/LEAGUE_CONFIRMATION_RESULT.md)
+[Replication](docs/research/LEAGUE_CONFIRMATION_RESULT.md) ·
+[Explorer UI notes](docs/EXPLORER_UI.md)
 
 ## Try it
 
