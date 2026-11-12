@@ -1,4 +1,14 @@
-# FIL project status — first v0.5 Possession Flow review candidate
+# FIL project status
+
+**Current:** the scouting decision study is complete. A tournament-stage design
+stopped at its measurement ceiling; the league-stage design passed both gates and the
+source-xG increment replicated in a held-out league. Nothing is merged, deployed or
+claimed as player ability.
+[Research summary](research/SCOUTING_RESEARCH_SUMMARY.md) ·
+[Replication](research/LEAGUE_CONFIRMATION_RESULT.md).
+
+The delivery notes below are kept as history and are unchanged.
+
 
 - The first factual v0.5 slice adds source-traceable possession reconstruction and
   interactive Possession Flow on `feat/fil-v05-possession-flow`, stacked on

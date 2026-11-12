@@ -9,6 +9,7 @@ player rating.
 
 [Live synthetic demo](https://fil-public-alpha.vercel.app) ·
 [Match Intelligence](https://fil-public-alpha.vercel.app/match.html) ·
+[Research result](#research-result) ·
 [Architecture](#architecture) ·
 [Verification](#verification) ·
 [Portfolio notes](docs/MATCH_INTELLIGENCE_PORTFOLIO.md)
@@ -56,6 +57,29 @@ Find candidates -> contradictory action -> original JSON -> Match Intelligence.
 The public app is one synthetic fixture set. Real match IDs are rejected with HTTP 400 by design.
 
 ![Player evidence view with pitch markers, action list and original JSON inspector](docs/images/scout-player.png)
+
+## Research result
+
+A frozen scouting study asks two questions before any ranking is allowed: is the
+underlying quantity stable enough per player to rank, and does a richer metric add
+information beyond goals?
+
+| Stage | Sample | Result |
+|---|---|---|
+| One tournament, one-appearance criterion | 63 matches, 377 pairs | ceiling 0.436 < 0.45, **stop** |
+| Three leagues, 14 appearances per window | 1,140 matches, 960 players | ceiling 0.856, **proceed** |
+| Held-out league | 377 matches, 320 players | xG − goals **+0.061**, **replicated** |
+
+Rank correlation with the next window's xG per appearance: goals 0.741, source xG
+0.791. The increment is real, replicated, and still below the pre-declared 0.10
+worthwhile difference — detectable, not decision-grade.
+
+Thresholds, arms, priors and endpoints were frozen before the data was opened; the
+held-out league was fetched only after the code freeze, and the confirmation script
+exposes no tunable argument. No player label, shortlist or ability score is produced.
+[Full summary](docs/research/SCOUTING_RESEARCH_SUMMARY.md) ·
+[Protocol](docs/research/LEAGUE_SCOUTING_PROTOCOL.md) ·
+[Replication](docs/research/LEAGUE_CONFIRMATION_RESULT.md)
 
 ## Try it
 
@@ -130,12 +154,12 @@ synthetic data; the real research corpus never leaves the local, rights-bound tr
 | Command | What it proves |
 |---|---|
 | `uv run --frozen ruff check .` | Lint and import ordering |
-| `uv run --frozen pytest -q` | 691 offline tests; no network, no provider data |
+| `uv run --frozen pytest -q` | 760 offline tests; no network, no provider data |
 | `uv run --frozen python scripts/verify_public_alpha.py` | 26-file manifest match, isolated entrypoints, HTTP contract |
 | `uv run --frozen python scripts/check_deployment.py --url <url>` | Live acceptance: identity, candidates, fixture, discovery page |
 | `uv run --frozen python scripts/check_scout_copilot_browser.py --browser <chrome>` | Chromium journey at 1440x900 and 390x844 |
 
-Current evidence: 691 tests pass, the packaged bundle matches its manifest, and the synthetic
+Current evidence: 760 tests pass, the packaged bundle matches its manifest, and the synthetic
 deployment at `fil-public-alpha.vercel.app` passed the HTTP and Chromium acceptance run. Deployment
 identity is recorded by source-tree hash, because a CLI deployment reports no commit metadata.
 
@@ -147,10 +171,12 @@ identity is recorded by source-tree hash, because a CLI deployment reports no co
 | Product, engine and source boundary | [`src/fil/intelligence/`](src/fil/intelligence/) |
 | Ingestion, canonical events, clock, score, possessions, research | [`src/fil/`](src/fil/) |
 | Verification and release scripts | [`scripts/`](scripts/) |
+| Scouting research protocols, executions and limits | [`docs/research/`](docs/research/) |
 | Design, contracts and evidence reports | [`docs/`](docs/) |
 | Tests | [`tests/`](tests/) |
 
-Start with [architecture](docs/MATCH_INTELLIGENCE_ARCHITECTURE.md), [metrics](docs/METRICS.md),
+Start with the [research summary](docs/research/SCOUTING_RESEARCH_SUMMARY.md),
+[architecture](docs/MATCH_INTELLIGENCE_ARCHITECTURE.md), [metrics](docs/METRICS.md),
 [source policy](docs/SOURCE_POLICY.md), [match clock](docs/MATCH_CLOCK.md) and
 [release evidence](docs/PUBLIC_WEB_RELEASE.md).
 
