@@ -2,8 +2,8 @@
 
 **Current:** the scouting decision study is complete. A tournament-stage design
 stopped at its measurement ceiling; the league-stage design passed both gates and the
-source-xG increment replicated in a held-out league. Nothing is merged, deployed or
-claimed as player ability.
+source-xG increment replicated in a held-out league. The study ships as documents and
+code; nothing is deployed and no player-ability claim is made.
 [Research summary](research/SCOUTING_RESEARCH_SUMMARY.md) ·
 [Replication](research/LEAGUE_CONFIRMATION_RESULT.md).
 
