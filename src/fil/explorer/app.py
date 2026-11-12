@@ -39,34 +39,63 @@ def mark(stage: str) -> None:
 st.set_page_config(page_title="FIL · Match Explorer", page_icon="⚽", layout="wide")
 st.markdown(
     """<style>
-.stApp{background:#0c1420;
-color:#e8edf3} .block-container{padding-top:2rem;
-max-width:1500px}
-h1,h2,h3{font-family:Inter,system-ui,sans-serif;
-letter-spacing:-.035em}
-[data-testid="stMetric"]{background:#152131;
-border:1px solid #29374b;
-border-radius:12px;
-padding:18px}
-[data-testid="stMetricLabel"]{color:#a9b7ca}
+:root{--bg:#0b1220;--panel:#121c2b;--panel-2:#162233;--line:#26344a;
+--ink:#e8eef6;--muted:#9fb0c6;--accent:#67b6d4;--accent-2:#7bd3c4}
+.stApp{background:
+radial-gradient(1100px 520px at 18% -12%,#17293f 0%,#0b1220 58%) fixed;
+color:var(--ink)}
+.block-container{padding-top:1.4rem;padding-bottom:3.2rem;max-width:1480px}
+html,body,[class*="css"]{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{letter-spacing:-.03em;font-weight:650;color:#f2f6fb}
+h1{font-size:2rem;margin-bottom:.2rem}
+h2{font-size:1.25rem;margin-top:1.4rem}
+h3{font-size:1.02rem}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+[data-testid="stMetric"]{background:linear-gradient(180deg,#152233,#121c2b);
+border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px;
+box-shadow:0 1px 0 #ffffff08 inset,0 10px 24px -18px #000}
+[data-testid="stMetricLabel"]{color:var(--muted);font-size:.78rem;
+letter-spacing:.04em;text-transform:uppercase}
 [data-testid="stMetricLabel"] p{white-space:normal;overflow:visible}
-[data-testid="stMetricValue"]{color:#f3f6fa}
-.match-head{padding:26px 32px;
-border:1px solid #334259;
-border-radius:16px;
-background:linear-gradient(110deg,#172d46,#151e2e)}
-.eyebrow{font:600 11px system-ui;
-letter-spacing:.18em;
-color:#83b9c7;
+[data-testid="stMetricValue"]{color:#f5f8fc;font-weight:650;letter-spacing:-.03em}
+[data-testid="stMetricDelta"]{color:var(--accent-2)}
+.match-head{padding:26px 30px;border:1px solid #34445c;border-radius:18px;
+background:linear-gradient(115deg,#1a3350 0%,#152134 55%,#121b2a 100%);
+box-shadow:0 22px 48px -30px #000}
+.eyebrow{font:600 11px system-ui;letter-spacing:.2em;color:#8ac4d6;
 text-transform:uppercase}
-.score{font:700 40px system-ui;
-letter-spacing:-.04em;
-margin:12px 0}.subtle{color:#a9b7ca;
-font-size:13px}
+.score{font:700 42px/1.1 system-ui;letter-spacing:-.045em;margin:14px 0 8px;
+color:#f7fafd}
+.subtle{color:var(--muted);font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{font:500 12px system-ui;color:#c7d6e8;background:#0e1928;
+border:1px solid #2b3d55;border-radius:999px;padding:4px 11px}
+.chip-accent{color:#0d1a22;background:var(--accent-2);border-color:transparent;
+font-weight:600}
+[data-testid="stSidebar"]{background:#0e1826;border-right:1px solid var(--line)}
+[data-testid="stSidebar"] .block-container{padding-top:1.2rem}
+[data-testid="stSidebar"] h3{font-size:.95rem;letter-spacing:.01em}
+[data-baseweb="tab-list"]{gap:6px;border-bottom:1px solid var(--line)}
+[data-baseweb="tab"]{border-radius:10px 10px 0 0;padding:10px 14px;
+color:var(--muted);background:transparent}
+[data-baseweb="tab"][aria-selected="true"]{color:#f2f6fb;background:#162233;
+border-bottom:2px solid var(--accent)}
+[data-testid="stDataFrame"]{border:1px solid var(--line);border-radius:12px;
+overflow:hidden}
+[data-testid="stExpander"]{border:1px solid var(--line);border-radius:12px;
+background:#101a28}
+[data-testid="stCaptionContainer"] p{color:var(--muted);letter-spacing:.01em}
+hr{border-color:var(--line)}
+button{border-radius:9px!important}
+.stButton button,.stDownloadButton button{background:#162233;border:1px solid #2d3f57;
+color:#dbe6f3}
+.stButton button:hover,.stDownloadButton button:hover{border-color:var(--accent);
+color:#fff}
 [data-testid="stAppDeployButton"]{display:none}
-[data-testid="stSidebar"]{background:#101c2a} button{border-radius:8px!important}
 @media(max-width:600px){
   .match-head{padding:20px}.score{font-size:28px}
+  h1{font-size:1.55rem}
   [data-testid="stHorizontalBlock"]:has([data-testid="stMetric"]){
     display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
   [data-testid="stHorizontalBlock"]:has([data-testid="stMetric"]) >
@@ -156,13 +185,17 @@ def main() -> None:
     st.html(
         f"""<div class="match-head">
     <div class="eyebrow">Football Intelligence Lab</div>
-
     <div class="score">{html.escape(names[team_ids[0]])}
     &nbsp; {meta["home_score"]} : {meta["away_score"]}
-    &nbsp; {html.escape(names[team_ids[1]])}</div><div class="subtle">
-    {html.escape(meta["competition_name"])} · {html.escape(meta["season_name"])}
-    · {html.escape(meta["match_date"])}
-    · Official full-match score · StatsBomb Open Data</div></div>""",
+    &nbsp; {html.escape(names[team_ids[1]])}</div>
+    <div class="subtle">Official full-match score, reconciled against source metadata.</div>
+    <div class="chips">
+      <span class="chip">{html.escape(meta["competition_name"])}</span>
+      <span class="chip">{html.escape(meta["season_name"])}</span>
+      <span class="chip">{html.escape(meta["match_date"])}</span>
+      <span class="chip chip-accent">StatsBomb Open Data</span>
+      <span class="chip">match {meta["match_id"]}</span>
+    </div></div>""",
     )
     st.caption(f"LOCAL RESEARCH / SOURCE-VERIFIED / HISTORICAL MATCH {meta['match_id']}")
     with st.sidebar:
